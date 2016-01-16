@@ -5,6 +5,7 @@ import org.fpsrobotics.PID.IPIDFeedbackDevice;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 
 public class Motor implements IMotor
 {
@@ -32,12 +33,16 @@ public class Motor implements IMotor
 	
 	public Motor(CANTalon motor, boolean invertDirection)
 	{
+		this.setControlMode(TalonControlMode.Speed);
+		
 		this.canMotor = motor;
 		this.invertDirection = invertDirection;
 	}
 	
 	public Motor(CANTalon motor, boolean invertDirection, IPIDFeedbackDevice device)
 	{
+		this.setControlMode(TalonControlMode.Speed);
+		
 		this.canMotor = motor;
 		this.invertDirection = invertDirection;
 		this.device = device;
@@ -219,7 +224,7 @@ public class Motor implements IMotor
 		return device;
 	}
 	
-	public CANTalon getCANTalon()
+	protected CANTalon getCANTalon()
 	{
 		return canMotor;
 	}
