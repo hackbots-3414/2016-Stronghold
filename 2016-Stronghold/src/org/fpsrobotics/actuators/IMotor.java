@@ -1,8 +1,6 @@
 package org.fpsrobotics.actuators;
 
-import org.fpsrobotics.PID.IPIDEnabledDevice;
-
-public interface IMotor extends IPIDEnabledDevice
+public interface IMotor
 {
 	double getSpeed();
 	void setSpeed(double speed);

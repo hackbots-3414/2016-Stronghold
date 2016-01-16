@@ -4,24 +4,24 @@ import org.fpsrobotics.PID.IPIDFeedbackDevice;
 
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 
-public class DoubleMotor implements IMotor
+public class DoubleMotor implements ICANMotor
 {
 	Motor motorOne, motorTwo;
-	boolean isCANTalon = true;
+	CANMotor CANMotorOne, CANMotorTwo;
 	
 	public DoubleMotor(Motor motorOne, Motor motorTwo)
 	{
 		this.motorOne = motorOne;
 		this.motorTwo = motorTwo;
-		
-		if(motorTwo.getCANTalon() != null)
-		{
-			motorTwo.setControlMode(TalonControlMode.Follower);
-			motorTwo.getCANTalon().set(motorOne.getCANTalon().getDeviceID());
-		} else
-		{
-			isCANTalon = false;
-		}
+	}
+	
+	public DoubleMotor(CANMotor motorOne, CANMotor motorTwo)
+	{
+		this.CANMotorOne = motorOne;
+		this.CANMotorTwo = motorTwo;
+
+		motorTwo.setControlMode(TalonControlMode.Follower);
+		motorTwo.setFollowerDeviceID(motorOne.getDeviceID());
 	}
 	
 	@Override
@@ -33,10 +33,12 @@ public class DoubleMotor implements IMotor
 	@Override
 	public void setSpeed(double speed) 
 	{
-		motorOne.setSpeed(speed);
-		
-		if(!isCANTalon)
+		if(CANMotorOne != null)
 		{
+			CANMotorOne.setSpeed(speed);
+		} else
+		{
+			motorOne.setSpeed(speed);
 			motorTwo.setSpeed(speed);
 		}
 	}
@@ -44,111 +46,89 @@ public class DoubleMotor implements IMotor
 	@Override
 	public void stop() 
 	{
-		motorOne.stop();
-		if(!isCANTalon)
+		if(CANMotorOne != null)
 		{
+			CANMotorOne.stop();
+		} else
+		{
+			motorOne.stop();
 			motorTwo.stop();
 		}
 	}
 
-	@Override
 	public void setP(double p) 
 	{
-		motorOne.setP(p);
-		if(!isCANTalon)
+		if(CANMotorOne != null)
 		{
-			motorTwo.setP(p);
+			CANMotorOne.setP(p);
 		}
 	}
 
-	@Override
-	public void setI(double i) {
-		motorOne.setI(i);
-		if(!isCANTalon)
+	public void setI(double i) 
+	{
+		if(CANMotorOne != null)
 		{
-			motorTwo.setI(i);
+			CANMotorOne.setI(i);
 		}
 	}
 
-	@Override
 	public void setD(double d) 
 	{
-		motorOne.setD(d);
-		if(!isCANTalon)
+		if(CANMotorOne != null)
 		{
-			motorTwo.setD(d);
+			CANMotorOne.setD(d);
 		}
 	}
 
-	@Override
-	public void setPIDFeedbackDevice(IPIDFeedbackDevice device) {
-		if(isCANTalon)
+	public void setPIDFeedbackDevice(IPIDFeedbackDevice device) 
+	{
+		if(CANMotorOne != null)
 		{
-			motorOne.setPIDFeedbackDevice(device);
-		} else
-		{
-			// implement later
+			CANMotorOne.setPIDFeedbackDevice(device);
 		}
 	}
 
-	@Override
 	public IPIDFeedbackDevice getPIDFeedbackDevice() 
 	{
-		if(isCANTalon)
+		if(CANMotorOne != null)
 		{
-			return motorOne.getPIDFeedbackDevice();
-		} else
-		{
-			// implement later
-			return null;
+			return CANMotorOne.getPIDFeedbackDevice();
 		}
+		
+		return null;
 	}
 
-	@Override
 	public void enablePID() 
 	{
-		motorOne.enablePID();
-		
-		if(!isCANTalon)
+		if(CANMotorOne != null)
 		{
-			motorTwo.enablePID();
+			CANMotorOne.enablePID();
 		}
 	}
 
-	@Override
 	public void disablePID() 
 	{
-		motorOne.disablePID();
-		
-		if(!isCANTalon)
+		if(CANMotorOne != null)
 		{
-			motorTwo.disablePID();
+			CANMotorOne.disablePID();
 		}
 	}
 
-	@Override
 	public TalonControlMode getControlMode() 
 	{
-		if(isCANTalon)
+		if(CANMotorOne != null)
 		{
-			return motorOne.getControlMode();
-		} else
-		{
-			// implement later
-			
-			return null;
+			return CANMotorOne.getControlMode();
 		}
+		
+		return null;
 	}
 
-	@Override
 	public void setControlMode(TalonControlMode mode) 
 	{
-		if(isCANTalon)
+		if(CANMotorOne != null)
 		{
-			motorOne.setControlMode(mode);
-		} else
-		{
-			// implement later
+			CANMotorOne.setControlMode(mode);
 		}
 	}
 
