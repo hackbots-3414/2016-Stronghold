@@ -4,58 +4,40 @@ import org.fpsrobotics.PID.IPIDFeedbackDevice;
 
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 
-public class TankDrive implements IDriveTrain
+public class Launcher implements ILauncher
 {
-//	double p, i, d;
-	private DoubleMotor motorLeft, motorRight;
+//	private double p, i, d;
 	
-	public TankDrive(DoubleMotor motorLeft, DoubleMotor motorRight)
+	private static double INTAKE_SPEED;
+	private static double SHOOT_SPEED;
+	
+	private CANMotor motorLeft, motorRight;
+	
+	public Launcher(CANMotor motorLeft, CANMotor motorRight)
 	{
 		this.motorLeft = motorLeft;
 		this.motorRight = motorRight;
 	}
 	
 	@Override
-	public void setSpeed(double leftSpeed, double rightSpeed) 
+	public void inTake()
 	{
-		motorLeft.setSpeed(leftSpeed);
-		motorRight.setSpeed(rightSpeed);
+		motorLeft.setSpeed(INTAKE_SPEED);
+		motorRight.setSpeed(INTAKE_SPEED);
+	}
+	
+	@Override
+	public void shoot()
+	{
+		motorLeft.setSpeed(SHOOT_SPEED);
+		motorRight.setSpeed(SHOOT_SPEED);
 	}
 
 	@Override
-	public void turnLeft(double speed) {
-		motorLeft.setSpeed(speed);
-		motorRight.setSpeed(-speed);
-	}
-
-	@Override
-	public void turnRight(double speed) {
-		motorLeft.setSpeed(-speed);
-		motorRight.setSpeed(speed);
-	}
-
-	@Override
-	public void goStraight(double speed) {
-		motorLeft.setSpeed(speed);
-		motorRight.setSpeed(speed);
-	}
-
-	@Override
-	public void goBackward(double speed) {
-		motorLeft.setSpeed(-speed);
-		motorRight.setSpeed(-speed);
-	}
-
-	@Override
-	public void driveLeft(double speed) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void driveRight(double speed) {
-		// TODO Auto-generated method stub
-		
+	public void stop()
+	{
+		motorLeft.stop();
+		motorRight.stop();
 	}
 
 	@Override

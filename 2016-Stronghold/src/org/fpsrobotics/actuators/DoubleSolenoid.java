@@ -4,15 +4,15 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
 public class DoubleSolenoid implements ISolenoid
 {
-	int channelOne;
-	int channelTwo;
-	edu.wpi.first.wpilibj.DoubleSolenoid solenoid;
+//	private int channelOne;
+//	private int channelTwo;
+	private edu.wpi.first.wpilibj.DoubleSolenoid solenoid;
 	
 	public DoubleSolenoid(int channelOne, int channelTwo)
 	{
 		solenoid = new edu.wpi.first.wpilibj.DoubleSolenoid(channelOne, channelTwo);
-		this.channelOne = channelOne;
-		this.channelTwo = channelTwo;
+//		this.channelOne = channelOne;
+//		this.channelTwo = channelTwo;
 	}
 	
 	@Override
