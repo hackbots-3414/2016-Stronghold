@@ -32,13 +32,13 @@ public class Motor implements IMotor
 	
 	public Motor(CANTalon motor, boolean invertDirection)
 	{
-		this.motor = canMotor;
+		this.canMotor = motor;
 		this.invertDirection = invertDirection;
 	}
 	
 	public Motor(CANTalon motor, boolean invertDirection, IPIDFeedbackDevice device)
 	{
-		this.motor = canMotor;
+		this.canMotor = motor;
 		this.invertDirection = invertDirection;
 		this.device = device;
 		
