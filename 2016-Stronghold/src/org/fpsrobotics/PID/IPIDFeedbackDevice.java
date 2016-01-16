@@ -1,5 +1,12 @@
 package org.fpsrobotics.PID;
 
-public interface IPIDFeedbackDevice {
+import edu.wpi.first.wpilibj.CANTalon;
 
+public interface IPIDFeedbackDevice
+{
+	double getCount();
+	void enable();
+	void disable();
+	void resetCount();
+	CANTalon.FeedbackDevice whatPIDDevice();
 }

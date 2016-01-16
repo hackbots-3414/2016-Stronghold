@@ -1,5 +1,6 @@
 package org.fpsrobotics.actuators;
 
-public enum SolenoidValues {
-
+public enum SolenoidValues 
+{
+	ON, OFF, NEUTRALSTATE;
 }

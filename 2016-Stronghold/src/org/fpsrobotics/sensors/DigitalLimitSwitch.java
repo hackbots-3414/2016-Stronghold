@@ -1,4 +1,4 @@
-package org.fpsrobotics.actuators;
+package org.fpsrobotics.sensors;
 
 public class DigitalLimitSwitch implements ILimitSwitch
 {
