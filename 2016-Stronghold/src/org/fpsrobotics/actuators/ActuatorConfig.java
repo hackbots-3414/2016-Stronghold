@@ -14,17 +14,25 @@ public class ActuatorConfig
 	private static final int MOTOR_RIGHT_REAR = 4;
 	
 	private IDriveTrain driveTrain;
+	private ILauncher launcher;
 	
-
+	private CANTalon leftFrontMotor;
+	private CANTalon leftRearMotor;
+	private CANTalon rightFrontMotor;
+	private CANTalon rightRearMotor;
+	
+	private CANTalon leftShooterMotor;
+	private CANTalon rightShooterMotor;
+	
 	private ActuatorConfig()
 	{
-		CANTalon leftFrontMotor = new CANTalon(MOTOR_LEFT_FRONT);
-		CANTalon leftRearMotor = new CANTalon(MOTOR_LEFT_REAR);
-		CANTalon rightFrontMotor = new CANTalon(MOTOR_RIGHT_FRONT);
-		CANTalon rightRearMotor = new CANTalon(MOTOR_RIGHT_REAR);
+		leftFrontMotor = new CANTalon(MOTOR_LEFT_FRONT);
+		leftRearMotor = new CANTalon(MOTOR_LEFT_REAR);
+		rightFrontMotor = new CANTalon(MOTOR_RIGHT_FRONT);
+		rightRearMotor = new CANTalon(MOTOR_RIGHT_REAR);
 		
 		driveTrain = new TankDrive(new DoubleMotor(new CANMotor(leftFrontMotor, false, new BuiltInCANTalonEncoder(leftFrontMotor)), new CANMotor(leftRearMotor, false, new BuiltInCANTalonEncoder(leftRearMotor))), new DoubleMotor(new CANMotor(rightFrontMotor, true, new BuiltInCANTalonEncoder(rightFrontMotor)), new CANMotor(rightRearMotor, true, new BuiltInCANTalonEncoder(rightRearMotor))));
-		
+		launcher = new Launcher(new CANMotor(leftShooterMotor, false, new BuiltInCANTalonEncoder(leftShooterMotor)), new CANMotor(rightShooterMotor, true, new BuiltInCANTalonEncoder(rightShooterMotor))); //One inverse, one not...accounts for shooting and intake opposite directions
 	}
 
 	public static synchronized ActuatorConfig getInstance()
@@ -40,5 +48,10 @@ public class ActuatorConfig
 	public IDriveTrain getDriveTrain()
 	{
 		return driveTrain;
+	}
+	
+	public ILauncher getLauncher()
+	{
+		return launcher;
 	}
 }

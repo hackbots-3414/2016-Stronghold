@@ -11,7 +11,7 @@ public class CANMotor implements ICANMotor
 	private CANTalon canMotor;
 	private IPIDFeedbackDevice device;
 	
-	int invert;
+	private int invert;
 	
 	public CANMotor(CANTalon motor, boolean invertDirection)
 	{

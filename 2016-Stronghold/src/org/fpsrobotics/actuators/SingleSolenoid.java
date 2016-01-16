@@ -4,13 +4,13 @@ import edu.wpi.first.wpilibj.Solenoid;
 
 public class SingleSolenoid implements ISolenoid
 {
-	int channel;
-	Solenoid solenoid;
+//	int channel;
+	private Solenoid solenoid;
 	
 	public SingleSolenoid(int channel)
 	{
 		solenoid = new Solenoid(channel);
-		this.channel = channel;
+//		this.channel = channel;
 	}
 
 	@Override
@@ -33,11 +33,9 @@ public class SingleSolenoid implements ISolenoid
 		case ON:
 			solenoid.set(true);
 			break;
-		case OFF:
+		default:
 			solenoid.set(false);
-			break;
-		case NEUTRALSTATE:
-			break;
+			
 		}
 	}
 
