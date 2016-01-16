@@ -28,7 +28,6 @@ public class Motor implements IMotor
 		this.motor = motor;
 		this.invertDirection = invertDirection;
 		this.device = device;
-		canMotor.setFeedbackDevice(device.whatPIDDevice());
 	}
 	
 	public Motor(CANTalon motor, boolean invertDirection)
@@ -42,6 +41,7 @@ public class Motor implements IMotor
 		this.motor = canMotor;
 		this.invertDirection = invertDirection;
 		this.device = device;
+		
 		canMotor.setFeedbackDevice(device.whatPIDDevice());
 	}
 	
@@ -56,7 +56,6 @@ public class Motor implements IMotor
 		this.motor = motor;
 		this.invertDirection = invertDirection;
 		this.device = device;
-		canMotor.setFeedbackDevice(device.whatPIDDevice());
 	}
 	
 	@Override
@@ -218,5 +217,10 @@ public class Motor implements IMotor
 	public IPIDFeedbackDevice getPIDFeedbackDevice() 
 	{
 		return device;
+	}
+	
+	public CANTalon getCANTalon()
+	{
+		return canMotor;
 	}
 }

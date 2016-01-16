@@ -12,6 +12,9 @@ public class DoubleMotor implements IMotor
 	{
 		this.motorOne = motorOne;
 		this.motorTwo = motorTwo;
+		
+		motorTwo.setControlMode(TalonControlMode.Follower);
+		motorTwo.getCANTalon().set(motorOne.getCANTalon().getDeviceID());
 	}
 	
 	@Override
@@ -24,40 +27,34 @@ public class DoubleMotor implements IMotor
 	public void setSpeed(double speed) 
 	{
 		motorOne.setSpeed(speed);
-		motorTwo.setSpeed(speed);
 	}
 
 	@Override
 	public void stop() 
 	{
 		motorOne.stop();
-		motorTwo.stop();
 	}
 
 	@Override
 	public void setP(double p) 
 	{
 		motorOne.setP(p);
-		motorTwo.setP(p);
 	}
 
 	@Override
 	public void setI(double i) {
 		motorOne.setI(i);
-		motorTwo.setI(i);
 	}
 
 	@Override
 	public void setD(double d) 
 	{
 		motorOne.setD(d);
-		motorTwo.setD(d);
 	}
 
 	@Override
 	public void setPIDFeedbackDevice(IPIDFeedbackDevice device) {
 		motorOne.setPIDFeedbackDevice(device);
-		motorTwo.setPIDFeedbackDevice(device);
 	}
 
 	@Override
@@ -69,13 +66,11 @@ public class DoubleMotor implements IMotor
 	@Override
 	public void enablePID() {
 		motorOne.enablePID();
-		motorTwo.enablePID();
 	}
 
 	@Override
 	public void disablePID() {
 		motorOne.disablePID();
-		motorTwo.disablePID();
 	}
 
 	@Override
@@ -86,7 +81,6 @@ public class DoubleMotor implements IMotor
 	@Override
 	public void setControlMode(TalonControlMode mode) {
 		motorOne.setControlMode(mode);
-		motorTwo.setControlMode(mode);
 	}
 
 }
