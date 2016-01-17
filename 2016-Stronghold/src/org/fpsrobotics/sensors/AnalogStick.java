@@ -1,5 +1,6 @@
 package org.fpsrobotics.sensors;
 
-public enum AnalogStick {
-
+public enum AnalogStick 
+{
+	RIGHT, LEFT;
 }

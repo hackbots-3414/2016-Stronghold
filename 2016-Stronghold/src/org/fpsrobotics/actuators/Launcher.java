@@ -20,7 +20,7 @@ public class Launcher implements ILauncher
 	}
 	
 	@Override
-	public void inTake()
+	public void intake()
 	{
 		motorLeft.setSpeed(INTAKE_SPEED);
 		motorRight.setSpeed(INTAKE_SPEED);
