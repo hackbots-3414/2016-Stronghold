@@ -15,6 +15,9 @@ public class SensorConfig
 	private final int QUAD_ENCODER_CHANNEL_ONE = 4; //TODO: Fix later
 	private final int QUAD_ENCODER_CHANNEL_TWO = 5; //TODO: Fix later
 	
+	private final int HALL_EFFECT_BOTTOM_PORT = 0;
+	private final int HALL_EFFECT_TOP_PORT = 1;
+	
 	private IJoystick leftJoystick;
 	private IJoystick rightJoystick;
 	
@@ -25,6 +28,8 @@ public class SensorConfig
 	private ILimitSwitch digitalLimitSwitch;
 	
 	private IPIDFeedbackDevice launcherEncoder;
+	
+	private IHallEffectSensor bottomLimitSensor, topLimitSensor;
 	
 	private SensorConfig()
 	{
@@ -38,6 +43,9 @@ public class SensorConfig
 		digitalLimitSwitch = new DigitalLimitSwitch(DIGITAL_LIMIT_SWITCH_CHANNEL);
 		
 		launcherEncoder = new QuadEncoder(QUAD_ENCODER_CHANNEL_ONE, QUAD_ENCODER_CHANNEL_TWO);
+		
+		bottomLimitSensor = new AndyMarkHallEffect(HALL_EFFECT_BOTTOM_PORT);
+		topLimitSensor = new AndyMarkHallEffect(HALL_EFFECT_TOP_PORT);
 	}
 
 	public static synchronized SensorConfig getInstance()
@@ -76,5 +84,15 @@ public class SensorConfig
 	public IPIDFeedbackDevice getQuadEncoder()
 	{
 		return launcherEncoder;
+	}
+	
+	public IHallEffectSensor getBottomLimitSensor()
+	{
+		return bottomLimitSensor;
+	}
+
+	public IHallEffectSensor getTopLimitSensor()
+	{
+		return topLimitSensor;
 	}
 }
