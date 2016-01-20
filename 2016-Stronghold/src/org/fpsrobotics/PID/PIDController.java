@@ -19,9 +19,7 @@ public class PIDController implements IPIDFeedbackDevice
 	private void setSetpoint(double stow2) {
 		// TODO Auto-generated method stub
 		
-	}
-	proctected double returnPIDInput(){
-		
+	}		
 	
 	@Override
 	public double getCount() {
@@ -47,6 +45,6 @@ public class PIDController implements IPIDFeedbackDevice
 	public FeedbackDevice whatPIDDevice() {
 		// TODO Auto-generated method stub
 		return null;
-										}
+										
 	}
 }
