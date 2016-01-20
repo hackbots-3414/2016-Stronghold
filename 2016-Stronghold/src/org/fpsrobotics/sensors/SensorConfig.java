@@ -31,12 +31,15 @@ public class SensorConfig
 	
 	private IHallEffectSensor bottomLimitSensor, topLimitSensor;
 	
+	private IGamepad gamepad;
+	
 	private SensorConfig()
 	{
 		timer = new ClockTimer();
 		
 		leftJoystick = new Logitech3DJoystick(0);
 		rightJoystick = new Logitech3DJoystick(1);
+		gamepad = new DualShockTwoController(2);
 		
 		autoSwitch = new AutonomousSwitches(AUTO_SWITCH_ONES, AUTO_SWITCH_TWOS, AUTO_SWITCH_FOURS);
 		
@@ -94,5 +97,10 @@ public class SensorConfig
 	public IHallEffectSensor getTopLimitSensor()
 	{
 		return topLimitSensor;
+	}
+	
+	public IGamepad getGamepad()
+	{
+		return gamepad;
 	}
 }
