@@ -6,7 +6,11 @@ import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 
 public class Gyroscope implements IPIDFeedbackDevice
 {
-
+	public Gyroscope()
+	{
+		//TODO: make actual gyroscope code
+	}
+	
 	@Override
 	public double getCount() {
 		// TODO Auto-generated method stub

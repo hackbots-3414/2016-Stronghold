@@ -1,5 +1,7 @@
 package org.fpsrobotics.sensors;
 
+import org.fpsrobotics.PID.IPIDFeedbackDevice;
+
 public class SensorConfig 
 {
 	private static SensorConfig singleton = null;
@@ -8,17 +10,34 @@ public class SensorConfig
 	private final int AUTO_SWITCH_TWOS = 1;
 	private final int AUTO_SWITCH_FOURS = 2;
 	
+	private final int DIGITAL_LIMIT_SWITCH_CHANNEL = 3; //TODO: Fix later
+	
+	private final int QUAD_ENCODER_CHANNEL_ONE = 4; //TODO: Fix later
+	private final int QUAD_ENCODER_CHANNEL_TWO = 5; //TODO: Fix later
+	
 	private IJoystick leftJoystick;
 	private IJoystick rightJoystick;
 	
 	private ICounterSwitch autoSwitch;
 	
+	private ITimer timer;
+	
+	private ILimitSwitch digitalLimitSwitch;
+	
+	private IPIDFeedbackDevice launcherEncoder;
+	
 	private SensorConfig()
 	{
+		timer = new ClockTimer();
+		
 		leftJoystick = new Logitech3DJoystick(0);
 		rightJoystick = new Logitech3DJoystick(1);
 		
 		autoSwitch = new AutonomousSwitches(AUTO_SWITCH_ONES, AUTO_SWITCH_TWOS, AUTO_SWITCH_FOURS);
+		
+		digitalLimitSwitch = new DigitalLimitSwitch(DIGITAL_LIMIT_SWITCH_CHANNEL);
+		
+		launcherEncoder = new QuadEncoder(QUAD_ENCODER_CHANNEL_ONE, QUAD_ENCODER_CHANNEL_TWO);
 	}
 
 	public static synchronized SensorConfig getInstance()
@@ -46,4 +65,16 @@ public class SensorConfig
 		return autoSwitch;
 	}
 	
+	public ITimer getTimer() {
+		return timer;
+	}
+	
+	public ILimitSwitch getLimitSwitch() {
+		return digitalLimitSwitch;
+	}
+	
+	public IPIDFeedbackDevice getQuadEncoder()
+	{
+		return launcherEncoder;
+	}
 }

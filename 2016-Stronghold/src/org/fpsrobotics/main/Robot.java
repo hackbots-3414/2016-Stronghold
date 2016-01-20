@@ -2,18 +2,21 @@
 package org.fpsrobotics.main;
 
 
+import org.fpsrobotics.autonomous.IAutonomousControl;
 import org.fpsrobotics.sensors.SensorConfig;
 import org.fpsrobotics.teleop.ITeleopControl;
+import org.fpsrobotics.teleop.MullenatorTeleop;
 
 import edu.wpi.first.wpilibj.SampleRobot;
 
 public class Robot extends SampleRobot 
 {
 	ITeleopControl teleop;
+	IAutonomousControl auto;
 	
     public Robot() 
     {
-
+    	teleop = new MullenatorTeleop();
     }
     
     public void robotInit() 

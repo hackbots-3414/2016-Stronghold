@@ -1,13 +1,7 @@
 package org.fpsrobotics.sensors;
 
 public interface ITimer {
-
-	public long getTimeInMillis();
-		
-	
-	public double getTimeInSeconds();
-		
-	
-	public double getTimeInMinutes();
-		
+	public void waitTimeInMillis(double milliseconds);
+	public void waitTimeInSeconds(double seconds);
+	public void waitTimeInMinutes(double minutes);
 }

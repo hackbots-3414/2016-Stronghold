@@ -1,26 +1,24 @@
 package org.fpsrobotics.sensors;
 
+import edu.wpi.first.wpilibj.Timer;
+
 public class ClockTimer implements ITimer {
 
 	@Override
-	public long getTimeInMillis()
-	{
-		// TODO Auto-generated method stub
-		return 0;
+	public void waitTimeInMillis(double milliseconds) {
+		Timer.delay(milliseconds*(1/1000));
 	}
 
 	@Override
-	public double getTimeInSeconds()
-	{
-		// TODO Auto-generated method stub
-		return 0;
+	public void waitTimeInSeconds(double seconds) {
+		Timer.delay(seconds);
+		
 	}
 
 	@Override
-	public double getTimeInMinutes()
-	{
-		// TODO Auto-generated method stub
-		return 0;
+	public void waitTimeInMinutes(double minutes) {
+		Timer.delay(minutes*60);
 	}
+
 
 }
