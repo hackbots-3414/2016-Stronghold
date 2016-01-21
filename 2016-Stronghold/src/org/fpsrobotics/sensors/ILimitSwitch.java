@@ -1,5 +1,6 @@
 package org.fpsrobotics.sensors;
 
-public interface ILimitSwitch {
-
+public interface ILimitSwitch 
+{
+	boolean getValue();
 }

@@ -1,5 +1,7 @@
 package org.fpsrobotics.sensors;
 
-public interface ICamera {
-
+public interface ICamera 
+{
+	void enable();
+	void disable();
 }
