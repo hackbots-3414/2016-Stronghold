@@ -22,13 +22,13 @@ public class Launcher implements ILauncher
 	private ILimitSwitch bottomLimit;
 	private IPIDFeedbackDevice encoder;
 	
-	public Launcher(ICANMotor motorLeft, ICANMotor motorRight, ILinearActuator linearActuator, ILimitSwitch bottomLimit, IPIDFeedbackDevice encoder)
+	public Launcher(ICANMotor motorLeft, ICANMotor motorRight, ILinearActuator linearActuator, ILimitSwitch bottomLimit, IPIDFeedbackDevice pot)
 	{
 		this.motorLeft = motorLeft;
 		this.motorRight = motorRight;
 		this.linearActuator = linearActuator;
 		this.bottomLimit = bottomLimit;
-		this.encoder = encoder;
+		this.encoder = pot;
 	}
 	
 	@Override
