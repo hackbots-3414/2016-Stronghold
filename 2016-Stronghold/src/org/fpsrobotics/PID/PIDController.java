@@ -4,47 +4,29 @@ import CANTalon.FeedbackDevice;
 
 public class PIDController implements IPIDFeedbackDevice 
 {
+	public static final double p = 1;
+	public static final double i = 1;
+	public static final double d = 1;
+	
+	private final CANTalonmotor = new CANTalon(1,2);
+	private final AnalogChannel pot = new AnalogChannel(4);
+	
+	public Wrist()
+	{
+		
+		super(2.0,0,0);
+		setSetpointRange(i,p);
+		setSetpoint(d);
+		enable()	
+	}
+	
+	protected double returnPIDInput()
+	{
+		return pot.getAverageVoltage()/MAX_VOLTAGE;
+	}
+	protected void PIDOutput(double output)
+	{
+		motor.set(output);
+	}
 
-	double P = 6;
-	double I = 6;
-	double D = 6;
-	
-	public static final double STOW = 0.0;
-	
-	public PIDController(){
-	setSetpoint(STOW);
-	enable();
-	}
-
-	private void setSetpoint(double stow2) {
-		// TODO Auto-generated method stub
-		
-	}		
-	
-	@Override
-	public double getCount() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-	@Override
-	public void enable() {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void disable() {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void resetCount() {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public FeedbackDevice whatPIDDevice() {
-		// TODO Auto-generated method stub
-		return null;
-										
-	}
 }
