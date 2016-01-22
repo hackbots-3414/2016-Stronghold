@@ -11,106 +11,113 @@ public class Launcher implements ILauncher
 	
 	private final double INTAKE_SPEED = 0.5;
 	private final double SHOOT_SPEED = 1.0;
+	private final double INTAKE_AUGER_SPEED = 0.2;
 	private final double LINEAR_ACTUATOR_SPEED = 0.8;
+	private final double AUGER_MOVE_SPEED = 0.5;
 	
 	private final int TOP_LIMIT_POT_VALUE = 300;
 	private final int BOTTOM_LIMIT_POT_VALUE = 0;
 	private final int SHOOTER_ENCODER_VALUE = 200;
 	
-	private ICANMotor motorLeft, motorRight;
-	private ICANMotor linearActuator;
-	private ILimitSwitch bottomLimit;
-	private IPIDFeedbackDevice pot;
+	private ICANMotor shooterMotorLeft, shooterMotorRight, augerIntakeMotor, augerLifterMotor, shooterLifterMotor;
+	private ILimitSwitch bottomLimitShooter, bottomLimitAuger, topLimitAuger;
+	private IPIDFeedbackDevice shooterPot;
 	
-	public Launcher(ICANMotor motorLeft, ICANMotor motorRight, ICANMotor linearActuator, ILimitSwitch bottomLimit, IPIDFeedbackDevice pot)
+	public Launcher(ICANMotor shooterMotorLeft, ICANMotor shooterMotorRight, ICANMotor shooterLifterMotor, ICANMotor augerIntakeMotor, ICANMotor augerLifterMotor, ILimitSwitch shooterBottomLimit, ILimitSwitch bottomLimitAuger, ILimitSwitch topLimitAuger, IPIDFeedbackDevice shooterPot)
 	{
-		this.motorLeft = motorLeft;
-		this.motorRight = motorRight;
-		this.linearActuator = linearActuator;
-		this.bottomLimit = bottomLimit;
-		this.pot = pot;
+		this.shooterMotorLeft = shooterMotorLeft;
+		this.shooterMotorRight = shooterMotorRight;
+		this.shooterLifterMotor = shooterLifterMotor;
+		this.bottomLimitShooter = shooterBottomLimit;
+		this.shooterPot = shooterPot;
+		this.augerIntakeMotor = augerIntakeMotor;
+		this.augerLifterMotor = augerLifterMotor;
+		this.bottomLimitAuger = bottomLimitAuger;
+		this.topLimitAuger = topLimitAuger;
 	}
 	
 	@Override
 	public void intake()
 	{
-		motorLeft.setSpeed(INTAKE_SPEED);
-		motorRight.setSpeed(INTAKE_SPEED);
+		augerIntakeMotor.setSpeed(-INTAKE_AUGER_SPEED);
+		
+		shooterMotorLeft.setSpeed(INTAKE_SPEED);
+		shooterMotorRight.setSpeed(INTAKE_SPEED);
 	}
 	
 	@Override
 	public void shoot()
 	{
-		motorLeft.setSpeed(SHOOT_SPEED);
-		motorRight.setSpeed(SHOOT_SPEED);
+		shooterMotorLeft.setSpeed(SHOOT_SPEED);
+		shooterMotorRight.setSpeed(SHOOT_SPEED);
 	}
 
 	@Override
 	public void stop()
 	{
-		motorLeft.stop();
-		motorRight.stop();
+		shooterMotorLeft.stop();
+		shooterMotorRight.stop();
 	}
 
 	@Override
 	public void setP(double p) 
 	{
-		motorLeft.setP(p);
-		motorRight.setP(p);
+		shooterMotorLeft.setP(p);
+		shooterMotorRight.setP(p);
 	}
 
 	@Override
 	public void setI(double i) 
 	{
-		motorLeft.setI(i);
-		motorRight.setI(i);
+		shooterMotorLeft.setI(i);
+		shooterMotorRight.setI(i);
 	}
 
 	@Override
 	public void setD(double d) 
 	{
-		motorLeft.setD(d);
-		motorRight.setD(d);
+		shooterMotorLeft.setD(d);
+		shooterMotorRight.setD(d);
 	}
 
 	@Override
 	public void setPIDFeedbackDevice(IPIDFeedbackDevice device) 
 	{
-		motorLeft.setPIDFeedbackDevice(device);
-		motorRight.setPIDFeedbackDevice(device);
+		shooterMotorLeft.setPIDFeedbackDevice(device);
+		shooterMotorRight.setPIDFeedbackDevice(device);
 	}
 
 	@Override
 	public IPIDFeedbackDevice getPIDFeedbackDevice() 
 	{
-		return motorLeft.getPIDFeedbackDevice();
+		return shooterMotorLeft.getPIDFeedbackDevice();
 	}
 
 	@Override
 	public void enablePID() 
 	{
-		motorLeft.enablePID();
-		motorRight.enablePID();
+		shooterMotorLeft.enablePID();
+		shooterMotorRight.enablePID();
 	}
 
 	@Override
 	public void disablePID() 
 	{
-		motorLeft.disablePID();
-		motorRight.disablePID();
+		shooterMotorLeft.disablePID();
+		shooterMotorRight.disablePID();
 	}
 
 	@Override
 	public TalonControlMode getControlMode() 
 	{
-		return motorLeft.getControlMode();
+		return shooterMotorLeft.getControlMode();
 	}
 
 	@Override
 	public void setControlMode(TalonControlMode mode) 
 	{
-		motorLeft.setControlMode(mode);
-		motorRight.setControlMode(mode);
+		shooterMotorLeft.setControlMode(mode);
+		shooterMotorRight.setControlMode(mode);
 	}
 
 	@Override
@@ -121,7 +128,7 @@ public class Launcher implements ILauncher
 			goDown();
 		}
 		
-		linearActuator.stop();
+		shooterLifterMotor.stop();
 		
 	}
 
@@ -133,15 +140,15 @@ public class Launcher implements ILauncher
 	@Override
 	public void goToPosition(int position) 
 	{
-		if(pot.getCount() < position)
+		if(shooterPot.getCount() < position)
 		{
-			while((pot.getCount() < position) && !atTopLimit())
+			while((shooterPot.getCount() < position) && !atTopLimit())
 			{
 				goUp();
 			}
 		} else
 		{
-			while((pot.getCount() > position) && !atBottomLimit())
+			while((shooterPot.getCount() > position) && !atBottomLimit())
 			{
 				goDown();
 			}
@@ -152,16 +159,16 @@ public class Launcher implements ILauncher
 	public void goUp() {
 		if(!atTopLimit())
 		{
-			if(pot.getCount() > (TOP_LIMIT_POT_VALUE-100))
+			if(shooterPot.getCount() > (TOP_LIMIT_POT_VALUE-100))
 			{
-				linearActuator.setSpeed(LINEAR_ACTUATOR_SPEED/5);
+				shooterLifterMotor.setSpeed(LINEAR_ACTUATOR_SPEED/5);
 			} else
 			{
-				linearActuator.setSpeed(LINEAR_ACTUATOR_SPEED);
+				shooterLifterMotor.setSpeed(LINEAR_ACTUATOR_SPEED);
 			}
 		} else
 		{
-			linearActuator.stop();
+			shooterLifterMotor.stop();
 		}
 	}
 
@@ -169,23 +176,23 @@ public class Launcher implements ILauncher
 	public void goDown() {
 		if(!atBottomLimit())
 		{
-			if(pot.getCount() < (TOP_LIMIT_POT_VALUE+100))
+			if(shooterPot.getCount() < (TOP_LIMIT_POT_VALUE+100))
 			{
-				linearActuator.setSpeed(-LINEAR_ACTUATOR_SPEED/5);
+				shooterLifterMotor.setSpeed(-LINEAR_ACTUATOR_SPEED/5);
 			} else
 			{
-				linearActuator.setSpeed(-LINEAR_ACTUATOR_SPEED);
+				shooterLifterMotor.setSpeed(-LINEAR_ACTUATOR_SPEED);
 			}
 		} else
 		{
-			linearActuator.stop();
+			shooterLifterMotor.stop();
 		}
 		
 	}
 	
 	private boolean atTopLimit()
 	{
-		if(pot.getCount() >= TOP_LIMIT_POT_VALUE)
+		if(shooterPot.getCount() >= TOP_LIMIT_POT_VALUE)
 		{
 			return true;
 		}
@@ -195,7 +202,7 @@ public class Launcher implements ILauncher
 	
 	private boolean atBottomLimit()
 	{
-		if(pot.getCount() <= BOTTOM_LIMIT_POT_VALUE || bottomLimit.getValue())
+		if(shooterPot.getCount() <= BOTTOM_LIMIT_POT_VALUE || bottomLimitShooter.getValue())
 		{
 			return true;
 		}
@@ -209,6 +216,24 @@ public class Launcher implements ILauncher
 		if(!atTopLimit())
 		{
 			goUp();
+		}
+	}
+
+	@Override
+	public void raiseArm() 
+	{
+		if(!topLimitAuger.getValue())
+		{
+			augerLifterMotor.setSpeed(AUGER_MOVE_SPEED);
+		}
+	}
+
+	@Override
+	public void lowerArm() 
+	{
+		if(!bottomLimitAuger.getValue())
+		{
+			augerLifterMotor.setSpeed(-AUGER_MOVE_SPEED);
 		}
 	}
 

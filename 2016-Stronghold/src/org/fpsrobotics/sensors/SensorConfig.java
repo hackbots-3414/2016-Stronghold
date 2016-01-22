@@ -17,6 +17,9 @@ public class SensorConfig
 	private final int HALL_EFFECT_BOTTOM_PORT = 0;
 	private final int HALL_EFFECT_TOP_PORT = 1;
 	
+	private final int AUGER_BOTTOM_LIMIT_SWITCH = 3;
+	private final int AUGER_TOP_LIMIT_SWITCH = 4;
+	
 	private final String CAMERA_USB_PORT = "cam0";
 	
 	private IJoystick leftJoystick;
@@ -27,6 +30,8 @@ public class SensorConfig
 	private ITimer timer;
 	
 	private ILimitSwitch digitalLimitSwitch;
+	private ILimitSwitch augerBottomLimitSwitch;
+	private ILimitSwitch augerTopLimitSwitch;
 	
 	private IPIDFeedbackDevice launcherPot;
 	
@@ -47,11 +52,15 @@ public class SensorConfig
 		autoSwitch = new AutonomousSwitches(AUTO_SWITCH_ONES, AUTO_SWITCH_TWOS, AUTO_SWITCH_FOURS);
 		
 		digitalLimitSwitch = new DigitalLimitSwitch(DIGITAL_LIMIT_SWITCH_CHANNEL);
+		augerBottomLimitSwitch = new DigitalLimitSwitch(AUGER_BOTTOM_LIMIT_SWITCH);
+		augerTopLimitSwitch = new DigitalLimitSwitch(AUGER_TOP_LIMIT_SWITCH);
 		
 		launcherPot = new Potentiometer(POTENTIOMETER_CHANNEL);
 		
 		bottomLimitSensor = new AndyMarkHallEffect(HALL_EFFECT_BOTTOM_PORT);
 		topLimitSensor = new AndyMarkHallEffect(HALL_EFFECT_TOP_PORT);
+		
+		
 		
 		camera = new MicrosoftLifeCam(CAMERA_USB_PORT);
 	}
@@ -112,5 +121,13 @@ public class SensorConfig
 	public ICamera getCamera()
 	{
 		return camera;
+	}
+	
+	public ILimitSwitch getAugerBottomLimitSwitch() {
+		return augerBottomLimitSwitch;
+	}
+
+	public ILimitSwitch getAugerTopLimitSwitch() {
+		return augerTopLimitSwitch;
 	}
 }

@@ -19,6 +19,8 @@ public class ActuatorConfig
 	private static final int RIGHT_SHOOTER_MOTOR = 6;
 	
 	private static final int LINEAR_ACTUATOR_MOTOR = 7;
+	private static final int AUGER_INTAKE_MOTOR = 8;
+	private static final int AUGER_LIFTER_MOTOR = 9;
 	
 	private static final double driveTrainP = 0.0000001;
 	private static final double driveTrainI = 0.0;
@@ -37,6 +39,9 @@ public class ActuatorConfig
 	private CANTalon leftShooterMotor;
 	private CANTalon rightShooterMotor;
 	
+	private CANTalon augerIntakeMotor;
+	private CANTalon augerLifterMotor;
+	
 	private CANTalon linearActuator;
 	
 	private ActuatorConfig()
@@ -51,6 +56,9 @@ public class ActuatorConfig
 		
 		linearActuator = new CANTalon(LINEAR_ACTUATOR_MOTOR);
 		
+		augerIntakeMotor = new CANTalon(AUGER_INTAKE_MOTOR);
+		augerLifterMotor = new CANTalon(AUGER_LIFTER_MOTOR);
+		
 		driveTrain = new TankDrive(new DoubleMotor(new CANMotor(leftFrontMotor, false, new BuiltInCANTalonEncoder(leftFrontMotor)), new CANMotor(leftRearMotor, false, new BuiltInCANTalonEncoder(leftRearMotor))), new DoubleMotor(new CANMotor(rightFrontMotor, true, new BuiltInCANTalonEncoder(rightFrontMotor)), new CANMotor(rightRearMotor, true, new BuiltInCANTalonEncoder(rightRearMotor))), new Gyroscope(GYROSCOPE_CHANNEL));
 		
 		driveTrain.setP(driveTrainP);
@@ -61,7 +69,11 @@ public class ActuatorConfig
 				(leftShooterMotor, false, new BuiltInCANTalonEncoder(leftShooterMotor))
 				, new CANMotor(rightShooterMotor, true, new BuiltInCANTalonEncoder(rightShooterMotor))
 				, new CANMotor(linearActuator, false)
+				, new CANMotor(augerIntakeMotor, false)
+				, new CANMotor(augerLifterMotor, false)
 				, SensorConfig.getInstance().getLimitSwitch()
+				, SensorConfig.getInstance().getAugerBottomLimitSwitch()
+				, SensorConfig.getInstance().getAugerTopLimitSwitch()
 				, SensorConfig.getInstance().getShooterPot()); //One inverse, one not...accounts for shooting and in-take opposite directions
 	}
 
