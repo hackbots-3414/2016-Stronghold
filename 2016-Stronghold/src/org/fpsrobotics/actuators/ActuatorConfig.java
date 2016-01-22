@@ -37,7 +37,7 @@ public class ActuatorConfig
 	private CANTalon leftShooterMotor;
 	private CANTalon rightShooterMotor;
 	
-	private ICANMotor linearActuator;
+	private CANTalon linearActuator;
 	
 	private ActuatorConfig()
 	{
@@ -49,7 +49,7 @@ public class ActuatorConfig
 		leftShooterMotor = new CANTalon(LEFT_SHOOTER_MOTOR);
 		rightShooterMotor = new CANTalon(RIGHT_SHOOTER_MOTOR);
 		
-		linearActuator = new CANMotor(new CANTalon(LINEAR_ACTUATOR_MOTOR), false);
+		linearActuator = new CANTalon(LINEAR_ACTUATOR_MOTOR);
 		
 		driveTrain = new TankDrive(new DoubleMotor(new CANMotor(leftFrontMotor, false, new BuiltInCANTalonEncoder(leftFrontMotor)), new CANMotor(leftRearMotor, false, new BuiltInCANTalonEncoder(leftRearMotor))), new DoubleMotor(new CANMotor(rightFrontMotor, true, new BuiltInCANTalonEncoder(rightFrontMotor)), new CANMotor(rightRearMotor, true, new BuiltInCANTalonEncoder(rightRearMotor))), new Gyroscope(GYROSCOPE_CHANNEL));
 		
@@ -60,9 +60,9 @@ public class ActuatorConfig
 		launcher = new Launcher(new CANMotor
 				(leftShooterMotor, false, new BuiltInCANTalonEncoder(leftShooterMotor))
 				, new CANMotor(rightShooterMotor, true, new BuiltInCANTalonEncoder(rightShooterMotor))
-				, new DartLinearActuator(linearActuator, SensorConfig.getInstance().getTopLimitSensor(), SensorConfig.getInstance().getBottomLimitSensor())
+				, new CANMotor(linearActuator, false)
 				, SensorConfig.getInstance().getLimitSwitch()
-				, SensorConfig.getInstance().getShooterPot()); //One inverse, one not...accounts for shooting and intake opposite directions
+				, SensorConfig.getInstance().getShooterPot()); //One inverse, one not...accounts for shooting and in-take opposite directions
 	}
 
 	public static synchronized ActuatorConfig getInstance()

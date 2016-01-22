@@ -13,22 +13,22 @@ public class Launcher implements ILauncher
 	private final double SHOOT_SPEED = 1.0;
 	private final double LINEAR_ACTUATOR_SPEED = 0.8;
 	
-	private final int TOP_LIMIT_ENCODER_VALUE = 300;
-	private final int BOTTOM_LIMIT_ENCODER_VALUE = 0;
+	private final int TOP_LIMIT_POT_VALUE = 300;
+	private final int BOTTOM_LIMIT_POT_VALUE = 0;
 	private final int SHOOTER_ENCODER_VALUE = 200;
 	
 	private ICANMotor motorLeft, motorRight;
-	private ILinearActuator linearActuator;
+	private ICANMotor linearActuator;
 	private ILimitSwitch bottomLimit;
-	private IPIDFeedbackDevice encoder;
+	private IPIDFeedbackDevice pot;
 	
-	public Launcher(ICANMotor motorLeft, ICANMotor motorRight, ILinearActuator linearActuator, ILimitSwitch bottomLimit, IPIDFeedbackDevice pot)
+	public Launcher(ICANMotor motorLeft, ICANMotor motorRight, ICANMotor linearActuator, ILimitSwitch bottomLimit, IPIDFeedbackDevice pot)
 	{
 		this.motorLeft = motorLeft;
 		this.motorRight = motorRight;
 		this.linearActuator = linearActuator;
 		this.bottomLimit = bottomLimit;
-		this.encoder = pot;
+		this.pot = pot;
 	}
 	
 	@Override
@@ -116,21 +116,9 @@ public class Launcher implements ILauncher
 	@Override
 	public void goToBottom() 
 	{
-		linearActuator.setSpeed(-LINEAR_ACTUATOR_SPEED);
-		
-		while(encoder.getCount() >= 100)
-		{
-			if(atBottomLimit())
-			{
-				break;
-			}
-		}
-		
-		linearActuator.setSpeed(-LINEAR_ACTUATOR_SPEED/5);
-		
 		while(!atBottomLimit())
 		{
-			
+			goDown();
 		}
 		
 		linearActuator.stop();
@@ -143,16 +131,17 @@ public class Launcher implements ILauncher
 	}
 
 	@Override
-	public void goToPosition(int position) {
-		if(encoder.getCount() < position)
+	public void goToPosition(int position) 
+	{
+		if(pot.getCount() < position)
 		{
-			while((encoder.getCount() < position) && !atTopLimit())
+			while((pot.getCount() < position) && !atTopLimit())
 			{
 				goUp();
 			}
 		} else
 		{
-			while((encoder.getCount() > position) && !atBottomLimit())
+			while((pot.getCount() > position) && !atBottomLimit())
 			{
 				goDown();
 			}
@@ -163,7 +152,13 @@ public class Launcher implements ILauncher
 	public void goUp() {
 		if(!atTopLimit())
 		{
-			linearActuator.setSpeed(LINEAR_ACTUATOR_SPEED);
+			if(pot.getCount() > (TOP_LIMIT_POT_VALUE-100))
+			{
+				linearActuator.setSpeed(LINEAR_ACTUATOR_SPEED/5);
+			} else
+			{
+				linearActuator.setSpeed(LINEAR_ACTUATOR_SPEED);
+			}
 		} else
 		{
 			linearActuator.stop();
@@ -174,7 +169,13 @@ public class Launcher implements ILauncher
 	public void goDown() {
 		if(!atBottomLimit())
 		{
-			linearActuator.setSpeed(-LINEAR_ACTUATOR_SPEED);
+			if(pot.getCount() < (TOP_LIMIT_POT_VALUE+100))
+			{
+				linearActuator.setSpeed(-LINEAR_ACTUATOR_SPEED/5);
+			} else
+			{
+				linearActuator.setSpeed(-LINEAR_ACTUATOR_SPEED);
+			}
 		} else
 		{
 			linearActuator.stop();
@@ -184,7 +185,7 @@ public class Launcher implements ILauncher
 	
 	private boolean atTopLimit()
 	{
-		if(encoder.getCount() >= TOP_LIMIT_ENCODER_VALUE)
+		if(pot.getCount() >= TOP_LIMIT_POT_VALUE)
 		{
 			return true;
 		}
@@ -194,12 +195,21 @@ public class Launcher implements ILauncher
 	
 	private boolean atBottomLimit()
 	{
-		if(encoder.getCount() <= BOTTOM_LIMIT_ENCODER_VALUE || bottomLimit.getValue())
+		if(pot.getCount() <= BOTTOM_LIMIT_POT_VALUE || bottomLimit.getValue())
 		{
 			return true;
 		}
 		
 		return false;
+	}
+
+	@Override
+	public void goToTopLimit() 
+	{
+		if(!atTopLimit())
+		{
+			goUp();
+		}
 	}
 
 }

@@ -12,5 +12,6 @@ public interface ILauncher extends IPIDEnabledDevice
 	public void intake();
 	public void shoot();
 	public void stop();
+	public void goToTopLimit();
 
 }
