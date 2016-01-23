@@ -132,4 +132,10 @@ public class DoubleMotor implements ICANMotor
 		}
 	}
 
+	@Override
+	public void PIDOutput() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

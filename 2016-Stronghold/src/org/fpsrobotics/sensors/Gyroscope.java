@@ -2,38 +2,52 @@ package org.fpsrobotics.sensors;
 
 import org.fpsrobotics.PID.IPIDFeedbackDevice;
 
+import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 
 public class Gyroscope implements IPIDFeedbackDevice
 {
-
+	AnalogGyro gyro;
+	boolean enabled;
+	
+	public Gyroscope(int channel)
+	{
+		gyro = new AnalogGyro(channel);
+		
+		gyro.initGyro();
+		
+		enabled = true;
+	}
+	
 	@Override
 	public double getCount() {
-		// TODO Auto-generated method stub
-		return 0;
+		if(enabled)
+		{
+			return gyro.getAngle();
+		} else
+		{
+			return 0;
+		}
 	}
 
 	@Override
 	public void enable() {
-		// TODO Auto-generated method stub
-		
+		enabled = true;
 	}
 
 	@Override
 	public void disable() {
-		// TODO Auto-generated method stub
-		
+		enabled = false;
 	}
 
 	@Override
 	public void resetCount() {
-		// TODO Auto-generated method stub
-		
+		gyro.reset();
 	}
 
 	@Override
 	public FeedbackDevice whatPIDDevice() {
-		// TODO Auto-generated method stub
+		// isn't actually a PID device... 
 		return null;
 	}
 

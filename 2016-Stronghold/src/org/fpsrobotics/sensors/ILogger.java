@@ -1,5 +1,6 @@
 package org.fpsrobotics.sensors;
 
-public interface ILogger {
-
+public interface ILogger 
+{
+	void reportInformation(OutputDevice device);
 }

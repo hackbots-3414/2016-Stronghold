@@ -138,4 +138,10 @@ public class CANMotor implements ICANMotor
 		canMotor.set(deviceID);
 	}
 
+	@Override
+	public void PIDOutput() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

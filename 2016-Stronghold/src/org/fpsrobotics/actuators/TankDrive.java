@@ -1,6 +1,7 @@
 package org.fpsrobotics.actuators;
 
 import org.fpsrobotics.PID.IPIDFeedbackDevice;
+import org.fpsrobotics.sensors.Gyroscope;
 
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 
@@ -8,11 +9,24 @@ public class TankDrive implements IDriveTrain
 {
 //	double p, i, d;
 	private DoubleMotor motorLeft, motorRight;
+
+	private Gyroscope gyro;
 	
 	public TankDrive(DoubleMotor motorLeft, DoubleMotor motorRight)
 	{
 		this.motorLeft = motorLeft;
 		this.motorRight = motorRight;
+	}
+	
+	public TankDrive(DoubleMotor motorLeft, DoubleMotor motorRight, Gyroscope gyro)
+	{
+		this.motorLeft = motorLeft;
+		this.motorRight = motorRight;
+		this.gyro = gyro;
+	}
+	
+	public Gyroscope getGyro() {
+		return gyro;
 	}
 	
 	@Override
@@ -117,6 +131,84 @@ public class TankDrive implements IDriveTrain
 	{
 		motorLeft.setControlMode(mode);
 		motorRight.setControlMode(mode);
+	}
+
+	@Override
+	public void turnLeft(double speed, double degrees) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void turnRight(double speed, double degrees) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	final double Kp = 0.03;
+	
+	@Override
+	public void goStraight(double speed, int distance) {
+		
+		motorLeft.disablePID();
+		motorRight.disablePID();
+		
+		motorLeft.CANMotorOne.getPIDFeedbackDevice().resetCount();
+		motorRight.CANMotorOne.getPIDFeedbackDevice().resetCount();
+		
+		for(double i = 0; i < distance; i += (distance/1000))
+		{
+			drive(speed, -gyro.getCount() * Kp);
+			
+			if(distance <= motorLeft.CANMotorOne.getPIDFeedbackDevice().getCount() || distance <= motorRight.CANMotorOne.getPIDFeedbackDevice().getCount())
+			{
+				break;
+			}
+		}
+		
+		motorLeft.enablePID();
+		motorRight.enablePID();
+		
+	}
+
+	@Override
+	public void goBackward(double speed, int distance) {
+		goStraight(-speed, distance);
+	}
+	
+	final double m_sensitivity = 0.5;
+	
+	private void drive(double outputMagnitude, double curve)
+	{
+		double leftOutput, rightOutput;
+		
+		if (curve < 0) {
+		      double value = Math.log(-curve);
+		      double ratio = (value - m_sensitivity) / (value + m_sensitivity);
+		      if (ratio == 0) {
+		        ratio = .0000000001;
+		      }
+		      leftOutput = outputMagnitude / ratio;
+		      rightOutput = outputMagnitude;
+		    } else if (curve > 0) {
+		      double value = Math.log(curve);
+		      double ratio = (value - m_sensitivity) / (value + m_sensitivity);
+		      if (ratio == 0) {
+		        ratio = .0000000001;
+		      }
+		      leftOutput = outputMagnitude;
+		      rightOutput = outputMagnitude / ratio;
+		    } else {
+		      leftOutput = outputMagnitude;
+		      rightOutput = outputMagnitude;
+		    }
+		    setSpeed(leftOutput, rightOutput);
+	}
+
+	@Override
+	public void PIDOutput() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -1,5 +1,6 @@
 package org.fpsrobotics.sensors;
 
-public enum ButtonJoystick {
-
+public enum ButtonJoystick 
+{
+	ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN;
 }
