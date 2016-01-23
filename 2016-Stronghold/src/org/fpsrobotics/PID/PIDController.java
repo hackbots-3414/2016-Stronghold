@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj.command.PIDSubsystem;
 
 public class PIDController extends PIDSubsystem{ 
 
-
 	public PIDController(double p , double i, double d) {
 		super("PIDController",2, 0, 0);
 		setSetpoint(d);
