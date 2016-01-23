@@ -15,6 +15,7 @@ public class ActuatorConfig
 	private static final int MOTOR_RIGHT_FRONT = 3;
 	private static final int MOTOR_RIGHT_REAR = 4;
 	
+	/*
 	private static final int LEFT_SHOOTER_MOTOR = 5;
 	private static final int RIGHT_SHOOTER_MOTOR = 6;
 	
@@ -26,16 +27,23 @@ public class ActuatorConfig
 	private static final double driveTrainI = 0.0;
 	private static final double driveTrainD = 0.0;
 	
+	/*
 	private static final int GYROSCOPE_CHANNEL = 0;
+	*/
 	
 	private IDriveTrain driveTrain;
-	private ILauncher launcher;
+	
+	//private ILauncher launcher;
 	
 	private CANTalon leftFrontMotor;
 	private CANTalon leftRearMotor;
 	private CANTalon rightFrontMotor;
 	private CANTalon rightRearMotor;
 	
+	private DoubleMotor leftDoubleMotor;
+	private DoubleMotor rightDoubleMotor;
+	
+	/*
 	private CANTalon leftShooterMotor;
 	private CANTalon rightShooterMotor;
 	
@@ -43,6 +51,7 @@ public class ActuatorConfig
 	private CANTalon augerLifterMotor;
 	
 	private CANTalon linearActuator;
+	*/
 	
 	private ActuatorConfig()
 	{
@@ -51,6 +60,19 @@ public class ActuatorConfig
 		rightFrontMotor = new CANTalon(MOTOR_RIGHT_FRONT);
 		rightRearMotor = new CANTalon(MOTOR_RIGHT_REAR);
 		
+		CANMotor leftFrontCANMotor = new CANMotor(leftFrontMotor, false);
+		CANMotor leftRearCANMotor = new CANMotor(leftRearMotor, false);
+		
+		CANMotor rightFrontCANMotor = new CANMotor(rightFrontMotor, false);
+		CANMotor rightRearCANMotor = new CANMotor(rightRearMotor, false);
+		
+		leftDoubleMotor = new DoubleMotor(leftFrontCANMotor, leftRearCANMotor);
+		rightDoubleMotor = new DoubleMotor(rightFrontCANMotor, rightRearCANMotor);
+		
+		driveTrain = new TankDrive(leftDoubleMotor, rightDoubleMotor);
+		driveTrain.disablePID();
+		
+		/*
 		leftShooterMotor = new CANTalon(LEFT_SHOOTER_MOTOR);
 		rightShooterMotor = new CANTalon(RIGHT_SHOOTER_MOTOR);
 		
@@ -58,8 +80,6 @@ public class ActuatorConfig
 		
 		augerIntakeMotor = new CANTalon(AUGER_INTAKE_MOTOR);
 		augerLifterMotor = new CANTalon(AUGER_LIFTER_MOTOR);
-		
-		driveTrain = new TankDrive(new DoubleMotor(new CANMotor(leftFrontMotor, false, new BuiltInCANTalonEncoder(leftFrontMotor)), new CANMotor(leftRearMotor, false, new BuiltInCANTalonEncoder(leftRearMotor))), new DoubleMotor(new CANMotor(rightFrontMotor, true, new BuiltInCANTalonEncoder(rightFrontMotor)), new CANMotor(rightRearMotor, true, new BuiltInCANTalonEncoder(rightRearMotor))), new Gyroscope(GYROSCOPE_CHANNEL));
 		
 		driveTrain.setP(driveTrainP);
 		driveTrain.setI(driveTrainI);
@@ -75,6 +95,7 @@ public class ActuatorConfig
 				, SensorConfig.getInstance().getAugerBottomLimitSwitch()
 				, SensorConfig.getInstance().getAugerTopLimitSwitch()
 				, SensorConfig.getInstance().getShooterPot()); //One inverse, one not...accounts for shooting and in-take opposite directions
+		*/
 	}
 
 	public static synchronized ActuatorConfig getInstance()
@@ -92,8 +113,10 @@ public class ActuatorConfig
 		return driveTrain;
 	}
 	
+	/*
 	public ILauncher getLauncher()
 	{
 		return launcher;
 	}
+	*/
 }

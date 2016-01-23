@@ -14,13 +14,13 @@ public class Logitech3DJoystick implements IJoystick
 	@Override
 	public double getX() 
 	{
-		return joy.getX();
+		return joy.getRawAxis(0);
 	}
 
 	@Override
 	public double getY() 
 	{
-		return joy.getY();
+		return joy.getRawAxis(1);
 	}
 
 	@Override

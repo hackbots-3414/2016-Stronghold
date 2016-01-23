@@ -15,7 +15,7 @@ public class CANMotor implements ICANMotor
 	
 	public CANMotor(CANTalon motor, boolean invertDirection)
 	{
-		this.setControlMode(TalonControlMode.Speed);
+		motor.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
 		
 		this.canMotor = motor;
 		this.invertDirection = invertDirection;
@@ -23,7 +23,7 @@ public class CANMotor implements ICANMotor
 	
 	public CANMotor(CANTalon motor, boolean invertDirection, IPIDFeedbackDevice device)
 	{
-		this.setControlMode(TalonControlMode.Speed);
+		motor.changeControlMode(TalonControlMode.PercentVbus);
 		
 		this.canMotor = motor;
 		this.invertDirection = invertDirection;
@@ -65,13 +65,13 @@ public class CANMotor implements ICANMotor
 	@Override
 	public void enablePID() 
 	{
-		canMotor.enableControl();
+		// TODO: implement later?
 	}
 
 	@Override
 	public void disablePID() 
 	{
-		canMotor.disableControl();
+		canMotor.changeControlMode(TalonControlMode.PercentVbus);
 	}
 
 	@Override
@@ -95,6 +95,7 @@ public class CANMotor implements ICANMotor
 	@Override
 	public void setSpeed(double speed) 
 	{
+		
 		invert = 1;
 		
 		if(invertDirection)

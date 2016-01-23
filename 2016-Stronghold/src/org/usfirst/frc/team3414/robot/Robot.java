@@ -1,12 +1,14 @@
 
-package org.fpsrobotics.main;
+package org.usfirst.frc.team3414.robot;
 
 
+import org.fpsrobotics.actuators.ActuatorConfig;
 import org.fpsrobotics.autonomous.IAutonomousControl;
 import org.fpsrobotics.sensors.SensorConfig;
 import org.fpsrobotics.teleop.ITeleopControl;
 import org.fpsrobotics.teleop.MullenatorTeleop;
 
+import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.SampleRobot;
 
 public class Robot extends SampleRobot 
@@ -21,14 +23,16 @@ public class Robot extends SampleRobot
     
     public void robotInit() 
     {
-		//This must always get run at the start of init. Do not perform any init before this is called
-		RobotStatus.setIsRunning(true);
+		
     }
 
     public void autonomous() 
     {
+    	enabled();
+    	
     	// TODO: implement different autonomous modes
     	
+    	/*
     	switch (SensorConfig.getInstance().getAutoSwitch().getValue())
     	{
     	case 0:
@@ -48,20 +52,27 @@ public class Robot extends SampleRobot
     	case 7:
     		break;
     	}
+    	*/
     }
-
+    
     public void operatorControl() 
     {
+    	enabled();
     	teleop.doTeleop();
     }
     
-    public void disabledInit()
+    public void disabled()
     {
     	RobotStatus.setIsRunning(false);
     }
     
+    private void enabled()
+    {
+    	RobotStatus.setIsRunning(true);
+    }
+    
     public void test() 
     {
-    	
+    	enabled();
     }
 }

@@ -6,7 +6,7 @@ public class ClockTimer implements ITimer {
 
 	@Override
 	public void waitTimeInMillis(double milliseconds) {
-		Timer.delay(milliseconds*(1/1000));
+		Timer.delay(milliseconds/1000);
 	}
 
 	@Override

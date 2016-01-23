@@ -9,10 +9,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class GamepadLogger implements ILogger
 {
 	IGamepad gamepad;
-	PrintWriter writer;
+	//PrintWriter writer;
 	
 	public GamepadLogger(IGamepad gamepad)
 	{
+		/*
 		try
 		{
 			writer = new PrintWriter("gamepadLog.txt", "UTF-8");
@@ -21,6 +22,7 @@ public class GamepadLogger implements ILogger
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		*/
 		
 		this.gamepad = gamepad;
 	}
@@ -38,11 +40,13 @@ public class GamepadLogger implements ILogger
 			
 		} else if(device == OutputDevice.FILE)
 		{
+			/*
 			writer.println("Left X " + gamepad.getAnalogStickValue(AnalogStick.LEFT, GamepadDirection.HORIZONTAL));
 			writer.println("Right X " + gamepad.getAnalogStickValue(AnalogStick.RIGHT, GamepadDirection.HORIZONTAL));
 			
 			writer.println("Left Y " + gamepad.getAnalogStickValue(AnalogStick.LEFT, GamepadDirection.VERTICAL));
 			writer.println("Right Y " + gamepad.getAnalogStickValue(AnalogStick.RIGHT, GamepadDirection.VERTICAL));
+			*/
 		}
 	}
 

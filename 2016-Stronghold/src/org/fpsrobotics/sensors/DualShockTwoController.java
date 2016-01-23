@@ -24,19 +24,19 @@ public class DualShockTwoController implements IGamepad
 		{
 			if(direction == GamepadDirection.HORIZONTAL)
 			{
-				return joy.getRawAxis(1);
+				return joy.getRawAxis(0);
 			} else
 			{
-				return joy.getRawAxis(2);
+				return joy.getRawAxis(1);
 			}
 		} else
 		{
 			if(direction == GamepadDirection.HORIZONTAL)
 			{
-				return joy.getRawAxis(3);
+				return joy.getRawAxis(2);
 			} else
 			{
-				return joy.getRawAxis(4);
+				return -joy.getRawAxis(3);
 			}
 		}
 	}

@@ -5,7 +5,6 @@ import java.util.concurrent.Executors;
 
 import org.fpsrobotics.actuators.ActuatorConfig;
 import org.fpsrobotics.actuators.ILauncher;
-import org.fpsrobotics.main.RobotStatus;
 import org.fpsrobotics.sensors.ButtonGamepad;
 import org.fpsrobotics.sensors.GamepadLogger;
 import org.fpsrobotics.sensors.IGamepad;
@@ -13,6 +12,9 @@ import org.fpsrobotics.sensors.ILogger;
 import org.fpsrobotics.sensors.JoystickLogger;
 import org.fpsrobotics.sensors.OutputDevice;
 import org.fpsrobotics.sensors.SensorConfig;
+import org.usfirst.frc.team3414.robot.RobotStatus;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class MullenatorTeleop implements ITeleopControl
 {
@@ -30,11 +32,15 @@ public class MullenatorTeleop implements ITeleopControl
 		{
 			while(RobotStatus.isRunning())
 			{
-				ActuatorConfig.getInstance().getDriveTrain().setSpeed(SensorConfig.getInstance().getLeftJoystick().getY(), SensorConfig.getInstance().getRightJoystick().getY());
+				ActuatorConfig.getInstance().getDriveTrain().setSpeed(
+						SensorConfig.getInstance().getLeftJoystick().getY(),
+						SensorConfig.getInstance().getRightJoystick().getY());
+				
 				SensorConfig.getInstance().getTimer().waitTimeInMillis(50);
 			}
 		});
 		
+		/*
 		executor.submit(() ->
 		{
 			ILauncher launcher;
@@ -66,6 +72,7 @@ public class MullenatorTeleop implements ITeleopControl
 				}
 			}
 		});
+		*/
 		
 		executor.submit(() ->
 		{

@@ -6,6 +6,7 @@ public class SensorConfig
 {
 	private static SensorConfig singleton = null;
 	
+	/*
 	private final int AUTO_SWITCH_ONES = 0;
 	private final int AUTO_SWITCH_TWOS = 1;
 	private final int AUTO_SWITCH_FOURS = 2;
@@ -21,13 +22,19 @@ public class SensorConfig
 	private final int AUGER_TOP_LIMIT_SWITCH = 4;
 	
 	private final String CAMERA_USB_PORT = "cam0";
+	*/
 	
 	private IJoystick leftJoystick;
 	private IJoystick rightJoystick;
 	
+	/*
+	
 	private ICounterSwitch autoSwitch;
 	
+	*/
 	private ITimer timer;
+	
+	/*
 	
 	private ILimitSwitch digitalLimitSwitch;
 	private ILimitSwitch augerBottomLimitSwitch;
@@ -36,10 +43,15 @@ public class SensorConfig
 	private IPIDFeedbackDevice launcherPot;
 	
 	private IHallEffectSensor bottomLimitSensor, topLimitSensor;
+	*/
 	
 	private IGamepad gamepad;
 	
+	private IPowerBoard pdp;
+	
+	/*
 	private ICamera camera;
+	*/
 	
 	private SensorConfig()
 	{
@@ -49,6 +61,9 @@ public class SensorConfig
 		rightJoystick = new Logitech3DJoystick(1);
 		gamepad = new DualShockTwoController(2);
 		
+		pdp = new PowerDistributionPanel();
+		
+		/*
 		autoSwitch = new AutonomousSwitches(AUTO_SWITCH_ONES, AUTO_SWITCH_TWOS, AUTO_SWITCH_FOURS);
 		
 		digitalLimitSwitch = new DigitalLimitSwitch(DIGITAL_LIMIT_SWITCH_CHANNEL);
@@ -63,6 +78,7 @@ public class SensorConfig
 		
 		
 		camera = new MicrosoftLifeCam(CAMERA_USB_PORT);
+		*/
 	}
 
 	public static synchronized SensorConfig getInstance()
@@ -85,14 +101,19 @@ public class SensorConfig
 		return rightJoystick;
 	}
 	
+	/*
 	public ICounterSwitch getAutoSwitch() 
 	{
 		return autoSwitch;
 	}
 	
+	*/
+	
 	public ITimer getTimer() {
 		return timer;
 	}
+	
+	/*
 	
 	public ILimitSwitch getLimitSwitch() {
 		return digitalLimitSwitch;
@@ -113,11 +134,18 @@ public class SensorConfig
 		return topLimitSensor;
 	}
 	
+	*/
 	public IGamepad getGamepad()
 	{
 		return gamepad;
 	}
+
+	public IPowerBoard getPdp()
+	{
+		return pdp;
+	}
 	
+	/*
 	public ICamera getCamera()
 	{
 		return camera;
@@ -130,4 +158,5 @@ public class SensorConfig
 	public ILimitSwitch getAugerTopLimitSwitch() {
 		return augerTopLimitSwitch;
 	}
+	*/
 }

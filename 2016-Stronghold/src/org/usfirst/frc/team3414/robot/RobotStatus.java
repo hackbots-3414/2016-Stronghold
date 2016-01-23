@@ -1,9 +1,8 @@
-package org.fpsrobotics.main;
+package org.usfirst.frc.team3414.robot;
 
 public class RobotStatus 
 {
-
-	private static boolean isRunning;
+	private static boolean isRunning = false;
 
 	public static boolean isRunning() 
 	{
