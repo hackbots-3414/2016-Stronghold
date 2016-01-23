@@ -17,17 +17,18 @@ public class Launcher implements ILauncher
 	private final int BOTTOM_LIMIT_ENCODER_VALUE = 0;
 	private final int SHOOTER_ENCODER_VALUE = 200;
 	
-	private ICANMotor motorLeft, motorRight, linearActuator;
+	private ICANMotor motorLeft, motorRight;
+	private ILinearActuator linearActuator;
 	private ILimitSwitch bottomLimit;
 	private IPIDFeedbackDevice encoder;
 	
-	public Launcher(ICANMotor motorLeft, ICANMotor motorRight, ICANMotor linearActuator, ILimitSwitch bottomLimit, IPIDFeedbackDevice encoder)
+	public Launcher(ICANMotor motorLeft, ICANMotor motorRight, ILinearActuator linearActuator, ILimitSwitch bottomLimit, IPIDFeedbackDevice pot)
 	{
 		this.motorLeft = motorLeft;
 		this.motorRight = motorRight;
 		this.linearActuator = linearActuator;
 		this.bottomLimit = bottomLimit;
-		this.encoder = encoder;
+		this.encoder = pot;
 	}
 	
 	@Override

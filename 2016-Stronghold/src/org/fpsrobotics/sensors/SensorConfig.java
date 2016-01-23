@@ -12,8 +12,12 @@ public class SensorConfig
 	
 	private final int DIGITAL_LIMIT_SWITCH_CHANNEL = 3; //TODO: Fix later
 	
-	private final int QUAD_ENCODER_CHANNEL_ONE = 4; //TODO: Fix later
-	private final int QUAD_ENCODER_CHANNEL_TWO = 5; //TODO: Fix later
+	private final int POTENTIOMETER_CHANNEL = 2;
+	
+	private final int HALL_EFFECT_BOTTOM_PORT = 0;
+	private final int HALL_EFFECT_TOP_PORT = 1;
+	
+	private final String CAMERA_USB_PORT = "cam0";
 	
 	private IJoystick leftJoystick;
 	private IJoystick rightJoystick;
@@ -24,7 +28,13 @@ public class SensorConfig
 	
 	private ILimitSwitch digitalLimitSwitch;
 	
-	private IPIDFeedbackDevice launcherEncoder;
+	private IPIDFeedbackDevice launcherPot;
+	
+	private IHallEffectSensor bottomLimitSensor, topLimitSensor;
+	
+	private IGamepad gamepad;
+	
+	private ICamera camera;
 	
 	private SensorConfig()
 	{
@@ -32,12 +42,18 @@ public class SensorConfig
 		
 		leftJoystick = new Logitech3DJoystick(0);
 		rightJoystick = new Logitech3DJoystick(1);
+		gamepad = new DualShockTwoController(2);
 		
 		autoSwitch = new AutonomousSwitches(AUTO_SWITCH_ONES, AUTO_SWITCH_TWOS, AUTO_SWITCH_FOURS);
 		
 		digitalLimitSwitch = new DigitalLimitSwitch(DIGITAL_LIMIT_SWITCH_CHANNEL);
 		
-		launcherEncoder = new QuadEncoder(QUAD_ENCODER_CHANNEL_ONE, QUAD_ENCODER_CHANNEL_TWO);
+		launcherPot = new Potentiometer(POTENTIOMETER_CHANNEL);
+		
+		bottomLimitSensor = new AndyMarkHallEffect(HALL_EFFECT_BOTTOM_PORT);
+		topLimitSensor = new AndyMarkHallEffect(HALL_EFFECT_TOP_PORT);
+		
+		camera = new MicrosoftLifeCam(CAMERA_USB_PORT);
 	}
 
 	public static synchronized SensorConfig getInstance()
@@ -73,8 +89,28 @@ public class SensorConfig
 		return digitalLimitSwitch;
 	}
 	
-	public IPIDFeedbackDevice getQuadEncoder()
+	public IPIDFeedbackDevice getShooterPot()
 	{
-		return launcherEncoder;
+		return launcherPot;
+	}
+	
+	public IHallEffectSensor getBottomLimitSensor()
+	{
+		return bottomLimitSensor;
+	}
+
+	public IHallEffectSensor getTopLimitSensor()
+	{
+		return topLimitSensor;
+	}
+	
+	public IGamepad getGamepad()
+	{
+		return gamepad;
+	}
+	
+	public ICamera getCamera()
+	{
+		return camera;
 	}
 }

@@ -24,6 +24,8 @@ public class ActuatorConfig
 	private static final double driveTrainI = 0.0;
 	private static final double driveTrainD = 0.0;
 	
+	private static final int GYROSCOPE_CHANNEL = 0;
+	
 	private IDriveTrain driveTrain;
 	private ILauncher launcher;
 	
@@ -35,7 +37,7 @@ public class ActuatorConfig
 	private CANTalon leftShooterMotor;
 	private CANTalon rightShooterMotor;
 	
-	private CANTalon linearActuator;
+	private ICANMotor linearActuator;
 	
 	private ActuatorConfig()
 	{
@@ -47,9 +49,9 @@ public class ActuatorConfig
 		leftShooterMotor = new CANTalon(LEFT_SHOOTER_MOTOR);
 		rightShooterMotor = new CANTalon(RIGHT_SHOOTER_MOTOR);
 		
-		linearActuator = new CANTalon(LINEAR_ACTUATOR_MOTOR);
+		linearActuator = new CANMotor(new CANTalon(LINEAR_ACTUATOR_MOTOR), false);
 		
-		driveTrain = new TankDrive(new DoubleMotor(new CANMotor(leftFrontMotor, false, new BuiltInCANTalonEncoder(leftFrontMotor)), new CANMotor(leftRearMotor, false, new BuiltInCANTalonEncoder(leftRearMotor))), new DoubleMotor(new CANMotor(rightFrontMotor, true, new BuiltInCANTalonEncoder(rightFrontMotor)), new CANMotor(rightRearMotor, true, new BuiltInCANTalonEncoder(rightRearMotor))), new Gyroscope());
+		driveTrain = new TankDrive(new DoubleMotor(new CANMotor(leftFrontMotor, false, new BuiltInCANTalonEncoder(leftFrontMotor)), new CANMotor(leftRearMotor, false, new BuiltInCANTalonEncoder(leftRearMotor))), new DoubleMotor(new CANMotor(rightFrontMotor, true, new BuiltInCANTalonEncoder(rightFrontMotor)), new CANMotor(rightRearMotor, true, new BuiltInCANTalonEncoder(rightRearMotor))), new Gyroscope(GYROSCOPE_CHANNEL));
 		
 		driveTrain.setP(driveTrainP);
 		driveTrain.setI(driveTrainI);
@@ -58,9 +60,9 @@ public class ActuatorConfig
 		launcher = new Launcher(new CANMotor
 				(leftShooterMotor, false, new BuiltInCANTalonEncoder(leftShooterMotor))
 				, new CANMotor(rightShooterMotor, true, new BuiltInCANTalonEncoder(rightShooterMotor))
-				, new CANMotor(linearActuator, false)
+				, new DartLinearActuator(linearActuator, SensorConfig.getInstance().getTopLimitSensor(), SensorConfig.getInstance().getBottomLimitSensor())
 				, SensorConfig.getInstance().getLimitSwitch()
-				, SensorConfig.getInstance().getQuadEncoder()); //One inverse, one not...accounts for shooting and intake opposite directions
+				, SensorConfig.getInstance().getShooterPot()); //One inverse, one not...accounts for shooting and intake opposite directions
 	}
 
 	public static synchronized ActuatorConfig getInstance()
