@@ -16,7 +16,6 @@ public class PIDController extends PIDSubsystem
 	
 	public PIDController()
 	{
-		
 		super(2.0,0,0);
 		setSetpointRange(i,p);
 		setSetpoint(d);
