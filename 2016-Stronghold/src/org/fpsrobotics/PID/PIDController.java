@@ -1,6 +1,6 @@
 package org.fpsrobotics.PID;
 
-import CANTalon.FeedbackDevice;
+import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 
 public class PIDController implements IPIDFeedbackDevice 
 {
