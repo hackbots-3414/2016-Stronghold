@@ -7,7 +7,6 @@ public interface IPIDEnabledDevice
 	public void setP(double p);
 	public void setI(double i);
 	public void setD(double d);
-	
 	public void PIDOutput();
 	
 	public void setPIDFeedbackDevice(IPIDFeedbackDevice device);

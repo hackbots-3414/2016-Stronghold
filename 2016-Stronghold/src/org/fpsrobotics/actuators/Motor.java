@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Talon;
 
-public class Motor implements IMotor, IPIDEnabledDevice, IPIDFeedbackDevice
+public class Motor implements IMotor,IPIDEnabledDevice,IPIDFeedbackDevice
 {
 	double p, i, d, invert;
 	private IPIDFeedbackDevice device;
