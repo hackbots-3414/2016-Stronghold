@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.command.PIDSubsystem;
 
-public class PIDController extends PIDSubsystem{ 
+public class PIDController extends PIDSubsystem implements IPIDFeedbackDevice{ 
 
 	public PIDController(double p , double i, double d) {
 		super("PIDController",2, 0, 0);
