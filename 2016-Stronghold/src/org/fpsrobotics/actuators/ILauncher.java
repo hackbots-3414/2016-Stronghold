@@ -1,21 +1,20 @@
 package org.fpsrobotics.actuators;
 
-import org.fpsrobotics.PID.IPIDEnabledDevice;
-
-public interface ILauncher extends IPIDEnabledDevice
+public interface ILauncher
 {
-	public void goToBottom();
-	public void goToShootingPosition();
-	public void goToPosition(int position);
-	public void goUp();
-	public void goDown();
-	public void intake();
+	public void moveShooterToBottomLimit();
+	public void goToPresetPosition();
+	public void moveShooterToPosition(int position);
+	public void moveShooterUp();
+	public void moveShooterDown();
+	public void intakeBoulder();
 	public void shootSequence();
-	public void stop();
-	public void goToTopLimit();
-	public void raiseArm();
-	public void lowerArm();
-	public void spinUp();
-	public void launch();
+	public void stopShooterWheels();
+	public void moveShooterToTopLimit();
+	public void raiseAuger();
+	public void lowerAuger();
+	public void spinShooterUp();
+	public void launchBoulder();
+	public void augerGoToPosition(int position);
 
 }

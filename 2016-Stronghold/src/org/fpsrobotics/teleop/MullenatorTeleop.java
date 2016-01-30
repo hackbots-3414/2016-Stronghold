@@ -32,6 +32,10 @@ public class MullenatorTeleop implements ITeleopControl
 		{
 			while(RobotStatus.isRunning())
 			{
+				ActuatorConfig.getInstance().getDriveTrain().setP(SmartDashboard.getNumber("p-value", 1.0));
+				ActuatorConfig.getInstance().getDriveTrain().setI(SmartDashboard.getNumber("i-value", 0.0));
+				ActuatorConfig.getInstance().getDriveTrain().setD(SmartDashboard.getNumber("d-value", 0.0));
+				
 				ActuatorConfig.getInstance().getDriveTrain().setSpeed(
 						SensorConfig.getInstance().getLeftJoystick().getY(),
 						SensorConfig.getInstance().getRightJoystick().getY());

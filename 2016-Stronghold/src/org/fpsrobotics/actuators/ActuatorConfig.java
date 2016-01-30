@@ -65,17 +65,16 @@ public class ActuatorConfig
 		rightFrontMotor = new CANTalon(MOTOR_RIGHT_FRONT);
 		rightRearMotor = new CANTalon(MOTOR_RIGHT_REAR);
 		
-		leftFrontCANMotor = new CANMotor(leftFrontMotor, false);
+		leftFrontCANMotor = new CANMotor(leftFrontMotor, false, SensorConfig.getInstance().getLeftEncoder());
 		leftRearCANMotor = new CANMotor(leftRearMotor, false);
 		
-		rightFrontCANMotor = new CANMotor(rightFrontMotor, false);
+		rightFrontCANMotor = new CANMotor(rightFrontMotor, false, SensorConfig.getInstance().getRightEncoder());
 		rightRearCANMotor = new CANMotor(rightRearMotor, false);
 		
 		leftDoubleMotor = new DoubleMotor(leftFrontCANMotor, leftRearCANMotor);
 		rightDoubleMotor = new DoubleMotor(rightFrontCANMotor, rightRearCANMotor);
 		
 		driveTrain = new TankDrive(leftDoubleMotor, rightDoubleMotor);
-		driveTrain.disablePID();
 		
 		/*
 		leftShooterMotor = new CANTalon(LEFT_SHOOTER_MOTOR);
@@ -116,6 +115,16 @@ public class ActuatorConfig
 	public IDriveTrain getDriveTrain()
 	{
 		return driveTrain;
+	}
+
+	public CANTalon getLeftFrontMotor()
+	{
+		return leftFrontMotor;
+	}
+
+	public CANTalon getRightFrontMotor()
+	{
+		return rightFrontMotor;
 	}
 	
 	/*

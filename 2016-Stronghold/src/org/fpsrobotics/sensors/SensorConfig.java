@@ -1,6 +1,7 @@
 package org.fpsrobotics.sensors;
 
 import org.fpsrobotics.PID.IPIDFeedbackDevice;
+import org.fpsrobotics.actuators.ActuatorConfig;
 
 public class SensorConfig 
 {
@@ -26,6 +27,9 @@ public class SensorConfig
 	
 	private IJoystick leftJoystick;
 	private IJoystick rightJoystick;
+	
+	IPIDFeedbackDevice leftEncoder;
+	IPIDFeedbackDevice rightEncoder;
 	
 	/*
 	
@@ -62,6 +66,9 @@ public class SensorConfig
 		gamepad = new DualShockTwoController(2);
 		
 		pdp = new PowerDistributionPanel();
+		
+		leftEncoder = new BuiltInCANTalonEncoder(ActuatorConfig.getInstance().getLeftFrontMotor());
+		rightEncoder = new BuiltInCANTalonEncoder(ActuatorConfig.getInstance().getRightFrontMotor());
 		
 		/*
 		autoSwitch = new AutonomousSwitches(AUTO_SWITCH_ONES, AUTO_SWITCH_TWOS, AUTO_SWITCH_FOURS);
@@ -113,6 +120,17 @@ public class SensorConfig
 		return timer;
 	}
 	
+	
+	public IPIDFeedbackDevice getLeftEncoder()
+	{
+		return leftEncoder;
+	}
+
+	public IPIDFeedbackDevice getRightEncoder()
+	{
+		return rightEncoder;
+	}
+
 	/*
 	
 	public ILimitSwitch getLimitSwitch() {
