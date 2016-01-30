@@ -14,9 +14,9 @@ public class PIDController extends PIDSubsystem implements IPIDFeedbackDevice{
 		// TODO Auto-generated constructor stub
 	}
 
-	public static final double p = .001;
-	public static final double i = 1;
-	public static final double d = 1;
+	public static final double p = .1;
+	public static final double i = .01;
+	public static final double d = .001;
 	private final AnalogInput pot = new AnalogInput(2);
 	
 	private final CANTalon motor = new CANTalon(1,2);
