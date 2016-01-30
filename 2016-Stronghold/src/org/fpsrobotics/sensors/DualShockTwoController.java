@@ -4,25 +4,25 @@ import edu.wpi.first.wpilibj.Joystick;
 
 public class DualShockTwoController implements IGamepad
 {
-	Joystick joy;
-	
+	private Joystick joy;
+
 	public DualShockTwoController(int channel)
 	{
 		joy = new Joystick(channel);
 	}
-	
+
 	// horizontal left 1
 	// vertical left 2
-	
+
 	// horizontal right 3
 	// vertical right 4
-	
+
 	@Override
-	public double getAnalogStickValue(AnalogStick stick, GamepadDirection direction) 
+	public double getAnalogStickValue(AnalogStick stick, GamepadDirection direction)
 	{
-		if(stick == AnalogStick.LEFT)
+		if (stick == AnalogStick.LEFT)
 		{
-			if(direction == GamepadDirection.HORIZONTAL)
+			if (direction == GamepadDirection.HORIZONTAL)
 			{
 				return joy.getRawAxis(0);
 			} else
@@ -31,7 +31,7 @@ public class DualShockTwoController implements IGamepad
 			}
 		} else
 		{
-			if(direction == GamepadDirection.HORIZONTAL)
+			if (direction == GamepadDirection.HORIZONTAL)
 			{
 				return joy.getRawAxis(2);
 			} else
@@ -42,9 +42,9 @@ public class DualShockTwoController implements IGamepad
 	}
 
 	@Override
-	public boolean getButtonValue(ButtonGamepad button) 
+	public boolean getButtonValue(ButtonGamepad button)
 	{
-		switch(button)
+		switch (button)
 		{
 		case ONE:
 			return joy.getRawButton(1);
@@ -70,9 +70,10 @@ public class DualShockTwoController implements IGamepad
 			return joy.getRawButton(11);
 		case TWELVE:
 			return joy.getRawButton(12);
+		default:
+			return false;
 		}
-		
-		return false;
+
 	}
 
 }

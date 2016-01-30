@@ -10,10 +10,12 @@ public interface ILauncher extends IPIDEnabledDevice
 	public void goUp();
 	public void goDown();
 	public void intake();
-	public void shoot();
+	public void shootSequence();
 	public void stop();
 	public void goToTopLimit();
 	public void raiseArm();
 	public void lowerArm();
+	public void spinUp();
+	public void launch();
 
 }

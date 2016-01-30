@@ -2,8 +2,8 @@ package org.fpsrobotics.sensors;
 
 public interface IAccelerometer
 {
-	double getX();
-	double getY();
-	double getZ();
-	void reset();
+	public double getX();
+	public double getY();
+	public double getZ();
+	public void reset();
 }

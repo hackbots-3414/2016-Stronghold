@@ -164,15 +164,15 @@ public class TankDrive implements IDriveTrain
 			motorLeft.disablePID();
 			motorRight.disablePID();
 
-			motorLeft.CANMotorOne.getPIDFeedbackDevice().resetCount();
-			motorRight.CANMotorOne.getPIDFeedbackDevice().resetCount();
+			motorLeft.getCANMotorOne().getPIDFeedbackDevice().resetCount();
+			motorRight.getCANMotorOne().getPIDFeedbackDevice().resetCount();
 
 			for (double i = 0; i < distance; i += (distance / 1000))
 			{
 				drive(speed, -gyro.getCount() * Kp);
 
-				if (distance <= motorLeft.CANMotorOne.getPIDFeedbackDevice().getCount()
-						|| distance <= motorRight.CANMotorOne.getPIDFeedbackDevice().getCount())
+				if (distance <= motorLeft.getCANMotorOne().getPIDFeedbackDevice().getCount()
+						|| distance <= motorRight.getCANMotorOne().getPIDFeedbackDevice().getCount())
 				{
 					break;
 				}

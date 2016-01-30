@@ -2,6 +2,6 @@ package org.fpsrobotics.sensors;
 
 public interface IGamepad 
 {
-	double getAnalogStickValue(AnalogStick stick, GamepadDirection direction);
-	boolean getButtonValue(ButtonGamepad button);
+	public double getAnalogStickValue(AnalogStick stick, GamepadDirection direction);
+	public boolean getButtonValue(ButtonGamepad button);
 }

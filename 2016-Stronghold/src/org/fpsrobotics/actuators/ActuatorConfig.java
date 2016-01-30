@@ -27,7 +27,7 @@ public class ActuatorConfig
 	private static final double driveTrainI = 0.0;
 	private static final double driveTrainD = 0.0;
 	
-	/*
+	
 	private static final int GYROSCOPE_CHANNEL = 0;
 	*/
 	
@@ -53,6 +53,11 @@ public class ActuatorConfig
 	private CANTalon linearActuator;
 	*/
 	
+	private CANMotor leftFrontCANMotor;
+	private CANMotor leftRearCANMotor;
+	private CANMotor rightFrontCANMotor;
+	private CANMotor rightRearCANMotor;
+	
 	private ActuatorConfig()
 	{
 		leftFrontMotor = new CANTalon(MOTOR_LEFT_FRONT);
@@ -60,11 +65,11 @@ public class ActuatorConfig
 		rightFrontMotor = new CANTalon(MOTOR_RIGHT_FRONT);
 		rightRearMotor = new CANTalon(MOTOR_RIGHT_REAR);
 		
-		CANMotor leftFrontCANMotor = new CANMotor(leftFrontMotor, false);
-		CANMotor leftRearCANMotor = new CANMotor(leftRearMotor, false);
+		leftFrontCANMotor = new CANMotor(leftFrontMotor, false);
+		leftRearCANMotor = new CANMotor(leftRearMotor, false);
 		
-		CANMotor rightFrontCANMotor = new CANMotor(rightFrontMotor, false);
-		CANMotor rightRearCANMotor = new CANMotor(rightRearMotor, false);
+		rightFrontCANMotor = new CANMotor(rightFrontMotor, false);
+		rightRearCANMotor = new CANMotor(rightRearMotor, false);
 		
 		leftDoubleMotor = new DoubleMotor(leftFrontCANMotor, leftRearCANMotor);
 		rightDoubleMotor = new DoubleMotor(rightFrontCANMotor, rightRearCANMotor);

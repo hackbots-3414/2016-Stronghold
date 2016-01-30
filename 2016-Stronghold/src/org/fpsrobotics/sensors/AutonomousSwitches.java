@@ -4,9 +4,9 @@ import edu.wpi.first.wpilibj.DigitalInput;
 
 public class AutonomousSwitches implements ICounterSwitch
 {
-	DigitalInput ones;
-	DigitalInput twos;
-	DigitalInput fours;
+	private DigitalInput ones;
+	private DigitalInput twos;
+	private DigitalInput fours;
 	
 	public AutonomousSwitches(int channelOnes, int channelTwos, int channelFours)
 	{

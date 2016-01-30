@@ -7,19 +7,19 @@ import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 
 public class Potentiometer implements IPIDFeedbackDevice
 {
-	AnalogInput analog;
-	boolean enabled;
+	private AnalogInput analog;
+	private boolean isEnabled;
 	
 	public Potentiometer(int channel)
 	{
 		analog = new AnalogInput(channel);
-		enabled = true;
+		isEnabled = true;
 	}
 
 	@Override
 	public double getCount()
 	{
-		if(enabled)
+		if(isEnabled)
 		{
 			return analog.getValue();
 		} else
@@ -31,13 +31,13 @@ public class Potentiometer implements IPIDFeedbackDevice
 	@Override
 	public void enable()
 	{
-		enabled = true;
+		isEnabled = true;
 	}
 
 	@Override
 	public void disable()
 	{
-		enabled = false;
+		isEnabled = false;
 	}
 
 	@Override

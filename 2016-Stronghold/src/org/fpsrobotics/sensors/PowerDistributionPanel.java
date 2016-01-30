@@ -2,7 +2,7 @@ package org.fpsrobotics.sensors;
 
 public class PowerDistributionPanel implements IPowerBoard
 {
-	edu.wpi.first.wpilibj.PowerDistributionPanel pdp;
+	private edu.wpi.first.wpilibj.PowerDistributionPanel pdp;
 	
 	public PowerDistributionPanel()
 	{

@@ -4,33 +4,33 @@ import edu.wpi.first.wpilibj.Joystick;
 
 public class Logitech3DJoystick implements IJoystick
 {
-	Joystick joy;
-	
+	private Joystick joy;
+
 	public Logitech3DJoystick(int channel)
 	{
 		joy = new Joystick(channel);
 	}
 
 	@Override
-	public double getX() 
+	public double getX()
 	{
 		return joy.getRawAxis(0);
 	}
 
 	@Override
-	public double getY() 
+	public double getY()
 	{
 		return joy.getRawAxis(1);
 	}
 
 	@Override
-	public double getTwist() 
+	public double getTwist()
 	{
 		return joy.getTwist();
 	}
 
 	@Override
-	public boolean getButtonValue(ButtonJoystick value) 
+	public boolean getButtonValue(ButtonJoystick value)
 	{
 		switch (value)
 		{
@@ -48,9 +48,10 @@ public class Logitech3DJoystick implements IJoystick
 			return joy.getRawButton(6);
 		case SEVEN:
 			return joy.getRawButton(7);
+		default:
+			return false;
 		}
-		
-		return false;
+
 	}
 
 }

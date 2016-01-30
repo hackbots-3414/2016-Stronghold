@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.Talon;
 
 public class Motor implements IMotor
 {
-	double p, i, d, invert;
+	private double p, i, d, invert;
 	private IPIDFeedbackDevice device;
 	private boolean invertDirection;
 	
@@ -56,12 +56,7 @@ public class Motor implements IMotor
 	@Override
 	public void setSpeed(double speed) 
 	{
-		invert = 1;
-		
-		if(invertDirection)
-		{
-			invert = -1;
-		}
+		invert = (invertDirection) ? -1 : 1;
 		
 		if(device == null && motor != null)
 		{

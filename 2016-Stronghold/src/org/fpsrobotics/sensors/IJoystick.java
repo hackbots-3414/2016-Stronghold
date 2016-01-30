@@ -2,8 +2,8 @@ package org.fpsrobotics.sensors;
 
 public interface IJoystick 
 {
-	double getX();
-	double getY();
-	double getTwist();
-	boolean getButtonValue(ButtonJoystick value);
+	public double getX();
+	public double getY();
+	public double getTwist();
+	public boolean getButtonValue(ButtonJoystick value);
 }

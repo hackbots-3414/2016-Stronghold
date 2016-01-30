@@ -1,16 +1,39 @@
 package org.fpsrobotics.sensors;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.util.Calendar;
 
 public class JoystickLogger implements ILogger
 {
 	IJoystick joyLeft;
 	IJoystick joyRight;
+	PrintWriter bw;
 	
 	public JoystickLogger(IJoystick joyLeft, IJoystick joyRight)
 	{
 		this.joyLeft = joyLeft;
 		this.joyRight = joyRight;
+		
+		
+		try
+		{
+			bw = new PrintWriter("joystickLog_" + getLoggerTimeStamp() + "_.txt", "UTF-8");
+		} catch (FileNotFoundException e)
+		{
+		// TODO Auto-generated catch block
+			System.out.println("Write File Not Found");
+			e.printStackTrace();
+		 }
+		 catch (UnsupportedEncodingException e)
+		{
+			// TODO Auto-generated catch block
+			 System.out.println("UTF-8 Not Found");
+			e.printStackTrace();
+		}
+		
 	}
 	
 	@Override
@@ -28,24 +51,28 @@ public class JoystickLogger implements ILogger
 			
 		} else if(device == OutputDevice.FILE)
 		{
-			/*
-			bw.write("X Value Left " + joyLeft.getX());
-			bw.write("X Value Right " + joyRight.getX());
-			bw.write("Y Value Left " + joyLeft.getY());
-			bw.write("Y Value Right " + joyRight.getY());
-			bw.write("Twist Value Left " + joyLeft.getTwist());
 			
-			try
-			{
-				bw.write("Twist Value Right " + joyRight.getTwist());
-			} catch (IOException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			bw.println("X Value Left " + joyLeft.getX());
+			bw.println("X Value Right " + joyRight.getX());
+			bw.println("Y Value Left " + joyLeft.getY());
+			bw.println("Y Value Right " + joyRight.getY());
+			bw.println("Twist Value Left " + joyLeft.getTwist());
+			bw.write("Twist Value Right " + joyRight.getTwist());
 			
-			*/
+			
+			
 		}
 	}
+	
+	private String getLoggerTimeStamp()
+	{
+		int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY); 
+        int minute = Calendar.getInstance().get(Calendar.MINUTE);
+        int month = Calendar.getInstance().get(Calendar.MONTH);
+        int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+        int year = Calendar.getInstance().get(Calendar.YEAR);
+        return "_" + minute + "_:_" + hour + "_:_" + month + "_:_" + day + "_:_" + year + "_";
+	}
+	
 
 }

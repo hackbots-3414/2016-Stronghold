@@ -2,13 +2,17 @@ package org.fpsrobotics.sensors;
 
 import edu.wpi.first.wpilibj.interfaces.Accelerometer;
 
+/**
+ * Something not working here right I think
+ *
+ */
 public class BuiltInAccelerometer implements IAccelerometer
 {
-	Accelerometer accel;
+	private Accelerometer accel;
 	
-	public BuiltInAccelerometer()
+	public BuiltInAccelerometer(Accelerometer accel)
 	{
-		
+		this.accel = accel;
 	}
 	
 	@Override

@@ -4,6 +4,11 @@ import edu.wpi.first.wpilibj.Timer;
 
 public class ClockTimer implements ITimer {
 
+	public ClockTimer()
+	{
+		
+	}
+	
 	@Override
 	public void waitTimeInMillis(double milliseconds) {
 		Timer.delay(milliseconds/1000);

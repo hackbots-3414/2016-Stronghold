@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.CameraServer;
 
 public class MicrosoftLifeCam implements ICamera
 {
-	 CameraServer server;
+	 private CameraServer server;
 	
 	public MicrosoftLifeCam(String usbPort)
 	{

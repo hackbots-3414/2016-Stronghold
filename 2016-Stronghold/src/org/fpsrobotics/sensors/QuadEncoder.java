@@ -7,20 +7,20 @@ import edu.wpi.first.wpilibj.Encoder;
 
 public class QuadEncoder implements IPIDFeedbackDevice
 {
-	Encoder encoder;
-	boolean enabled;
+	private Encoder encoder;
+	private boolean isEnabled;
 	
 	public QuadEncoder(int channelA, int channelB)
 	{
 		encoder = new Encoder(channelA, channelB);
 		encoder.reset();
 		
-		enabled = true;
+		isEnabled = true;
 	}
 
 	@Override
 	public double getCount() {
-		if(enabled)
+		if(isEnabled)
 		{
 			return encoder.get();
 		} else
@@ -31,12 +31,12 @@ public class QuadEncoder implements IPIDFeedbackDevice
 
 	@Override
 	public void enable() {
-		enabled = true;
+		isEnabled = true;
 	}
 
 	@Override
 	public void disable() {
-		enabled = false;
+		isEnabled = false;
 	}
 
 	@Override

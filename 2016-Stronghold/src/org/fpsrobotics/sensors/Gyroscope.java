@@ -7,8 +7,8 @@ import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 
 public class Gyroscope implements IPIDFeedbackDevice
 {
-	AnalogGyro gyro;
-	boolean enabled;
+	private AnalogGyro gyro;
+	private boolean isEnabled;
 	
 	public Gyroscope(int channel)
 	{
@@ -16,12 +16,12 @@ public class Gyroscope implements IPIDFeedbackDevice
 		
 		gyro.initGyro();
 		
-		enabled = true;
+		isEnabled = true;
 	}
 	
 	@Override
 	public double getCount() {
-		if(enabled)
+		if(isEnabled)
 		{
 			return gyro.getAngle();
 		} else
@@ -32,12 +32,12 @@ public class Gyroscope implements IPIDFeedbackDevice
 
 	@Override
 	public void enable() {
-		enabled = true;
+		isEnabled = true;
 	}
 
 	@Override
 	public void disable() {
-		enabled = false;
+		isEnabled = false;
 	}
 
 	@Override

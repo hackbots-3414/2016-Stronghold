@@ -6,8 +6,8 @@ import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 
 public class DoubleMotor implements ICANMotor
 {
-	Motor motorOne, motorTwo;
-	CANMotor CANMotorOne, CANMotorTwo;
+	private Motor motorOne, motorTwo;
+	private CANMotor CANMotorOne, CANMotorTwo;
 	
 	public DoubleMotor(Motor motorOne, Motor motorTwo)
 	{
@@ -130,6 +130,16 @@ public class DoubleMotor implements ICANMotor
 		{
 			CANMotorOne.setControlMode(mode);
 		}
+	}
+	
+	public CANMotor getCANMotorOne()
+	{
+		return CANMotorOne;
+	}
+
+	public CANMotor getCANMotorTwo()
+	{
+		return CANMotorTwo;
 	}
 
 }

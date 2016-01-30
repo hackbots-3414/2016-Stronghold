@@ -15,7 +15,7 @@ public class CANMotor implements ICANMotor
 	
 	public CANMotor(CANTalon motor, boolean invertDirection)
 	{
-		motor.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
+		motor.changeControlMode(TalonControlMode.PercentVbus);
 		
 		this.canMotor = motor;
 		this.invertDirection = invertDirection;
@@ -95,13 +95,7 @@ public class CANMotor implements ICANMotor
 	@Override
 	public void setSpeed(double speed) 
 	{
-		
-		invert = 1;
-		
-		if(invertDirection)
-		{
-			invert = -1;
-		}
+		invert = (invertDirection) ? -1 : 1;
 			
 		if(device != null)
 		{

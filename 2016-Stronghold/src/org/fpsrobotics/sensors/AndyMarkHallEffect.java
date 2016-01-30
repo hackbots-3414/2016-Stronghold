@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 
 public class AndyMarkHallEffect implements IHallEffectSensor
 {
-	DigitalInput input;
+	private DigitalInput input;
 	
 	public AndyMarkHallEffect(int channel)
 	{

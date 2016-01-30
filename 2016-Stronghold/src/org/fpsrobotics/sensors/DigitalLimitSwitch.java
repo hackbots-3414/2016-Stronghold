@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 
 public class DigitalLimitSwitch implements ILimitSwitch
 {
-	DigitalInput limitSwitch;
+	private DigitalInput limitSwitch;
 	
 	public DigitalLimitSwitch(int channel)
 	{

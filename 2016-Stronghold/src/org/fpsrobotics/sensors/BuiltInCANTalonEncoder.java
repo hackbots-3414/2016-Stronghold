@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 
 public class BuiltInCANTalonEncoder implements IPIDFeedbackDevice 
 {
-	CANTalon canMotor;
+	private CANTalon canMotor;
 	
 	public BuiltInCANTalonEncoder(CANTalon canMotor)
 	{

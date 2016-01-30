@@ -2,8 +2,8 @@ package org.fpsrobotics.sensors;
 
 public interface IPowerBoard 
 {
-	double getVoltage();
-	double getCurrent(int channel);
-	double getPower(int channel);
-	double getTemperature();
+	public double getVoltage();
+	public double getCurrent(int channel);
+	public double getPower(int channel);
+	public double getTemperature();
 }
