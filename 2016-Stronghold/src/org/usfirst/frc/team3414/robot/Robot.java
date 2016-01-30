@@ -1,20 +1,23 @@
-
 package org.usfirst.frc.team3414.robot;
 
 
-import org.fpsrobotics.actuators.ActuatorConfig;
+
+
+import org.fpsrobotics.autonomous.AutonDoNothing;
 import org.fpsrobotics.autonomous.IAutonomousControl;
 import org.fpsrobotics.sensors.SensorConfig;
 import org.fpsrobotics.teleop.ITeleopControl;
 import org.fpsrobotics.teleop.MullenatorTeleop;
 
-import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.SampleRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends SampleRobot 
 {
 	ITeleopControl teleop;
 	IAutonomousControl auto;
+	SendableChooser autoChooser;
 	
     public Robot() 
     {
@@ -23,13 +26,12 @@ public class Robot extends SampleRobot
     
     public void robotInit() 
     {
-		
+		//This must always get run at the start of init. Do not perform any init before this is called
+		RobotStatus.setIsRunning(true);
     }
 
     public void autonomous() 
     {
-    	enabled();
-    	
     	// TODO: implement different autonomous modes
     	
     	/*
@@ -53,26 +55,33 @@ public class Robot extends SampleRobot
     		break;
     	}
     	*/
+    	
+    	makeAutoChooser();
+    	
+    	((IAutonomousControl) autoChooser.getSelected()).doAuto();
+    	
     }
-    
+
     public void operatorControl() 
     {
-    	enabled();
     	teleop.doTeleop();
     }
     
-    public void disabled()
+    public void disabledInit()
     {
     	RobotStatus.setIsRunning(false);
     }
     
-    private void enabled()
-    {
-    	RobotStatus.setIsRunning(true);
-    }
-    
     public void test() 
     {
-    	enabled();
+    	
+    }
+    
+    private void makeAutoChooser() {
+    	autoChooser = new SendableChooser();
+        
+    	autoChooser.addDefault("Do Nothing", new AutonDoNothing());
+    	// TODO: Add more auton things later
+        SmartDashboard.putData("Autonomous Chooser", autoChooser);
     }
 }
