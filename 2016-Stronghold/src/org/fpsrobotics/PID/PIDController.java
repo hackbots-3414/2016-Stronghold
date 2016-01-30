@@ -11,6 +11,7 @@ public class PIDController extends PIDSubsystem implements IPIDFeedbackDevice{
 		super("PIDController",2, 0, 0);
 		setSetpoint(d);
 		setAbsoluteTolerance(.2);
+		getPIDController().setContinuous(true);
 		enable();
 		// TODO Auto-generated constructor stub
 	}
