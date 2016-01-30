@@ -1,5 +1,7 @@
 package org.fpsrobotics.actuators;
 
+import java.util.Scanner;
+
 import org.fpsrobotics.PID.IPIDEnabledDevice;
 import org.fpsrobotics.PID.IPIDFeedbackDevice;
 

@@ -32,19 +32,16 @@ public class CANMotor implements ICANMotor
 		canMotor.setFeedbackDevice(device.whatPIDDevice());
 	}
 
-	@Override
 	public void setP(double p) 
 	{
 		canMotor.setP(p);
 	}
 
-	@Override
 	public void setI(double i) 
 	{
 		canMotor.setI(i);
 	}
 
-	@Override
 	public void setD(double d) 
 	{
 		canMotor.setD(d);
@@ -137,11 +134,6 @@ public class CANMotor implements ICANMotor
 	{
 		canMotor.set(deviceID);
 	}
-
-//	public void usePIDOutput(double output) {
-//		canMotor.set(output);
-//		canMotor.pidWrite(output);
-//	}
 
 	public void PIDOutput() {
 		// TODO Auto-generated method stub
