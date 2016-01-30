@@ -1,11 +1,11 @@
 package org.fpsrobotics.actuators;
 
 import org.fpsrobotics.PID.IPIDFeedbackDevice;
-
+import org.fpsrobotics.PID.*;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 
-public class CANMotor implements ICANMotor 
+public class CANMotor implements ICANMotor
 {
 	private boolean invertDirection;
 	private CANTalon canMotor;
@@ -140,7 +140,6 @@ public class CANMotor implements ICANMotor
 
 	@Override
 	public void PIDOutput() {
-		// TODO Auto-generated method stub
 		
 	}
 

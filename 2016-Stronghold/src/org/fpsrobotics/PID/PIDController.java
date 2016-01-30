@@ -26,7 +26,7 @@ public class PIDController extends PIDSubsystem implements IPIDFeedbackDevice{
 	{
 		return pot.getAverageVoltage();
 	}
-	protected void PIDOutput(double output)
+	protected void usePIDOutput(double output)
 	{
 		motor.set(output);
 		motor.pidWrite(output);
@@ -55,12 +55,6 @@ public class PIDController extends PIDSubsystem implements IPIDFeedbackDevice{
 	public FeedbackDevice whatPIDDevice() {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	protected void usePIDOutput(double output) {
-		// TODO Auto-generated method stub
-	
 	}
 
 	@Override
