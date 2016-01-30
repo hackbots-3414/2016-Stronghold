@@ -138,7 +138,13 @@ public class CANMotor implements ICANMotor
 		canMotor.set(deviceID);
 	}
 
+//	public void usePIDOutput(double output) {
+//		canMotor.set(output);
+//		canMotor.pidWrite(output);
+//	}
+
 	public void PIDOutput() {
+		// TODO Auto-generated method stub
 		
 	}
 
