@@ -74,14 +74,15 @@ public class SensorConfig
 		pdp = new PowerDistributionPanel();
 		*/
 		
-		//leftEncoder = new BuiltInCANTalonEncoder(ActuatorConfig.getInstance().getLeftFrontMotor());
-		//rightEncoder = new BuiltInCANTalonEncoder(ActuatorConfig.getInstance().getRightFrontMotor());
+		leftEncoder = new BuiltInCANTalonEncoder(ActuatorConfig.getInstance().getLeftFrontMotor());
+		rightEncoder = new BuiltInCANTalonEncoder(ActuatorConfig.getInstance().getRightFrontMotor());
 		
 		pot = new Potentiometer(POTENTIOMETER_CHANNEL);
 		
 		/*
 		autoSwitch = new AutonomousSwitches(AUTO_SWITCH_ONES, AUTO_SWITCH_TWOS, AUTO_SWITCH_FOURS);
 		*/
+		
 		bottomLimitSwitch = new DigitalLimitSwitch(DIGITAL_LIMIT_SWITCH_CHANNEL);
 		augerBottomLimitSwitch = new DigitalLimitSwitch(AUGER_BOTTOM_LIMIT_SWITCH);
 		augerTopLimitSwitch = new DigitalLimitSwitch(AUGER_TOP_LIMIT_SWITCH);

@@ -32,15 +32,18 @@ public class MullenatorTeleop implements ITeleopControl
 		{
 			while(RobotStatus.isRunning())
 			{
-				/*
+				/* Try static P I and D values first
 				ActuatorConfig.getInstance().getDriveTrain().setP(SmartDashboard.getNumber("p-value", 0.000001));
 				ActuatorConfig.getInstance().getDriveTrain().setI(SmartDashboard.getNumber("i-value", 0.0));
 				ActuatorConfig.getInstance().getDriveTrain().setD(SmartDashboard.getNumber("d-value", 0.0));
 				*/
 				
+				// This won't work until we transform it linearly.
 				ActuatorConfig.getInstance().getDriveTrain().setSpeed(
 						SensorConfig.getInstance().getLeftJoystick().getY(),
 						SensorConfig.getInstance().getRightJoystick().getY());
+				
+				System.out.println("Drive Loop Completed");
 				
 				SensorConfig.getInstance().getTimer().waitTimeInMillis(50);
 			}
@@ -93,7 +96,6 @@ public class MullenatorTeleop implements ITeleopControl
 			}
 		});
 
-		/*
 		executor.submit(() ->
 		{
 			while(RobotStatus.isRunning())
@@ -103,7 +105,6 @@ public class MullenatorTeleop implements ITeleopControl
 				SensorConfig.getInstance().getTimer().waitTimeInMillis(1000);
 			}
 		});
-		*/
 		
 		/*
 		executor.submit(() ->

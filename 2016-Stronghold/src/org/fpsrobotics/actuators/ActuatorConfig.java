@@ -27,11 +27,9 @@ public class ActuatorConfig
 	
 	private final int SERVO_PORT = 9;
 	
-	/*
 	private static final double driveTrainP = 0.0000001;
 	private static final double driveTrainI = 0.0;
 	private static final double driveTrainD = 0.0;
-	*/
 	
 	/*
 	private static final int GYROSCOPE_CHANNEL = 0;
@@ -66,29 +64,26 @@ public class ActuatorConfig
 	
 	private ActuatorConfig()
 	{
-		//shooterSolenoid = new SingleSolenoid(1);
-		
 		leftFrontMotor = new CANTalon(MOTOR_LEFT_FRONT);
 		leftRearMotor = new CANTalon(MOTOR_LEFT_REAR);
 		rightFrontMotor = new CANTalon(MOTOR_RIGHT_FRONT);
 		rightRearMotor = new CANTalon(MOTOR_RIGHT_REAR);
 		
-		//leftFrontCANMotor = new CANMotor(leftFrontMotor, true, SensorConfig.getInstance().getLeftEncoder());
-		leftFrontCANMotor = new CANMotor(leftFrontMotor, true);
+		leftFrontCANMotor = new CANMotor(leftFrontMotor, true, SensorConfig.getInstance().getLeftEncoder());
 		leftRearCANMotor = new CANMotor(leftRearMotor, true);
 		
-		//rightFrontCANMotor = new CANMotor(rightFrontMotor, false, SensorConfig.getInstance().getRightEncoder());
-		rightFrontCANMotor = new CANMotor(rightFrontMotor, false);
+		rightFrontCANMotor = new CANMotor(rightFrontMotor, false, SensorConfig.getInstance().getRightEncoder());
 		rightRearCANMotor = new CANMotor(rightRearMotor, false);
 		
 		leftDoubleMotor = new DoubleMotor(leftFrontCANMotor, leftRearCANMotor);
 		rightDoubleMotor = new DoubleMotor(rightFrontCANMotor, rightRearCANMotor);
 		
 		driveTrain = new TankDrive(leftDoubleMotor, rightDoubleMotor);
+		driveTrain.setControlMode(TalonControlMode.Speed);
 		
-		//driveTrain.setControlMode(TalonControlMode.Speed);
-		//driveTrain.enablePID();
-		driveTrain.disablePID();
+		driveTrain.setP(driveTrainP);
+		driveTrain.setI(driveTrainI);
+		driveTrain.setD(driveTrainD);
 		
 		leftShooterMotor = new CANTalon(LEFT_SHOOTER_MOTOR);
 		rightShooterMotor = new CANTalon(RIGHT_SHOOTER_MOTOR);
@@ -99,12 +94,6 @@ public class ActuatorConfig
 		augerLifterMotor = new CANTalon(AUGER_LIFTER_MOTOR);
 		
 		servo = new Servo(SERVO_PORT);
-		
-		/*
-		driveTrain.setP(driveTrainP);
-		driveTrain.setI(driveTrainI);
-		driveTrain.setD(driveTrainD);
-		*/
 		
 		launcher = new Launcher(
 				new CANMotor(leftShooterMotor, true),
