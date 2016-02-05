@@ -21,17 +21,18 @@ public class Launcher implements ILauncher
 	private final int SHOOTER_ENCODER_VALUE = 200;
 
 	private ICANMotor shooterMotorLeft, shooterMotorRight, augerIntakeMotor, shooterLifterMotor;
-	private BoschHallEffectMotor augerLifterMotor;
+	private ICANMotor augerLifterMotor;
 	private ILimitSwitch bottomLimitShooter, bottomLimitAuger, topLimitAuger;
 	private IPIDFeedbackDevice shooterPot;
 
 	private ISolenoid shooterPiston;
 
-	public Launcher(ICANMotor shooterMotorLeft, 
+	public Launcher(
+			ICANMotor shooterMotorLeft, 
 			ICANMotor shooterMotorRight, 
 			ICANMotor shooterLifterMotor,
 			ICANMotor augerIntakeMotor, 
-			BoschHallEffectMotor augerLifterMotor, 
+			ICANMotor augerLifterMotor, 
 			ILimitSwitch shooterBottomLimit,
 			ILimitSwitch bottomLimitAuger, 
 			ILimitSwitch topLimitAuger, 
@@ -224,6 +225,7 @@ public class Launcher implements ILauncher
 	@Override
 	public void augerGoToPosition(int position)
 	{
+		/*
 		if(!isAugerAtBottomLimit() && !isAugerAtTopLimit())
 		{
 			if(augerLifterMotor.getPosition() < position)
@@ -240,6 +242,7 @@ public class Launcher implements ILauncher
 				}
 			}
 		}
+		*/
 	}
 
 }

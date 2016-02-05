@@ -12,16 +12,21 @@ public class SensorConfig
 	private final int AUTO_SWITCH_TWOS = 1;
 	private final int AUTO_SWITCH_FOURS = 2;
 	
+	*/
+	
 	private final int DIGITAL_LIMIT_SWITCH_CHANNEL = 3; //TODO: Fix later
 	
 	private final int POTENTIOMETER_CHANNEL = 2;
 	
+	/*
 	private final int HALL_EFFECT_BOTTOM_PORT = 0;
 	private final int HALL_EFFECT_TOP_PORT = 1;
+	*/
 	
 	private final int AUGER_BOTTOM_LIMIT_SWITCH = 3;
 	private final int AUGER_TOP_LIMIT_SWITCH = 4;
 	
+	/*
 	private final String CAMERA_USB_PORT = "cam0";
 	*/
 	
@@ -31,6 +36,8 @@ public class SensorConfig
 	IPIDFeedbackDevice leftEncoder;
 	IPIDFeedbackDevice rightEncoder;
 	
+	IPIDFeedbackDevice pot;
+	
 	/*
 	
 	private ICounterSwitch autoSwitch;
@@ -38,14 +45,12 @@ public class SensorConfig
 	*/
 	private ITimer timer;
 	
-	/*
 	
-	private ILimitSwitch digitalLimitSwitch;
+	private ILimitSwitch bottomLimitSwitch;
 	private ILimitSwitch augerBottomLimitSwitch;
 	private ILimitSwitch augerTopLimitSwitch;
 	
-	private IPIDFeedbackDevice launcherPot;
-	
+	/*
 	private IHallEffectSensor bottomLimitSensor, topLimitSensor;
 	*/
 	
@@ -70,19 +75,19 @@ public class SensorConfig
 		leftEncoder = new BuiltInCANTalonEncoder(ActuatorConfig.getInstance().getLeftFrontMotor());
 		rightEncoder = new BuiltInCANTalonEncoder(ActuatorConfig.getInstance().getRightFrontMotor());
 		
+		pot = new Potentiometer(POTENTIOMETER_CHANNEL);
+		
 		/*
 		autoSwitch = new AutonomousSwitches(AUTO_SWITCH_ONES, AUTO_SWITCH_TWOS, AUTO_SWITCH_FOURS);
 		
-		digitalLimitSwitch = new DigitalLimitSwitch(DIGITAL_LIMIT_SWITCH_CHANNEL);
+		*/
+		bottomLimitSwitch = new DigitalLimitSwitch(DIGITAL_LIMIT_SWITCH_CHANNEL);
 		augerBottomLimitSwitch = new DigitalLimitSwitch(AUGER_BOTTOM_LIMIT_SWITCH);
 		augerTopLimitSwitch = new DigitalLimitSwitch(AUGER_TOP_LIMIT_SWITCH);
 		
-		launcherPot = new Potentiometer(POTENTIOMETER_CHANNEL);
-		
+		/*
 		bottomLimitSensor = new AndyMarkHallEffect(HALL_EFFECT_BOTTOM_PORT);
 		topLimitSensor = new AndyMarkHallEffect(HALL_EFFECT_TOP_PORT);
-		
-		
 		
 		camera = new MicrosoftLifeCam(CAMERA_USB_PORT);
 		*/
@@ -130,6 +135,12 @@ public class SensorConfig
 	{
 		return rightEncoder;
 	}
+	
+	
+
+	public IPIDFeedbackDevice getShooterPot() {
+		return pot;
+	}
 
 	/*
 	
@@ -162,6 +173,20 @@ public class SensorConfig
 	{
 		return pdp;
 	}
+
+	public ILimitSwitch getBottomLimitSwitch() {
+		return bottomLimitSwitch;
+	}
+
+	public ILimitSwitch getAugerBottomLimitSwitch() {
+		return augerBottomLimitSwitch;
+	}
+
+	public ILimitSwitch getAugerTopLimitSwitch() {
+		return augerTopLimitSwitch;
+	}
+	
+	
 	
 	/*
 	public ICamera getCamera()

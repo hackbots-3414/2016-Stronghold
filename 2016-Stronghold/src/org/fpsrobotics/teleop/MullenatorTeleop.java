@@ -44,7 +44,6 @@ public class MullenatorTeleop implements ITeleopControl
 			}
 		});
 		
-		/*
 		executor.submit(() ->
 		{
 			ILauncher launcher;
@@ -57,26 +56,25 @@ public class MullenatorTeleop implements ITeleopControl
 			{
 				if(gamepad.getButtonValue(ButtonGamepad.TWO))
 				{
-					launcher.goDown();
+					launcher.moveShooterDown();
 				}
-				
+	
 				if(gamepad.getButtonValue(ButtonGamepad.FOUR))
 				{
-					launcher.goUp();
+					launcher.moveShooterUp();
 				}
 				
 				if(gamepad.getButtonValue(ButtonGamepad.ONE))
 				{
-					launcher.shoot();
+					launcher.launchBoulder();
 				}
 				
 				if(gamepad.getButtonValue(ButtonGamepad.THREE))
 				{
-					launcher.intake();
+					launcher.intakeBoulder();
 				}
 			}
 		});
-		*/
 		
 		executor.submit(() ->
 		{
