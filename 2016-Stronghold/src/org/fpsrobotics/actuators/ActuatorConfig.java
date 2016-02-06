@@ -7,15 +7,16 @@ import org.fpsrobotics.sensors.ILimitSwitch;
 import org.fpsrobotics.sensors.SensorConfig;
 
 import edu.wpi.first.wpilibj.CANTalon;
+import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 
 public class ActuatorConfig
 {
 	private static ActuatorConfig singleton = null;
 	
-	private static final int MOTOR_LEFT_FRONT = 1;
-	private static final int MOTOR_LEFT_REAR = 2;
-	private static final int MOTOR_RIGHT_FRONT = 3;
-	private static final int MOTOR_RIGHT_REAR = 4;
+	private static final int MOTOR_LEFT_FRONT = 3;
+	private static final int MOTOR_LEFT_REAR = 4;
+	private static final int MOTOR_RIGHT_FRONT = 1;
+	private static final int MOTOR_RIGHT_REAR = 2;
 	
 	private static final int LEFT_SHOOTER_MOTOR = 5;
 	private static final int RIGHT_SHOOTER_MOTOR = 6;
@@ -24,13 +25,15 @@ public class ActuatorConfig
 	private static final int AUGER_INTAKE_MOTOR = 8;
 	private static final int AUGER_LIFTER_MOTOR = 9;
 	
-	/*
+	private final int SERVO_PORT = 9;
 	
+	/*
 	private static final double driveTrainP = 0.0000001;
 	private static final double driveTrainI = 0.0;
 	private static final double driveTrainD = 0.0;
+	*/
 	
-	
+	/*
 	private static final int GYROSCOPE_CHANNEL = 0;
 	*/
 	
@@ -59,20 +62,20 @@ public class ActuatorConfig
 	private CANMotor rightFrontCANMotor;
 	private CANMotor rightRearCANMotor;
 	
-	private ISolenoid shooterSolenoid;
+	private IServo servo;
 	
 	private ActuatorConfig()
 	{
-		shooterSolenoid = new SingleSolenoid(1);
+		//shooterSolenoid = new SingleSolenoid(1);
 		
 		leftFrontMotor = new CANTalon(MOTOR_LEFT_FRONT);
 		leftRearMotor = new CANTalon(MOTOR_LEFT_REAR);
 		rightFrontMotor = new CANTalon(MOTOR_RIGHT_FRONT);
 		rightRearMotor = new CANTalon(MOTOR_RIGHT_REAR);
 		
-		//leftFrontCANMotor = new CANMotor(leftFrontMotor, false, SensorConfig.getInstance().getLeftEncoder());
-		leftFrontCANMotor = new CANMotor(leftFrontMotor, false);
-		leftRearCANMotor = new CANMotor(leftRearMotor, false);
+		//leftFrontCANMotor = new CANMotor(leftFrontMotor, true, SensorConfig.getInstance().getLeftEncoder());
+		leftFrontCANMotor = new CANMotor(leftFrontMotor, true);
+		leftRearCANMotor = new CANMotor(leftRearMotor, true);
 		
 		//rightFrontCANMotor = new CANMotor(rightFrontMotor, false, SensorConfig.getInstance().getRightEncoder());
 		rightFrontCANMotor = new CANMotor(rightFrontMotor, false);
@@ -83,6 +86,8 @@ public class ActuatorConfig
 		
 		driveTrain = new TankDrive(leftDoubleMotor, rightDoubleMotor);
 		
+		//driveTrain.setControlMode(TalonControlMode.Speed);
+		//driveTrain.enablePID();
 		driveTrain.disablePID();
 		
 		leftShooterMotor = new CANTalon(LEFT_SHOOTER_MOTOR);
@@ -93,34 +98,25 @@ public class ActuatorConfig
 		augerIntakeMotor = new CANTalon(AUGER_INTAKE_MOTOR);
 		augerLifterMotor = new CANTalon(AUGER_LIFTER_MOTOR);
 		
+		servo = new Servo(SERVO_PORT);
+		
 		/*
 		driveTrain.setP(driveTrainP);
 		driveTrain.setI(driveTrainI);
 		driveTrain.setD(driveTrainD);
-		
-		launcher = new Launcher(new CANMotor
-				(leftShooterMotor, false, new BuiltInCANTalonEncoder(leftShooterMotor))
-				, new CANMotor(rightShooterMotor, true, new BuiltInCANTalonEncoder(rightShooterMotor))
-				, new CANMotor(linearActuator, false)
-				, new CANMotor(augerIntakeMotor, false)
-				, new CANMotor(augerLifterMotor, false)
-				, SensorConfig.getInstance().getLimitSwitch()
-				, SensorConfig.getInstance().getAugerBottomLimitSwitch()
-				, SensorConfig.getInstance().getAugerTopLimitSwitch()
-				, SensorConfig.getInstance().getShooterPot()); //One inverse, one not...accounts for shooting and in-take opposite directions
 		*/
 		
 		launcher = new Launcher(
-				new CANMotor(leftShooterMotor, false),
+				new CANMotor(leftShooterMotor, true),
 				new CANMotor(rightShooterMotor, false),
-				new CANMotor(linearActuator, false),
+				new CANMotor(linearActuator, true),
 				new CANMotor(augerIntakeMotor, false), 
 				new CANMotor(augerLifterMotor, false), 
 				SensorConfig.getInstance().getBottomLimitSwitch(),
 				SensorConfig.getInstance().getAugerBottomLimitSwitch(), 
 				SensorConfig.getInstance().getAugerTopLimitSwitch(), 
 				SensorConfig.getInstance().getShooterPot(),
-			    shooterSolenoid
+			    servo
 				);
 	}
 
@@ -153,4 +149,10 @@ public class ActuatorConfig
 	{
 		return launcher;
 	}
+
+	public IServo getServo() {
+		return servo;
+	}
+	
+	
 }

@@ -10,14 +10,14 @@ public class Launcher implements ILauncher
 {
 	// private double p, i, d;
 
-	private final double INTAKE_SPEED = -0.5;
+	private final double INTAKE_SPEED = -0.2;
 	private final double SHOOT_SPEED = 1.0;
 	private final double INTAKE_AUGER_SPEED = 0.2;
-	private final double LINEAR_ACTUATOR_SPEED = 0.8;
+	private final double LINEAR_ACTUATOR_SPEED = 0.7;
 	private final double AUGER_MOVE_SPEED = 0.5;
 
-	private final int TOP_LIMIT_POT_VALUE = 300;
-	private final int BOTTOM_LIMIT_POT_VALUE = 0;
+	private final int TOP_LIMIT_POT_VALUE = 3932;
+	private final int BOTTOM_LIMIT_POT_VALUE = 3972;
 	private final int SHOOTER_ENCODER_VALUE = 200;
 
 	private ICANMotor shooterMotorLeft, shooterMotorRight, augerIntakeMotor, shooterLifterMotor;
@@ -25,7 +25,7 @@ public class Launcher implements ILauncher
 	private ILimitSwitch bottomLimitShooter, bottomLimitAuger, topLimitAuger;
 	private IPIDFeedbackDevice shooterPot;
 
-	private ISolenoid shooterPiston;
+	private IServo shooterActuator;
 
 	public Launcher(
 			ICANMotor shooterMotorLeft, 
@@ -37,7 +37,7 @@ public class Launcher implements ILauncher
 			ILimitSwitch bottomLimitAuger, 
 			ILimitSwitch topLimitAuger, 
 			IPIDFeedbackDevice shooterPot,
-			ISolenoid shooterPiston)
+			IServo shooterActuator)
 	{
 		this.shooterMotorLeft = shooterMotorLeft;
 		this.shooterMotorRight = shooterMotorRight;
@@ -48,7 +48,7 @@ public class Launcher implements ILauncher
 		this.augerLifterMotor = augerLifterMotor;
 		this.bottomLimitAuger = bottomLimitAuger;
 		this.topLimitAuger = topLimitAuger;
-		this.shooterPiston = shooterPiston;
+		this.shooterActuator = shooterActuator;
 	}
 
 	@Override
@@ -66,7 +66,6 @@ public class Launcher implements ILauncher
 		spinShooterUp();
 		SensorConfig.getInstance().getTimer().waitTimeInMillis(1000);
 		launchBoulder();
-
 	}
 
 	@Override
@@ -117,13 +116,7 @@ public class Launcher implements ILauncher
 	{
 		if (!shooterAtTopLimit())
 		{
-			if (shooterPot.getCount() > (TOP_LIMIT_POT_VALUE - 100))
-			{
-				shooterLifterMotor.setSpeed(LINEAR_ACTUATOR_SPEED / 5);
-			} else
-			{
-				shooterLifterMotor.setSpeed(LINEAR_ACTUATOR_SPEED);
-			}
+			shooterLifterMotor.setSpeed(LINEAR_ACTUATOR_SPEED);
 		} else
 		{
 			shooterLifterMotor.stop();
@@ -135,23 +128,22 @@ public class Launcher implements ILauncher
 	{
 		if (!shooterAtBottomLimit())
 		{
-			if (shooterPot.getCount() < (TOP_LIMIT_POT_VALUE + 100))
-			{
-				shooterLifterMotor.setSpeed(-LINEAR_ACTUATOR_SPEED / 5);
-			} else
-			{
-				shooterLifterMotor.setSpeed(-LINEAR_ACTUATOR_SPEED);
-			}
+			shooterLifterMotor.setSpeed(-LINEAR_ACTUATOR_SPEED);
 		} else
 		{
 			shooterLifterMotor.stop();
 		}
 
 	}
+	
+	public void stopShooterLifter()
+	{
+		shooterLifterMotor.stop();
+	}
 
 	private boolean shooterAtTopLimit()
 	{
-		if (shooterPot.getCount() >= TOP_LIMIT_POT_VALUE)
+		if (shooterPot.getCount() <= TOP_LIMIT_POT_VALUE)
 		{
 			return true;
 		}
@@ -161,7 +153,8 @@ public class Launcher implements ILauncher
 
 	private boolean shooterAtBottomLimit()
 	{
-		if ((shooterPot.getCount() <= BOTTOM_LIMIT_POT_VALUE) || bottomLimitShooter.getValue())
+		//if ((shooterPot.getCount() <= BOTTOM_LIMIT_POT_VALUE) || bottomLimitShooter.getValue())
+		if (shooterPot.getCount() >= BOTTOM_LIMIT_POT_VALUE)
 		{
 			return true;
 		}
@@ -216,10 +209,10 @@ public class Launcher implements ILauncher
 	@Override
 	public void launchBoulder()
 	{
-		shooterPiston.turnOn();
+		shooterActuator.engage();
 		SensorConfig.getInstance().getTimer().waitTimeInMillis(250);
 		stopShooterWheels();
-		shooterPiston.turnOff();
+		shooterActuator.disengage();
 	}
 
 	@Override

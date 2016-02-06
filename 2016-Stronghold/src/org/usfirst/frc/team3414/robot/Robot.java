@@ -26,12 +26,12 @@ public class Robot extends SampleRobot
     
     public void robotInit() 
     {
-		//This must always get run at the start of init. Do not perform any init before this is called
-		RobotStatus.setIsRunning(true);
+    	
     }
 
     public void autonomous() 
     {
+    	RobotStatus.setIsRunning(true);
     	// TODO: implement different autonomous modes
     	
     	/*
@@ -64,17 +64,18 @@ public class Robot extends SampleRobot
 
     public void operatorControl() 
     {
+    	RobotStatus.setIsRunning(true);
     	teleop.doTeleop();
     }
     
-    public void disabledInit()
+    public void disabled()
     {
     	RobotStatus.setIsRunning(false);
     }
     
     public void test() 
     {
-    	
+    	RobotStatus.setIsRunning(true);
     }
     
     private void makeAutoChooser() {

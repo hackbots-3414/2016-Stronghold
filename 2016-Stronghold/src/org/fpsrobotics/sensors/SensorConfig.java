@@ -14,17 +14,17 @@ public class SensorConfig
 	
 	*/
 	
-	private final int DIGITAL_LIMIT_SWITCH_CHANNEL = 3; //TODO: Fix later
+	private final int DIGITAL_LIMIT_SWITCH_CHANNEL = 3;
 	
-	private final int POTENTIOMETER_CHANNEL = 2;
+	private final int POTENTIOMETER_CHANNEL = 0;
 	
 	/*
 	private final int HALL_EFFECT_BOTTOM_PORT = 0;
 	private final int HALL_EFFECT_TOP_PORT = 1;
 	*/
 	
-	private final int AUGER_BOTTOM_LIMIT_SWITCH = 3;
-	private final int AUGER_TOP_LIMIT_SWITCH = 4;
+	private final int AUGER_BOTTOM_LIMIT_SWITCH = 4;
+	private final int AUGER_TOP_LIMIT_SWITCH = 5;
 	
 	/*
 	private final String CAMERA_USB_PORT = "cam0";
@@ -70,25 +70,23 @@ public class SensorConfig
 		rightJoystick = new Logitech3DJoystick(1);
 		gamepad = new DualShockTwoController(2);
 		
+		/*
 		pdp = new PowerDistributionPanel();
+		*/
 		
-		leftEncoder = new BuiltInCANTalonEncoder(ActuatorConfig.getInstance().getLeftFrontMotor());
-		rightEncoder = new BuiltInCANTalonEncoder(ActuatorConfig.getInstance().getRightFrontMotor());
+		//leftEncoder = new BuiltInCANTalonEncoder(ActuatorConfig.getInstance().getLeftFrontMotor());
+		//rightEncoder = new BuiltInCANTalonEncoder(ActuatorConfig.getInstance().getRightFrontMotor());
 		
 		pot = new Potentiometer(POTENTIOMETER_CHANNEL);
 		
 		/*
 		autoSwitch = new AutonomousSwitches(AUTO_SWITCH_ONES, AUTO_SWITCH_TWOS, AUTO_SWITCH_FOURS);
-		
 		*/
 		bottomLimitSwitch = new DigitalLimitSwitch(DIGITAL_LIMIT_SWITCH_CHANNEL);
 		augerBottomLimitSwitch = new DigitalLimitSwitch(AUGER_BOTTOM_LIMIT_SWITCH);
 		augerTopLimitSwitch = new DigitalLimitSwitch(AUGER_TOP_LIMIT_SWITCH);
 		
 		/*
-		bottomLimitSensor = new AndyMarkHallEffect(HALL_EFFECT_BOTTOM_PORT);
-		topLimitSensor = new AndyMarkHallEffect(HALL_EFFECT_TOP_PORT);
-		
 		camera = new MicrosoftLifeCam(CAMERA_USB_PORT);
 		*/
 	}
@@ -142,28 +140,7 @@ public class SensorConfig
 		return pot;
 	}
 
-	/*
 	
-	public ILimitSwitch getLimitSwitch() {
-		return digitalLimitSwitch;
-	}
-	
-	public IPIDFeedbackDevice getShooterPot()
-	{
-		return launcherPot;
-	}
-	
-	public IHallEffectSensor getBottomLimitSensor()
-	{
-		return bottomLimitSensor;
-	}
-
-	public IHallEffectSensor getTopLimitSensor()
-	{
-		return topLimitSensor;
-	}
-	
-	*/
 	public IGamepad getGamepad()
 	{
 		return gamepad;

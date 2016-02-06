@@ -2,8 +2,8 @@ package org.fpsrobotics.actuators;
 
 public class Servo implements IServo
 {
-	private static final double SERVO_LATCHED = 1.0;
-	private static final double SERVO_UNLATCHED = 0.0;
+	private static final double SERVO_LATCHED = 0.6;
+	private static final double SERVO_UNLATCHED = 1.0;
 	
 	edu.wpi.first.wpilibj.Servo servo;
 	

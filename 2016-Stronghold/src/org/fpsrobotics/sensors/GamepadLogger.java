@@ -17,7 +17,8 @@ public class GamepadLogger implements ILogger
 		
 		try
 		{
-			writer = new PrintWriter("gamepadLog_" + getLoggerTimeStamp() + "_.txt", "UTF-8");
+//			writer = new PrintWriter("gamepadLog_" + getLoggerTimeStamp() + "_.txt", "UTF-8");
+			writer = new PrintWriter("gamepadLog.txt", "UTF-8");
 		} catch (FileNotFoundException e)
 		{
 			System.out.println("Write File Not Found");

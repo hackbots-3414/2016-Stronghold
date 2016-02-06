@@ -32,9 +32,11 @@ public class MullenatorTeleop implements ITeleopControl
 		{
 			while(RobotStatus.isRunning())
 			{
-				ActuatorConfig.getInstance().getDriveTrain().setP(SmartDashboard.getNumber("p-value", 1.0));
+				/*
+				ActuatorConfig.getInstance().getDriveTrain().setP(SmartDashboard.getNumber("p-value", 0.000001));
 				ActuatorConfig.getInstance().getDriveTrain().setI(SmartDashboard.getNumber("i-value", 0.0));
 				ActuatorConfig.getInstance().getDriveTrain().setD(SmartDashboard.getNumber("d-value", 0.0));
+				*/
 				
 				ActuatorConfig.getInstance().getDriveTrain().setSpeed(
 						SensorConfig.getInstance().getLeftJoystick().getY(),
@@ -54,28 +56,56 @@ public class MullenatorTeleop implements ITeleopControl
 			
 			while(RobotStatus.isRunning())
 			{
-				if(gamepad.getButtonValue(ButtonGamepad.TWO))
+				while(gamepad.getButtonValue(ButtonGamepad.TWO))
 				{
 					launcher.moveShooterDown();
 				}
 	
-				if(gamepad.getButtonValue(ButtonGamepad.FOUR))
+				while(gamepad.getButtonValue(ButtonGamepad.FOUR))
 				{
 					launcher.moveShooterUp();
 				}
 				
+				launcher.stopShooterLifter();
+				
 				if(gamepad.getButtonValue(ButtonGamepad.ONE))
 				{
-					launcher.launchBoulder();
+					launcher.spinShooterUp();
+				} else
+				{
+					launcher.stopShooterWheels();
 				}
 				
 				if(gamepad.getButtonValue(ButtonGamepad.THREE))
 				{
 					launcher.intakeBoulder();
+				} else
+				{
+					launcher.stopShooterWheels();
 				}
+				
+				if(gamepad.getButtonValue(ButtonGamepad.SIX))
+				{
+					launcher.launchBoulder();
+				}
+				
+				System.out.println(SensorConfig.getInstance().getShooterPot().getCount() + " Potentiometer");
 			}
 		});
+
+		/*
+		executor.submit(() ->
+		{
+			while(RobotStatus.isRunning())
+			{
+				System.out.println(SensorConfig.getInstance().getLeftEncoder().getCount() + " Left Encoder");
+				System.out.println(SensorConfig.getInstance().getRightEncoder().getCount() + " Right Encoder");
+				SensorConfig.getInstance().getTimer().waitTimeInMillis(1000);
+			}
+		});
+		*/
 		
+		/*
 		executor.submit(() ->
 		{
 			ILogger joyLogger, gamepadLogger;
@@ -89,5 +119,7 @@ public class MullenatorTeleop implements ITeleopControl
 				gamepadLogger.reportInformation(OutputDevice.SMARTDASHBOARD);
 			}
 		});
+		*/
+		
 	}
 }

@@ -16,5 +16,6 @@ public interface ILauncher
 	public void spinShooterUp();
 	public void launchBoulder();
 	public void augerGoToPosition(int position);
+	public void stopShooterLifter();
 
 }
