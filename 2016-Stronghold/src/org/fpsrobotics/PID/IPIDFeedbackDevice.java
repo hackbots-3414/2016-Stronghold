@@ -8,5 +8,6 @@ public interface IPIDFeedbackDevice
 	void enable();
 	void disable();
 	void resetCount();
+	double getError();
 	CANTalon.FeedbackDevice whatPIDDevice();
 }

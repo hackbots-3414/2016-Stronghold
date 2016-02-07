@@ -33,9 +33,6 @@ public class SensorConfig
 	private IJoystick leftJoystick;
 	private IJoystick rightJoystick;
 	
-	IPIDFeedbackDevice leftEncoder;
-	IPIDFeedbackDevice rightEncoder;
-	
 	IPIDFeedbackDevice pot;
 	
 	/*
@@ -73,9 +70,6 @@ public class SensorConfig
 		/*
 		pdp = new PowerDistributionPanel();
 		*/
-		
-		leftEncoder = new BuiltInCANTalonEncoder(ActuatorConfig.getInstance().getLeftFrontMotor());
-		rightEncoder = new BuiltInCANTalonEncoder(ActuatorConfig.getInstance().getRightFrontMotor());
 		
 		pot = new Potentiometer(POTENTIOMETER_CHANNEL);
 		
@@ -124,19 +118,6 @@ public class SensorConfig
 		return timer;
 	}
 	
-	
-	public IPIDFeedbackDevice getLeftEncoder()
-	{
-		return leftEncoder;
-	}
-
-	public IPIDFeedbackDevice getRightEncoder()
-	{
-		return rightEncoder;
-	}
-	
-	
-
 	public IPIDFeedbackDevice getShooterPot() {
 		return pot;
 	}

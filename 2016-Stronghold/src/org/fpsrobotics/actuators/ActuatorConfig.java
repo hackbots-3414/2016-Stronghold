@@ -27,9 +27,11 @@ public class ActuatorConfig
 	
 	private final int SERVO_PORT = 9;
 	
-	private static final double driveTrainP = 0.0000001;
+	/*
+	private static final double driveTrainP = 0.0001; 
 	private static final double driveTrainI = 0.0;
 	private static final double driveTrainD = 0.0;
+	*/
 	
 	/*
 	private static final int GYROSCOPE_CHANNEL = 0;
@@ -60,6 +62,9 @@ public class ActuatorConfig
 	private CANMotor rightFrontCANMotor;
 	private CANMotor rightRearCANMotor;
 	
+	IPIDFeedbackDevice leftEncoder;
+	IPIDFeedbackDevice rightEncoder;
+	
 	private IServo servo;
 	
 	private ActuatorConfig()
@@ -69,21 +74,24 @@ public class ActuatorConfig
 		rightFrontMotor = new CANTalon(MOTOR_RIGHT_FRONT);
 		rightRearMotor = new CANTalon(MOTOR_RIGHT_REAR);
 		
-		leftFrontCANMotor = new CANMotor(leftFrontMotor, true, SensorConfig.getInstance().getLeftEncoder());
+		leftEncoder = new BuiltInCANTalonEncoder(leftFrontMotor);
+		rightEncoder = new BuiltInCANTalonEncoder(rightFrontMotor);
+		
+		leftFrontCANMotor = new CANMotor(leftFrontMotor, true, leftEncoder);
 		leftRearCANMotor = new CANMotor(leftRearMotor, true);
 		
-		rightFrontCANMotor = new CANMotor(rightFrontMotor, false, SensorConfig.getInstance().getRightEncoder());
+		rightFrontCANMotor = new CANMotor(rightFrontMotor, false, rightEncoder);
 		rightRearCANMotor = new CANMotor(rightRearMotor, false);
+		
+		rightFrontMotor.reverseSensor(true);
+		leftFrontMotor.reverseSensor(true);
 		
 		leftDoubleMotor = new DoubleMotor(leftFrontCANMotor, leftRearCANMotor);
 		rightDoubleMotor = new DoubleMotor(rightFrontCANMotor, rightRearCANMotor);
 		
 		driveTrain = new TankDrive(leftDoubleMotor, rightDoubleMotor);
-		driveTrain.setControlMode(TalonControlMode.Speed);
 		
-		driveTrain.setP(driveTrainP);
-		driveTrain.setI(driveTrainI);
-		driveTrain.setD(driveTrainD);
+		driveTrain.setControlMode(TalonControlMode.Speed);
 		
 		leftShooterMotor = new CANTalon(LEFT_SHOOTER_MOTOR);
 		rightShooterMotor = new CANTalon(RIGHT_SHOOTER_MOTOR);
@@ -142,6 +150,15 @@ public class ActuatorConfig
 	public IServo getServo() {
 		return servo;
 	}
+
+	public IPIDFeedbackDevice getLeftEncoder() {
+		return leftEncoder;
+	}
+
+	public IPIDFeedbackDevice getRightEncoder() {
+		return rightEncoder;
+	}
+	
 	
 	
 }

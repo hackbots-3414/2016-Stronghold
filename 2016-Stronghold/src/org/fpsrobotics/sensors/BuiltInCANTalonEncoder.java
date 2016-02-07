@@ -12,6 +12,7 @@ public class BuiltInCANTalonEncoder implements IPIDFeedbackDevice
 	public BuiltInCANTalonEncoder(CANTalon canMotor)
 	{
 		this.canMotor = canMotor;
+		canMotor.configEncoderCodesPerRev(2048);
 	}
 	
 	@Override
@@ -42,6 +43,11 @@ public class BuiltInCANTalonEncoder implements IPIDFeedbackDevice
 	public FeedbackDevice whatPIDDevice() 
 	{
 		return CANTalon.FeedbackDevice.QuadEncoder;
+	}
+
+	@Override
+	public double getError() {
+		return canMotor.getClosedLoopError();
 	}
 
 }

@@ -30,20 +30,31 @@ public class MullenatorTeleop implements ITeleopControl
 	{
 		executor.submit(() ->
 		{
+			double correctedYOne, correctedYTwo;
+			
 			while(RobotStatus.isRunning())
 			{
-				/* Try static P I and D values first
-				ActuatorConfig.getInstance().getDriveTrain().setP(SmartDashboard.getNumber("p-value", 0.000001));
-				ActuatorConfig.getInstance().getDriveTrain().setI(SmartDashboard.getNumber("i-value", 0.0));
-				ActuatorConfig.getInstance().getDriveTrain().setD(SmartDashboard.getNumber("d-value", 0.0));
+				correctedYOne = SensorConfig.getInstance().getRightJoystick().getY()*400;
+				correctedYTwo = SensorConfig.getInstance().getLeftJoystick().getY()*400;
+				
+				if(correctedYOne > 10 || correctedYTwo > 10 || correctedYOne < -10 || correctedYTwo < -10)
+				{
+					ActuatorConfig.getInstance().getDriveTrain().setSpeed(correctedYOne, correctedYTwo);
+				} else
+				{
+					ActuatorConfig.getInstance().getDriveTrain().setSpeed(0, 0);
+				}
+				
+				System.out.println("Potentiometer " + SensorConfig.getInstance().getShooterPot().getCount());
+				/*
+				System.out.println(correctedYOne + " " + correctedYTwo);
+				
+				SmartDashboard.putNumber("PID Error Left", ActuatorConfig.getInstance().getLeftEncoder().getError());
+				SmartDashboard.putNumber("PID Error Right", ActuatorConfig.getInstance().getRightEncoder().getError());
+				
+				SmartDashboard.putNumber("Left Encoder Value", ActuatorConfig.getInstance().getLeftEncoder().getCount());
+				SmartDashboard.putNumber("Right Encoder Value", ActuatorConfig.getInstance().getRightEncoder().getCount());
 				*/
-				
-				// This won't work until we transform it linearly.
-				ActuatorConfig.getInstance().getDriveTrain().setSpeed(
-						SensorConfig.getInstance().getLeftJoystick().getY(),
-						SensorConfig.getInstance().getRightJoystick().getY());
-				
-				System.out.println("Drive Loop Completed");
 				
 				SensorConfig.getInstance().getTimer().waitTimeInMillis(50);
 			}
@@ -71,38 +82,24 @@ public class MullenatorTeleop implements ITeleopControl
 				
 				launcher.stopShooterLifter();
 				
-				if(gamepad.getButtonValue(ButtonGamepad.ONE))
+				while(gamepad.getButtonValue(ButtonGamepad.ONE))
 				{
 					launcher.spinShooterUp();
-				} else
-				{
-					launcher.stopShooterWheels();
-				}
+				} 
 				
-				if(gamepad.getButtonValue(ButtonGamepad.THREE))
+				while(gamepad.getButtonValue(ButtonGamepad.THREE))
 				{
 					launcher.intakeBoulder();
-				} else
-				{
-					launcher.stopShooterWheels();
-				}
+				} 
 				
 				if(gamepad.getButtonValue(ButtonGamepad.SIX))
 				{
 					launcher.launchBoulder();
 				}
 				
-				System.out.println(SensorConfig.getInstance().getShooterPot().getCount() + " Potentiometer");
-			}
-		});
-
-		executor.submit(() ->
-		{
-			while(RobotStatus.isRunning())
-			{
-				System.out.println(SensorConfig.getInstance().getLeftEncoder().getCount() + " Left Encoder");
-				System.out.println(SensorConfig.getInstance().getRightEncoder().getCount() + " Right Encoder");
-				SensorConfig.getInstance().getTimer().waitTimeInMillis(1000);
+				launcher.stopShooterWheels();
+				
+				//System.out.println(SensorConfig.getInstance().getShooterPot().getCount() + " Potentiometer");
 			}
 		});
 		

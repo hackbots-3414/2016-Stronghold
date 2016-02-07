@@ -10,14 +10,14 @@ public class Launcher implements ILauncher
 {
 	// private double p, i, d;
 
-	private final double INTAKE_SPEED = -0.2;
+	private final double INTAKE_SPEED = -0.4;
 	private final double SHOOT_SPEED = 1.0;
 	private final double INTAKE_AUGER_SPEED = 0.2;
 	private final double LINEAR_ACTUATOR_SPEED = 0.7;
 	private final double AUGER_MOVE_SPEED = 0.5;
 
-	private final int TOP_LIMIT_POT_VALUE = 3932;
-	private final int BOTTOM_LIMIT_POT_VALUE = 3972;
+	private final int TOP_LIMIT_POT_VALUE = 310;
+	private final int BOTTOM_LIMIT_POT_VALUE = 1411;
 	private final int SHOOTER_ENCODER_VALUE = 200;
 
 	private ICANMotor shooterMotorLeft, shooterMotorRight, augerIntakeMotor, shooterLifterMotor;

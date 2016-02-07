@@ -52,4 +52,10 @@ public class Potentiometer implements IPIDFeedbackDevice
 		return FeedbackDevice.AnalogPot;
 	}
 
+	@Override
+	public double getError() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

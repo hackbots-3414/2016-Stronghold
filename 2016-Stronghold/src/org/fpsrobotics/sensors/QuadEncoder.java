@@ -49,4 +49,11 @@ public class QuadEncoder implements IPIDFeedbackDevice
 		return FeedbackDevice.QuadEncoder;
 	}
 
+	@Override
+	public double getError() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
 }

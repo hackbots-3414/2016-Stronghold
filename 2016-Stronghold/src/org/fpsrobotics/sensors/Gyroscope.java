@@ -51,4 +51,10 @@ public class Gyroscope implements IPIDFeedbackDevice
 		return null;
 	}
 
+	@Override
+	public double getError() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }
