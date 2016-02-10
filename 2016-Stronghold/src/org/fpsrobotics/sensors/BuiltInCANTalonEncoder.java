@@ -5,6 +5,11 @@ import org.fpsrobotics.PID.IPIDFeedbackDevice;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 
+/**
+ * 
+ * A class that implements the encoder connected to directly to the CAN Talon motor controller.
+ *
+ */
 public class BuiltInCANTalonEncoder implements IPIDFeedbackDevice 
 {
 	private CANTalon canMotor;

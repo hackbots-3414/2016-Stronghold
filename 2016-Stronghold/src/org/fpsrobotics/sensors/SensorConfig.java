@@ -22,17 +22,14 @@ public class SensorConfig
 	
 	private final int POTENTIOMETER_CHANNEL = 0;
 	
-	/*
-	private final int HALL_EFFECT_BOTTOM_PORT = 0;
-	private final int HALL_EFFECT_TOP_PORT = 1;
-	*/
-	
 	private final int AUGER_BOTTOM_LIMIT_SWITCH = 4;
 	private final int AUGER_TOP_LIMIT_SWITCH = 5;
 	
 	/*
 	private final String CAMERA_USB_PORT = "cam0";
+	private ICamera camera;
 	*/
+	
 	
 	private IJoystick leftJoystick;
 	private IJoystick rightJoystick;
@@ -51,19 +48,11 @@ public class SensorConfig
 	private ILimitSwitch augerBottomLimitSwitch;
 	private ILimitSwitch augerTopLimitSwitch;
 	
-	/*
-	private IHallEffectSensor bottomLimitSensor, topLimitSensor;
-	*/
-	
 	private IGamepad gamepad;
 	
 	private IPowerBoard pdp;
 	
 	private IGyroscope gyro;
-	
-	/*
-	private ICamera camera;
-	*/
 	
 	private SensorConfig()
 	{

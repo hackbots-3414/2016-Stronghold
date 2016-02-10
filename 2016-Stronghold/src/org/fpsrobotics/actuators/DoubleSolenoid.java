@@ -2,6 +2,10 @@ package org.fpsrobotics.actuators;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
+/**
+ * Used to control a double solenoid connected to the pneumatics breakout board in the 2016 season.
+ *
+ */
 public class DoubleSolenoid implements ISolenoid
 {
 //	private int channelOne;

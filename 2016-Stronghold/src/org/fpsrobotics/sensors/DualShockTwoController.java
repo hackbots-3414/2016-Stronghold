@@ -2,6 +2,10 @@ package org.fpsrobotics.sensors;
 
 import edu.wpi.first.wpilibj.Joystick;
 
+/**
+ * A class that interfaces with the Logitech dual shock two controller.
+ *
+ */
 public class DualShockTwoController implements IGamepad
 {
 	private Joystick joy;

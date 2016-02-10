@@ -2,6 +2,11 @@ package org.fpsrobotics.sensors;
 
 import edu.wpi.first.wpilibj.Joystick;
 
+/**
+ * 
+ * Implements the buttons and joystick motions on the Logitech 3D Joystick.
+ *
+ */
 public class Logitech3DJoystick implements IJoystick
 {
 	private Joystick joy;

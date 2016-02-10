@@ -2,6 +2,10 @@ package org.fpsrobotics.actuators;
 
 import org.fpsrobotics.sensors.IHallEffectSensor;
 
+/**
+ * Controls the Dart Linear Actuator available in the 2016 season.
+ * This class is used when a Dart Linear Actuator has hall effect sensors attached to it in order to monitor it's upper and lower limits.
+ */
 public class DartLinearActuator implements ILinearActuator
 {
 	private IMotor screwMotor;

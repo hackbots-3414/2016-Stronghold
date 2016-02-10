@@ -3,6 +3,12 @@ package org.fpsrobotics.actuators;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.PWM;
 
+/**
+ * Controls the Bosch motor donated to us.
+ * The motor uses hall effect sensors to determine the position of the shaft. 
+ * This class is incomplete and unused because the motors sent to us have defective hall effect sensors and therefore just use the normal CANMotor or Motor class.
+ *
+ */
 public class BoschHallEffectMotor implements IMotor
 {
 	CANTalon motor;

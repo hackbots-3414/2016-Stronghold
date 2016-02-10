@@ -2,6 +2,11 @@ package org.fpsrobotics.sensors;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 
+/**
+ * 
+ * A class that implements the 8 position switch that is used to determine the autonomous mode at the beginning of a match.
+ *
+ */
 public class AutonomousSwitches implements ICounterSwitch
 {
 	private DigitalInput ones;

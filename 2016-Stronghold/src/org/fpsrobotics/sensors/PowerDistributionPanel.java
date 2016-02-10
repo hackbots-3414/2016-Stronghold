@@ -1,5 +1,10 @@
 package org.fpsrobotics.sensors;
 
+/**
+ * Defines the Power Distribution Panel and it's sensors onboard.
+ * You can measure the voltage and temperature for the whole system. Along with Current and power on each channel.
+ *
+ */
 public class PowerDistributionPanel implements IPowerBoard
 {
 	private edu.wpi.first.wpilibj.PowerDistributionPanel pdp;

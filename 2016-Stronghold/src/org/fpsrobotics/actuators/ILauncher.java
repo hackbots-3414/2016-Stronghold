@@ -1,5 +1,9 @@
 package org.fpsrobotics.actuators;
 
+/**
+ * Describes a launcher to be used in the 2016 season for the game Stronghold.
+ *
+ */
 public interface ILauncher
 {
 	public void moveShooterToBottomLimit();

@@ -1,5 +1,9 @@
 package org.fpsrobotics.sensors;
 
+/**
+ * Defines a 3 dimensional accelerometer.
+ *
+ */
 public interface IAccelerometer
 {
 	public double getX();

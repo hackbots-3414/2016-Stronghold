@@ -6,9 +6,13 @@ import org.fpsrobotics.sensors.IGyroscope;
 
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 
+/**
+ * Creates a drive train that has two double motors on either side with encoders on each gearbox. 
+ * It also has an optional gyroscope attached in order for straight movement.
+ *
+ */
 public class TankDrive implements IDriveTrain
 {
-	// double p, i, d;
 	private DoubleMotor motorLeft, motorRight;
 
 	private IGyroscope gyro;

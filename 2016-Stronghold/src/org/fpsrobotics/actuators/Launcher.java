@@ -6,10 +6,17 @@ import org.fpsrobotics.sensors.SensorConfig;
 
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 
+/**
+ * Creates a launcher for the 2016 season Stronghold. It uses two independent motors to fire the ball 
+ * as well as a servo to launch it into the firing position.
+ * It has a linear actuator that controls the vertical position of the shooter, along with two limit switches 
+ * and a potentiometer that define it's limits of travel.
+ * It also has an auger that needs a motor to suck in the ball and a motor to move itself vertically.
+ * The auger also has limit switches for it's outer reaches of travel.
+ *
+ */
 public class Launcher implements ILauncher
 {
-	// private double p, i, d;
-
 	private final double INTAKE_SPEED = -0.4;
 	private final double SHOOT_SPEED = 1.0;
 	private final double INTAKE_AUGER_SPEED = 0.2;

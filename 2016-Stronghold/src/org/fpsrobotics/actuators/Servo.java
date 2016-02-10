@@ -1,5 +1,10 @@
 package org.fpsrobotics.actuators;
 
+/**
+ * This class controls a generic hobby servo, it has options to set it's position
+ * from -1.0 to 1.0 as well as a predefined latched and unlatched position.
+ *
+ */
 public class Servo implements IServo
 {
 	private static final double SERVO_LATCHED = 0.6;

@@ -5,6 +5,11 @@ import org.fpsrobotics.PID.IPIDFeedbackDevice;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Talon;
 
+/**
+ * A generic motor class that does not use the CAN interface. 
+ * This class would be suitable to control the Jaguar, Victor, Talon and Talon SR motor controllers.
+ *
+ */
 public class Motor implements IMotor
 {
 	private double p, i, d, invert;

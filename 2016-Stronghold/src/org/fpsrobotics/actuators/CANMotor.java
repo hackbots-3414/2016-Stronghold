@@ -5,6 +5,11 @@ import org.fpsrobotics.PID.IPIDFeedbackDevice;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 
+/**
+ * 
+ * Controls motors connected to Talon SRX motor controllers that interface with the CAN bus on the RoboRIO.
+ *
+ */
 public class CANMotor implements ICANMotor 
 {
 	private boolean invertDirection;
@@ -15,6 +20,7 @@ public class CANMotor implements ICANMotor
 	
 	public CANMotor(CANTalon motor, boolean invertDirection)
 	{
+		// Changes the motor controller to accept percentages expressed in decimals of the voltage of the system.
 		motor.changeControlMode(TalonControlMode.PercentVbus);
 		
 		this.canMotor = motor;
@@ -23,10 +29,8 @@ public class CANMotor implements ICANMotor
 	
 	public CANMotor(CANTalon motor, boolean invertDirection, IPIDFeedbackDevice device)
 	{
-		motor.changeControlMode(TalonControlMode.PercentVbus);
-		
-		this.canMotor = motor;
-		this.invertDirection = invertDirection;
+		// Calls above constructor
+		this(motor, invertDirection);
 		this.device = device;
 		
 		canMotor.setFeedbackDevice(device.whatPIDDevice());

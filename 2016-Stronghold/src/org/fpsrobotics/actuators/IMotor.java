@@ -1,5 +1,8 @@
 package org.fpsrobotics.actuators;
 
+/**
+ * Describes a generic motor
+ */
 public interface IMotor
 {
 	double getSpeed();

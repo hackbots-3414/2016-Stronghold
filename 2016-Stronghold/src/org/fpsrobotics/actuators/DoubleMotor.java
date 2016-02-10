@@ -4,22 +4,37 @@ import org.fpsrobotics.PID.IPIDFeedbackDevice;
 
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 
+/**
+ * This class combines the functionality of two motors into one.
+ *
+ */
 public class DoubleMotor implements ICANMotor
 {
 	private Motor motorOne, motorTwo;
 	private CANMotor CANMotorOne, CANMotorTwo;
 	
+	/**
+	 * Used for motors that aren't connected to Talon SRX motor controllers
+	 * @param motorOne
+	 * @param motorTwo
+	 */
 	public DoubleMotor(Motor motorOne, Motor motorTwo)
 	{
 		this.motorOne = motorOne;
 		this.motorTwo = motorTwo;
 	}
 	
+	/**
+	 * Used for motors that are connected to Talon SRX motor controllers
+	 * @param motorOne
+	 * @param motorTwo
+	 */
 	public DoubleMotor(CANMotor motorOne, CANMotor motorTwo)
 	{
 		this.CANMotorOne = motorOne;
 		this.CANMotorTwo = motorTwo;
-
+		
+		// Follower mode makes one CANTalon go the same speed as another CANTalon without issuing them both separate commands.
 		motorTwo.setControlMode(TalonControlMode.Follower);
 		motorTwo.setFollowerDeviceID(motorOne.getDeviceID());
 	}

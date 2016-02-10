@@ -5,6 +5,11 @@ import org.fpsrobotics.PID.IPIDFeedbackDevice;
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 
+/**
+ * 
+ * Implements a simple analog gyroscope.
+ *
+ */
 public class Gyroscope implements IGyroscope
 {
 	private AnalogGyro gyro;

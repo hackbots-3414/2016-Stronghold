@@ -2,6 +2,10 @@ package org.fpsrobotics.sensors;
 
 import com.kauailabs.navx.frc.AHRS;
 
+/**
+ * Implements the gyroscope included on the NavX MXP board.
+ *
+ */
 public class GyroscopeNavX implements IGyroscope
 {
 	AHRS ahrs;

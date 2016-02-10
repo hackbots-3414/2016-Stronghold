@@ -5,6 +5,11 @@ import org.fpsrobotics.PID.IPIDFeedbackDevice;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 
+/**
+ * 
+ * Defines an analog potentiometer.
+ *
+ */
 public class Potentiometer implements IPIDFeedbackDevice
 {
 	private AnalogInput analog;
