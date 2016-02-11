@@ -3,6 +3,10 @@ package org.fpsrobotics.sensors;
 import org.fpsrobotics.PID.IPIDFeedbackDevice;
 import org.fpsrobotics.actuators.ActuatorConfig;
 
+import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.wpilibj.SPI;
+
 public class SensorConfig 
 {
 	private static SensorConfig singleton = null;
@@ -55,6 +59,8 @@ public class SensorConfig
 	
 	private IPowerBoard pdp;
 	
+	private IGyroscope gyro;
+	
 	/*
 	private ICamera camera;
 	*/
@@ -80,6 +86,10 @@ public class SensorConfig
 		bottomLimitSwitch = new DigitalLimitSwitch(DIGITAL_LIMIT_SWITCH_CHANNEL);
 		augerBottomLimitSwitch = new DigitalLimitSwitch(AUGER_BOTTOM_LIMIT_SWITCH);
 		augerTopLimitSwitch = new DigitalLimitSwitch(AUGER_TOP_LIMIT_SWITCH);
+		
+		AHRS ahrs = new AHRS(SPI.Port.kMXP);
+		
+		gyro = new GyroscopeNavX(ahrs);
 		
 		/*
 		camera = new MicrosoftLifeCam(CAMERA_USB_PORT);
@@ -145,7 +155,10 @@ public class SensorConfig
 		return augerTopLimitSwitch;
 	}
 	
-	
+	public IGyroscope getGyro()
+	{
+		return gyro;
+	}
 	
 	/*
 	public ICamera getCamera()

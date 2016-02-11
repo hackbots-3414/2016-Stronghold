@@ -5,7 +5,7 @@ import org.fpsrobotics.PID.IPIDFeedbackDevice;
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 
-public class Gyroscope implements IPIDFeedbackDevice
+public class Gyroscope implements IGyroscope
 {
 	private AnalogGyro gyro;
 	private boolean isEnabled;
@@ -43,18 +43,6 @@ public class Gyroscope implements IPIDFeedbackDevice
 	@Override
 	public void resetCount() {
 		gyro.reset();
-	}
-
-	@Override
-	public FeedbackDevice whatPIDDevice() {
-		// isn't actually a PID device... 
-		return null;
-	}
-
-	@Override
-	public double getError() {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 
 }

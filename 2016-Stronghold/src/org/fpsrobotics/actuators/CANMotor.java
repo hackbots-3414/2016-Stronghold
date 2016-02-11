@@ -65,6 +65,8 @@ public class CANMotor implements ICANMotor
 	@Override
 	public void enablePID() 
 	{
+		canMotor.reset();
+		canMotor.enable();
 		// TODO: implement later?
 	}
 

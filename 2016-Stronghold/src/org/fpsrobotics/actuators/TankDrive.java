@@ -2,6 +2,7 @@ package org.fpsrobotics.actuators;
 
 import org.fpsrobotics.PID.IPIDFeedbackDevice;
 import org.fpsrobotics.sensors.Gyroscope;
+import org.fpsrobotics.sensors.IGyroscope;
 
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 
@@ -10,7 +11,7 @@ public class TankDrive implements IDriveTrain
 	// double p, i, d;
 	private DoubleMotor motorLeft, motorRight;
 
-	private Gyroscope gyro;
+	private IGyroscope gyro;
 
 	public TankDrive(DoubleMotor motorLeft, DoubleMotor motorRight)
 	{
@@ -18,16 +19,11 @@ public class TankDrive implements IDriveTrain
 		this.motorRight = motorRight;
 	}
 
-	public TankDrive(DoubleMotor motorLeft, DoubleMotor motorRight, Gyroscope gyro)
+	public TankDrive(DoubleMotor motorLeft, DoubleMotor motorRight, IGyroscope gyro)
 	{
 		this.motorLeft = motorLeft;
 		this.motorRight = motorRight;
 		this.gyro = gyro;
-	}
-
-	public Gyroscope getGyro()
-	{
-		return gyro;
 	}
 
 	@Override
@@ -182,7 +178,14 @@ public class TankDrive implements IDriveTrain
 			motorRight.enablePID();
 		} else
 		{
-
+			try
+			{
+				throw new Exception("Josh made a PNG (Raul), no gyroscope");
+			} catch (Exception e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 	}

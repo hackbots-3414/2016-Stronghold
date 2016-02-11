@@ -89,7 +89,7 @@ public class ActuatorConfig
 		leftDoubleMotor = new DoubleMotor(leftFrontCANMotor, leftRearCANMotor);
 		rightDoubleMotor = new DoubleMotor(rightFrontCANMotor, rightRearCANMotor);
 		
-		driveTrain = new TankDrive(leftDoubleMotor, rightDoubleMotor);
+		driveTrain = new TankDrive(leftDoubleMotor, rightDoubleMotor, SensorConfig.getInstance().getGyro());
 		
 		driveTrain.setControlMode(TalonControlMode.Speed);
 		
