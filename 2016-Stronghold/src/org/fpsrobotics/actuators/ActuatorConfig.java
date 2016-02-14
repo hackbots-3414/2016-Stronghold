@@ -101,6 +101,7 @@ public class ActuatorConfig
 		
 		// Create the whole drivetrain
 		driveTrain = new TankDrive(leftDoubleMotor, rightDoubleMotor, SensorConfig.getInstance().getGyro());
+		//driveTrain = new TankDrive(leftDoubleMotor, rightDoubleMotor);
 		
 		// set it to use PID by default
 		driveTrain.enablePID();

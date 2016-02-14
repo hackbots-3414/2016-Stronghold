@@ -23,7 +23,7 @@ public class BuiltInCANTalonEncoder implements IPIDFeedbackDevice
 	@Override
 	public double getCount() 
 	{
-		return canMotor.get();
+		return canMotor.getEncPosition();
 	}
 
 	@Override
@@ -41,7 +41,7 @@ public class BuiltInCANTalonEncoder implements IPIDFeedbackDevice
 	@Override
 	public void resetCount() 
 	{
-		canMotor.reset();
+		
 	}
 
 	@Override

@@ -11,12 +11,9 @@ public class SensorConfig
 {
 	private static SensorConfig singleton = null;
 	
-	/*
 	private final int AUTO_SWITCH_ONES = 0;
 	private final int AUTO_SWITCH_TWOS = 1;
 	private final int AUTO_SWITCH_FOURS = 2;
-	
-	*/
 	
 	private final int DIGITAL_LIMIT_SWITCH_CHANNEL = 3;
 	
@@ -25,10 +22,8 @@ public class SensorConfig
 	private final int AUGER_BOTTOM_LIMIT_SWITCH = 4;
 	private final int AUGER_TOP_LIMIT_SWITCH = 5;
 	
-	/*
 	private final String CAMERA_USB_PORT = "cam0";
 	private ICamera camera;
-	*/
 	
 	
 	private IJoystick leftJoystick;
@@ -36,11 +31,8 @@ public class SensorConfig
 	
 	IPIDFeedbackDevice pot;
 	
-	/*
-	
 	private ICounterSwitch autoSwitch;
 	
-	*/
 	private ITimer timer;
 	
 	
@@ -68,9 +60,7 @@ public class SensorConfig
 		
 		pot = new Potentiometer(POTENTIOMETER_CHANNEL);
 		
-		/*
-		autoSwitch = new AutonomousSwitches(AUTO_SWITCH_ONES, AUTO_SWITCH_TWOS, AUTO_SWITCH_FOURS);
-		*/
+		//autoSwitch = new AutonomousSwitches(AUTO_SWITCH_ONES, AUTO_SWITCH_TWOS, AUTO_SWITCH_FOURS);
 		
 		bottomLimitSwitch = new DigitalLimitSwitch(DIGITAL_LIMIT_SWITCH_CHANNEL);
 		augerBottomLimitSwitch = new DigitalLimitSwitch(AUGER_BOTTOM_LIMIT_SWITCH);
@@ -80,9 +70,7 @@ public class SensorConfig
 		
 		gyro = new GyroscopeNavX(ahrs);
 		
-		/*
 		camera = new MicrosoftLifeCam(CAMERA_USB_PORT);
-		*/
 	}
 
 	public static synchronized SensorConfig getInstance()
@@ -105,13 +93,10 @@ public class SensorConfig
 		return rightJoystick;
 	}
 	
-	/*
 	public ICounterSwitch getAutoSwitch() 
 	{
 		return autoSwitch;
 	}
-	
-	*/
 	
 	public ITimer getTimer() {
 		return timer;

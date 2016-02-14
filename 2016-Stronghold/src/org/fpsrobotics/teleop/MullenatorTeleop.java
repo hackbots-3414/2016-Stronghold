@@ -32,14 +32,17 @@ public class MullenatorTeleop implements ITeleopControl
 	{
 		executor.submit(() ->
 		{
-			double correctedYOne, correctedYTwo;
+			ActuatorConfig.getInstance().getDriveTrain().enablePID();
+			ActuatorConfig.getInstance().getDriveTrain().setControlMode(TalonControlMode.Speed);
+			
+			double correctedYOne, correctedYTwo, yOne, yTwo;
 
 			boolean pidOn = true;
 
 			while (RobotStatus.isRunning())
 			{
 
-				if (SensorConfig.getInstance().getRightJoystick().getButtonValue(ButtonJoystick.ONE))
+				if (SensorConfig.getInstance().getRightJoystick().getButtonValue(ButtonJoystick.FIVE))
 				{
 					pidOn = !pidOn;
 					
@@ -59,9 +62,35 @@ public class MullenatorTeleop implements ITeleopControl
 
 				if (pidOn)
 				{
-					correctedYOne = SensorConfig.getInstance().getRightJoystick().getY() * 400;
-					correctedYTwo = SensorConfig.getInstance().getLeftJoystick().getY() * 400;
-
+					yOne = SensorConfig.getInstance().getRightJoystick().getY();
+					yTwo = SensorConfig.getInstance().getLeftJoystick().getY();
+					
+					correctedYOne = yOne*400;
+					correctedYTwo = yTwo*400;
+					/*
+					if(yOne > 0)
+					{
+						correctedYOne = Math.log10(yOne+.12) * 400 + 370;
+					} else if (yOne < 0)
+					{
+						correctedYOne = -(Math.log10(Math.abs(yOne)+.12) * 400 + 370);
+					} else
+					{
+						correctedYOne = 0;
+					}
+					
+					if(yOne > 0)
+					{
+						correctedYTwo = Math.log10(yTwo+.12) * 400 + 370;
+					} else if (yOne < 0)
+					{
+						correctedYTwo = -(Math.log10(Math.abs(yTwo)+.12) * 400 + 370);
+					} else
+					{
+						correctedYTwo = 0;
+					}
+					*/
+					
 					if (correctedYOne > 20 || correctedYTwo > 20 || correctedYOne < -20 || correctedYTwo < -20)
 					{
 						ActuatorConfig.getInstance().getDriveTrain().setSpeed(correctedYOne, correctedYTwo);
@@ -100,6 +129,7 @@ public class MullenatorTeleop implements ITeleopControl
 				 * ActuatorConfig.getInstance().getRightEncoder().getCount());
 				 */
 
+				SmartDashboard.putNumber("Angle", SensorConfig.getInstance().getGyro().getCount());
 				SensorConfig.getInstance().getTimer().waitTimeInMillis(50);
 			}
 		});

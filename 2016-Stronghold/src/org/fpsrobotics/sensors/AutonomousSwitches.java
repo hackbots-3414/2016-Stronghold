@@ -23,6 +23,10 @@ public class AutonomousSwitches implements ICounterSwitch
 	@Override
 	public int getValue() 
 	{
+		System.out.println(ones.get() + " " + twos.get() + " " + fours.get());
+		
+		
+		
 		if(ones.get() == false && twos.get() == false && fours.get() == false)
 		{
 			return 0;

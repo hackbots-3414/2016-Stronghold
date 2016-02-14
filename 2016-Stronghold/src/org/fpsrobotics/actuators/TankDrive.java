@@ -3,8 +3,11 @@ package org.fpsrobotics.actuators;
 import org.fpsrobotics.PID.IPIDFeedbackDevice;
 import org.fpsrobotics.sensors.Gyroscope;
 import org.fpsrobotics.sensors.IGyroscope;
+import org.fpsrobotics.sensors.SensorConfig;
+import org.usfirst.frc.team3414.robot.RobotStatus;
 
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Creates a drive train that has two double motors on either side with encoders on each gearbox. 
@@ -143,15 +146,37 @@ public class TankDrive implements IDriveTrain
 	@Override
 	public void turnLeft(double speed, double degrees)
 	{
-		// TODO Auto-generated method stub
-
+		gyro.resetCount();
+		disablePID();
+		
+		if(-degrees < gyro.getCount())
+		{
+			while(-degrees < gyro.getCount())
+			{
+				setSpeed(speed, -speed);
+			}
+		}
+		
+		setSpeed(0, 0);
+		enablePID();
 	}
 
 	@Override
 	public void turnRight(double speed, double degrees)
 	{
-		// TODO Auto-generated method stub
-
+		gyro.resetCount();
+		disablePID();
+		
+		if(degrees > gyro.getCount())
+		{
+			while(degrees > gyro.getCount())
+			{
+				setSpeed(-speed, speed);
+			}
+		}
+		
+		setSpeed(0, 0);
+		enablePID();
 	}
 
 	final double Kp = 0.03;
@@ -159,27 +184,26 @@ public class TankDrive implements IDriveTrain
 	@Override
 	public void goStraight(double speed, int distance)
 	{
+		double initialCountRight = motorRight.getCANMotorOne().getPIDFeedbackDevice().getCount();
+		double initialCountLeft = motorLeft.getCANMotorOne().getPIDFeedbackDevice().getCount();
+		
 		if (gyro != null)
 		{
-			motorLeft.disablePID();
-			motorRight.disablePID();
-
-			motorLeft.getCANMotorOne().getPIDFeedbackDevice().resetCount();
-			motorRight.getCANMotorOne().getPIDFeedbackDevice().resetCount();
-
-			for (double i = 0; i < distance; i += (distance / 1000))
+			disablePID();
+			
+			gyro.resetCount();
+			
+			while(RobotStatus.isRunning() && 
+			((motorLeft.getCANMotorOne().getPIDFeedbackDevice().getCount()-initialCountLeft) >= -distance)
+		    && ((motorRight.getCANMotorOne().getPIDFeedbackDevice().getCount()-initialCountRight) >= -distance))
 			{
-				drive(speed, -gyro.getCount() * Kp);
-
-				if (distance <= motorLeft.getCANMotorOne().getPIDFeedbackDevice().getCount()
-						|| distance <= motorRight.getCANMotorOne().getPIDFeedbackDevice().getCount())
-				{
-					break;
-				}
+				drive(-speed, -gyro.getCount() * Kp);
 			}
-
-			motorLeft.enablePID();
-			motorRight.enablePID();
+			
+			enablePID();
+			
+			setSpeed(0,0);
+			
 		} else
 		{
 			try
@@ -231,6 +255,7 @@ public class TankDrive implements IDriveTrain
 			leftOutput = outputMagnitude;
 			rightOutput = outputMagnitude;
 		}
+		
 		setSpeed(leftOutput, rightOutput);
 	}
 
