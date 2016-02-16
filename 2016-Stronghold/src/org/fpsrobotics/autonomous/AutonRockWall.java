@@ -1,6 +1,7 @@
 package org.fpsrobotics.autonomous;
 
 import org.fpsrobotics.actuators.ActuatorConfig;
+import org.fpsrobotics.sensors.SensorConfig;
 
 public class AutonRockWall implements IAutonomousControl
 {
@@ -9,8 +10,17 @@ public class AutonRockWall implements IAutonomousControl
 	public void doAuto()
 	
 	{
+		// Go over rock wall
 		ActuatorConfig.getInstance().getDriveTrain().goStraight(0.8, 100000);
-		ActuatorConfig.getInstance().getDriveTrain().goStraight(0.2, 10000);
+		
+		// Straighten drive train
+		ActuatorConfig.getInstance().getDriveTrainAssist().centerDriveTrain(0.2);
+		
+		// Wait
+		SensorConfig.getInstance().getTimer().waitTimeInMillis(250);
+		
+		// Shoot ball
+		ActuatorConfig.getInstance().getLauncher().shootSequence();
 	}
 
 }

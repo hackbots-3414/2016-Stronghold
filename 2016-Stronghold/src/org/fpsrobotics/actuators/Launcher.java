@@ -32,7 +32,7 @@ public class Launcher implements ILauncher
 	private ILimitSwitch bottomLimitShooter, bottomLimitAuger, topLimitAuger;
 	private IPIDFeedbackDevice shooterPot;
 
-	private IServo shooterActuator;
+	private ISolenoid shooterActuator;
 
 	public Launcher(
 			ICANMotor shooterMotorLeft, 
@@ -44,7 +44,7 @@ public class Launcher implements ILauncher
 			ILimitSwitch bottomLimitAuger, 
 			ILimitSwitch topLimitAuger, 
 			IPIDFeedbackDevice shooterPot,
-			IServo shooterActuator)
+			ISolenoid shooterActuator)
 	{
 		this.shooterMotorLeft = shooterMotorLeft;
 		this.shooterMotorRight = shooterMotorRight;
@@ -70,8 +70,9 @@ public class Launcher implements ILauncher
 	@Override
 	public void shootSequence()
 	{
+		lowerAuger();
 		spinShooterUp();
-		SensorConfig.getInstance().getTimer().waitTimeInMillis(1000);
+		SensorConfig.getInstance().getTimer().waitTimeInMillis(500);
 		launchBoulder();
 	}
 
@@ -216,10 +217,10 @@ public class Launcher implements ILauncher
 	@Override
 	public void launchBoulder()
 	{
-		shooterActuator.engage();
+		shooterActuator.turnOff();
 		SensorConfig.getInstance().getTimer().waitTimeInMillis(250);
 		stopShooterWheels();
-		shooterActuator.disengage();
+		shooterActuator.turnOn();
 	}
 
 	@Override

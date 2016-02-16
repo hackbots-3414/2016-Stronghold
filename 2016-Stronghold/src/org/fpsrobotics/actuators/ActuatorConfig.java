@@ -1,7 +1,7 @@
 package org.fpsrobotics.actuators;
 
 import org.fpsrobotics.PID.IPIDFeedbackDevice;
-
+import org.fpsrobotics.autonomous.DriveTrainAssist;
 import org.fpsrobotics.sensors.BuiltInCANTalonEncoder;
 import org.fpsrobotics.sensors.Gyroscope;
 import org.fpsrobotics.sensors.ILimitSwitch;
@@ -30,10 +30,10 @@ public class ActuatorConfig
 	private final int AUGER_INTAKE_MOTOR = 8;
 	private final int AUGER_LIFTER_MOTOR = 9;
 	
-	private final int SERVO_PORT = 9;
+	private final int SOLENOID_PORT = 0;
 	
-	// Servo, if we use it
-	private IServo servo;
+	// Solenoid
+	ISolenoid shooterSolenoid;
 	
 	// Drive base classes
 	private CANTalon leftFrontMotor;
@@ -57,6 +57,9 @@ public class ActuatorConfig
 	
 	// Drive train
 	private IDriveTrain driveTrain;
+	
+	// Drive assist
+	private DriveTrainAssist driveAssist;
 	
 	// Shooter motors
 	private CANTalon leftShooterMotor;
@@ -101,6 +104,10 @@ public class ActuatorConfig
 		
 		// Create the whole drivetrain
 		driveTrain = new TankDrive(leftDoubleMotor, rightDoubleMotor, SensorConfig.getInstance().getGyro());
+		
+		// Create drive assist
+		driveAssist = new DriveTrainAssist(driveTrain, SensorConfig.getInstance().getGyro());
+				
 		//driveTrain = new TankDrive(leftDoubleMotor, rightDoubleMotor);
 		
 		// set it to use PID by default
@@ -119,8 +126,8 @@ public class ActuatorConfig
 		augerIntakeMotor = new CANTalon(AUGER_INTAKE_MOTOR);
 		augerLifterMotor = new CANTalon(AUGER_LIFTER_MOTOR);
 		
-		// Instantiate servo, if we use it
-		servo = new Servo(SERVO_PORT);
+		// Instantiate solenoid
+		shooterSolenoid = new SingleSolenoid(SOLENOID_PORT);
 		
 		// Instantiate the launcher itself
 		launcher = new Launcher(
@@ -133,7 +140,7 @@ public class ActuatorConfig
 				SensorConfig.getInstance().getAugerBottomLimitSwitch(), 
 				SensorConfig.getInstance().getAugerTopLimitSwitch(), 
 				SensorConfig.getInstance().getShooterPot(),
-			    servo
+			    shooterSolenoid
 				);
 	}
 
@@ -167,8 +174,8 @@ public class ActuatorConfig
 		return launcher;
 	}
 
-	public IServo getServo() {
-		return servo;
+	public ISolenoid getShooterSolenoid() {
+		return shooterSolenoid;
 	}
 
 	public IPIDFeedbackDevice getLeftEncoder() {
@@ -177,6 +184,11 @@ public class ActuatorConfig
 
 	public IPIDFeedbackDevice getRightEncoder() {
 		return rightEncoder;
+	}
+	
+	public DriveTrainAssist getDriveTrainAssist()
+	{
+		return driveAssist;
 	}
 	
 	

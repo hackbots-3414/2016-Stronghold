@@ -65,15 +65,18 @@ public class MullenatorTeleop implements ITeleopControl
 					yOne = SensorConfig.getInstance().getRightJoystick().getY();
 					yTwo = SensorConfig.getInstance().getLeftJoystick().getY();
 					
+					/* Linear Drive Control
 					correctedYOne = yOne*400;
 					correctedYTwo = yTwo*400;
-					/*
+					*/
+					
+					/* Logarithmic Drive Control
 					if(yOne > 0)
 					{
-						correctedYOne = Math.log10(yOne+.12) * 400 + 370;
+						correctedYOne = (Math.log10(yOne+.12) * 400 + 370);
 					} else if (yOne < 0)
 					{
-						correctedYOne = -(Math.log10(Math.abs(yOne)+.12) * 400 + 370);
+						correctedYOne = -(Math.log10(-yOne+.12) * 400 + 370);
 					} else
 					{
 						correctedYOne = 0;
@@ -81,15 +84,19 @@ public class MullenatorTeleop implements ITeleopControl
 					
 					if(yOne > 0)
 					{
-						correctedYTwo = Math.log10(yTwo+.12) * 400 + 370;
+						correctedYTwo = (Math.log10(yTwo+.12) * 400 + 370);
 					} else if (yOne < 0)
 					{
-						correctedYTwo = -(Math.log10(Math.abs(yTwo)+.12) * 400 + 370);
+						correctedYTwo = -(Math.log10(-yTwo+.12) * 400 + 370);
 					} else
 					{
 						correctedYTwo = 0;
 					}
 					*/
+					
+					/* Inverse Tangent Drive Control */
+					correctedYOne = Math.atan(yOne)*(4/Math.PI)*400;
+					correctedYTwo = Math.atan(yTwo)*(4/Math.PI)*400;
 					
 					if (correctedYOne > 20 || correctedYTwo > 20 || correctedYOne < -20 || correctedYTwo < -20)
 					{
