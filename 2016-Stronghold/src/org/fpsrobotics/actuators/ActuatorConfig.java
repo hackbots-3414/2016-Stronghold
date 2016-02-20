@@ -26,6 +26,7 @@ public class ActuatorConfig
 	private final int LEFT_SHOOTER_MOTOR = 5;
 	private final int RIGHT_SHOOTER_MOTOR = 6;
 	
+	
 	private final int LINEAR_ACTUATOR_MOTOR = 7;
 	private final int AUGER_INTAKE_MOTOR = 8;
 	private final int AUGER_LIFTER_MOTOR = 9;
