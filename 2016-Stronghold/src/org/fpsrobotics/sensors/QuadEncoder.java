@@ -55,5 +55,10 @@ public class QuadEncoder implements IPIDFeedbackDevice
 		return 0;
 	}
 
+	@Override
+	public double getRate() {
+		return encoder.getRate();
+	}
+
 
 }

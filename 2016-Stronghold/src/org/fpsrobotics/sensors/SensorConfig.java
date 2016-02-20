@@ -54,22 +54,52 @@ public class SensorConfig
 	{
 		timer = new ClockTimer();
 		
-		leftJoystick = new Logitech3DJoystick(0);
-		rightJoystick = new Logitech3DJoystick(1);
-		gamepad = new DualShockTwoController(2);
+		try
+		{
+			leftJoystick = new Logitech3DJoystick(0);
+			rightJoystick = new Logitech3DJoystick(1);
+			gamepad = new DualShockTwoController(2);
+		} catch(Exception e)
+		{
+			System.err.println("Joystick failed to initialize");
+		}
 		
-		pot = new Potentiometer(POTENTIOMETER_CHANNEL);
+		try
+		{
+			pot = new Potentiometer(POTENTIOMETER_CHANNEL);
+		} catch(Exception e)
+		{
+			System.err.println("Potentiometer failed to initialize");
+		}
 		
-		autoSwitch = new AutonomousSwitches(AUTO_SWITCH_ONES, AUTO_SWITCH_TWOS, AUTO_SWITCH_FOURS);
+		try
+		{
+			autoSwitch = new AutonomousSwitches(AUTO_SWITCH_ONES, AUTO_SWITCH_TWOS, AUTO_SWITCH_FOURS, true);
+		} catch(Exception e)
+		{
+			System.err.println("Autonomous switches failed to initialize");
+		}
 		
-		bottomLimitSwitch = new DigitalLimitSwitch(SHOOTER_BOTTOM_LIMIT_CHANNEL, true);
-		topLimitSwitch = new DigitalLimitSwitch(SHOOTER_TOP_LIMIT_CHANNEL, true);
-		augerBottomLimitSwitch = new DigitalLimitSwitch(AUGER_BOTTOM_LIMIT_SWITCH, true);
-		augerTopLimitSwitch = new DigitalLimitSwitch(AUGER_TOP_LIMIT_SWITCH, true);
+		try
+		{
+			bottomLimitSwitch = new DigitalLimitSwitch(SHOOTER_BOTTOM_LIMIT_CHANNEL, true);
+			topLimitSwitch = new DigitalLimitSwitch(SHOOTER_TOP_LIMIT_CHANNEL, true);
+			augerBottomLimitSwitch = new DigitalLimitSwitch(AUGER_BOTTOM_LIMIT_SWITCH, true);
+			augerTopLimitSwitch = new DigitalLimitSwitch(AUGER_TOP_LIMIT_SWITCH, true);
+		} catch (Exception e)
+		{
+			System.err.println("A limit switch failed to initialize, stopping to avoid damage");
+			System.exit(1);
+		}
 		
-		AHRS ahrs = new AHRS(SPI.Port.kMXP);
-		
-		gyro = new GyroscopeNavX(ahrs);
+		try
+		{
+			AHRS ahrs = new AHRS(SPI.Port.kMXP);
+			gyro =		this.reversed = reversed; new GyroscopeNavX(ahrs);
+		} catch(Exception e)
+		{
+			System.err.println("No NavX MXP board found, or plugged into the wrong spot");
+		}
 		
 		//cameraOne = new MicrosoftLifeCam(CAMERA_USB_PORT);
 		

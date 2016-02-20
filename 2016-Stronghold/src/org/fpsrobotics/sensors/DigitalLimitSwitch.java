@@ -18,6 +18,11 @@ public class DigitalLimitSwitch implements ILimitSwitch
 		this.reversed = reversed;
 	}
 
+	public DigitalLimitSwitch(int channel)
+	{
+		limitSwitch = new DigitalInput(channel);
+	}
+	
 	@Override
 	public boolean getValue() 
 	{

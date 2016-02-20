@@ -55,4 +55,10 @@ public class BuiltInCANTalonEncoder implements IPIDFeedbackDevice
 		return canMotor.getClosedLoopError();
 	}
 
+	@Override
+	public double getRate() 
+	{
+		return canMotor.getEncVelocity();
+	}
+
 }

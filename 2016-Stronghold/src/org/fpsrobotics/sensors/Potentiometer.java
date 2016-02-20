@@ -63,4 +63,10 @@ public class Potentiometer implements IPIDFeedbackDevice
 		return 0;
 	}
 
+	@Override
+	public double getRate() {
+		// TODO: make it return rate of rotation
+		return 0;
+	}
+
 }

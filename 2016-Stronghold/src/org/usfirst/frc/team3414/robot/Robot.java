@@ -1,8 +1,5 @@
 package org.usfirst.frc.team3414.robot;
 
-
-
-
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -29,7 +26,7 @@ public class Robot extends SampleRobot
 {
 	ITeleopControl teleop;
 	IAutonomousControl auto;
-	//SendableChooser autoChooser;
+	SendableChooser autoChooser;
 	private ExecutorService executor;
 	
     public Robot() 
@@ -44,6 +41,18 @@ public class Robot extends SampleRobot
     }
     
     IVision vision = new VisionCenterTarget();
+    
+    private void makeAutoChooser() 
+    {
+    	autoChooser = new SendableChooser();
+        
+    	autoChooser.addDefault("Do Nothing", new AutonDoNothing());
+    	autoChooser.addDefault("Low Goal", new AutonLowGoal());
+    	autoChooser.addDefault("Rock Wall", new AutonRockWall());
+    	autoChooser.addDefault("Rough Terrain", new AutonRoughTerrain());
+    	
+        SmartDashboard.putData("Autonomous Chooser", autoChooser);
+    }
     
     public void autonomous() 
     {
@@ -127,14 +136,4 @@ public class Robot extends SampleRobot
     {
     	RobotStatus.setIsRunning(true);
     }
-    
-    /*
-    private void makeAutoChooser() {
-    	autoChooser = new SendableChooser();
-        
-    	autoChooser.addDefault("Do Nothing", new AutonDoNothing());
-    	// TODO: Add more auton things later
-        SmartDashboard.putData("Autonomous Chooser", autoChooser);
-    }
-    */
 }

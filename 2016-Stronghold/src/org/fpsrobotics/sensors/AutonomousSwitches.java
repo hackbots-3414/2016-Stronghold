@@ -9,60 +9,60 @@ import edu.wpi.first.wpilibj.DigitalInput;
  */
 public class AutonomousSwitches implements ICounterSwitch
 {
-	private DigitalInput ones;
-	private DigitalInput twos;
-	private DigitalInput fours;
+	private DigitalLimitSwitch ones;
+	private DigitalLimitSwitch twos;
+	private DigitalLimitSwitch fours;
 	
-	public AutonomousSwitches(int channelOnes, int channelTwos, int channelFours)
+	public AutonomousSwitches(int channelOnes, int channelTwos, int channelFours, boolean invertSwitches)
 	{
-		ones = new DigitalInput(channelOnes);
-		twos = new DigitalInput(channelTwos);
-		fours = new DigitalInput(channelFours);
+		ones = new DigitalLimitSwitch(channelOnes, invertSwitches);
+		twos = new DigitalLimitSwitch(channelTwos, invertSwitches);
+		fours = new DigitalLimitSwitch(channelFours, invertSwitches);
 	}
 
 	@Override
 	public int getValue() 
 	{
-		System.out.println(ones.get() + " " + twos.get() + " " + fours.get());
+		System.out.println(ones.getValue() + " " + twos.getValue() + " " + fours.getValue());
 		
 		
 		
-		if(!ones.get() == false && !twos.get() == false && !fours.get() == false)
+		if(ones.getValue() == false && twos.getValue() == false && fours.getValue() == false)
 		{
 			return 0;
 		}
 		
-		if(!ones.get() == true && !twos.get() == false && !fours.get() == false)
+		if(ones.getValue() == true && twos.getValue() == false && fours.getValue() == false)
 		{
 			return 1;
 		}
 		
-		if(!ones.get() == false && !twos.get() == true && !fours.get() == false)
+		if(ones.getValue() == false && twos.getValue() == true && fours.getValue() == false)
 		{
 			return 2;
 		}
 		
-		if(!ones.get() == true && !twos.get() == true && !fours.get() == false)
+		if(ones.getValue() == true && twos.getValue() == true && fours.getValue() == false)
 		{
 			return 3;
 		}
 		
-		if(!ones.get() == false && !twos.get() == false && !fours.get() == true)
+		if(ones.getValue() == false && twos.getValue() == false && fours.getValue() == true)
 		{
 			return 4;
 		}
 		
-		if(!ones.get() == true && !twos.get() == false && !fours.get() == true)
+		if(ones.getValue() == true && twos.getValue() == false && fours.getValue() == true)
 		{
 			return 5;
 		}
 		
-		if(!ones.get() == false && !twos.get() == true && !fours.get() == true)
+		if(ones.getValue() == false && twos.getValue() == true && fours.getValue() == true)
 		{
 			return 6;
 		}
 		
-		if(!ones.get() == true && !twos.get() == true && !fours.get() == true)
+		if(ones.getValue() == true && twos.getValue() == true && fours.getValue() == true)
 		{
 			return 7;
 		}

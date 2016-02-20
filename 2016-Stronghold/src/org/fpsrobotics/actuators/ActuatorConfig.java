@@ -56,6 +56,9 @@ public class ActuatorConfig
 	private IPIDFeedbackDevice leftEncoder;
 	private IPIDFeedbackDevice rightEncoder;
 	
+	// Auger encoder
+	private IPIDFeedbackDevice augerEncoder;
+	
 	// Drive train
 	private IDriveTrain driveTrain;
 	
@@ -78,15 +81,27 @@ public class ActuatorConfig
 	
 	private ActuatorConfig()
 	{
-		// Instantiate CANTalons
-		leftFrontMotor = new CANTalon(MOTOR_LEFT_FRONT);
-		leftRearMotor = new CANTalon(MOTOR_LEFT_REAR);
-		rightFrontMotor = new CANTalon(MOTOR_RIGHT_FRONT);
-		rightRearMotor = new CANTalon(MOTOR_RIGHT_REAR);
+		try
+		{
+			// Instantiate CANTalons
+			leftFrontMotor = new CANTalon(MOTOR_LEFT_FRONT);
+			leftRearMotor = new CANTalon(MOTOR_LEFT_REAR);
+			rightFrontMotor = new CANTalon(MOTOR_RIGHT_FRONT);
+			rightRearMotor = new CANTalon(MOTOR_RIGHT_REAR);
+		} catch(Exception e)
+		{
+			System.err.println("Drive Train CANTalons failed to initialize");
+		}
 		
-		// Instantiate encoders
-		leftEncoder = new BuiltInCANTalonEncoder(leftFrontMotor);
-		rightEncoder = new BuiltInCANTalonEncoder(rightFrontMotor);
+		try
+		{
+			// Instantiate encoders
+			leftEncoder = new BuiltInCANTalonEncoder(leftFrontMotor);
+			rightEncoder = new BuiltInCANTalonEncoder(rightFrontMotor);
+		} catch(Exception e)
+		{
+			System.err.println("Drive encoders failed to initialize");
+		}
 		
 		// Instantiate CANMotors
 		leftFrontCANMotor = new CANMotor(leftFrontMotor, true, leftEncoder);
@@ -116,19 +131,46 @@ public class ActuatorConfig
 		driveTrain.setControlMode(TalonControlMode.Speed); // Speed means use encoder rates 
 														   // to control how fast the robot is moving
 		
-		// Instantiate shooter motors
-		leftShooterMotor = new CANTalon(LEFT_SHOOTER_MOTOR);
-		rightShooterMotor = new CANTalon(RIGHT_SHOOTER_MOTOR);
+		try
+		{
+			// Instantiate shooter motors
+			leftShooterMotor = new CANTalon(LEFT_SHOOTER_MOTOR);
+			rightShooterMotor = new CANTalon(RIGHT_SHOOTER_MOTOR);
 		
-		// Instantiate shooter lifter
-		linearActuator = new CANTalon(LINEAR_ACTUATOR_MOTOR);
+			// Instantiate shooter lifter
+			linearActuator = new CANTalon(LINEAR_ACTUATOR_MOTOR);
+		} catch(Exception e)
+		{
+			System.err.println("Shooter motor failed to initalize");
+		}
 		
-		// Instantiate auger motors
-		augerIntakeMotor = new CANTalon(AUGER_INTAKE_MOTOR);
-		augerLifterMotor = new CANTalon(AUGER_LIFTER_MOTOR);
+		try
+		{
+			// Instantiate auger motors
+			augerIntakeMotor = new CANTalon(AUGER_INTAKE_MOTOR);
+			augerLifterMotor = new CANTalon(AUGER_LIFTER_MOTOR);
+		} catch(Exception e)
+		{
+			System.err.println("Auger motor failed to initalize");
+		}
 		
-		// Instantiate solenoid
-		shooterSolenoid = new SingleSolenoid(SOLENOID_PORT);
+		try
+		{
+			// Instantiate auger encoder
+			augerEncoder = new BuiltInCANTalonEncoder(augerLifterMotor);
+		} catch(Exception e)
+		{
+			System.err.println("Auger encoder failed to initialize");
+		}
+		
+		try
+		{
+			// Instantiate solenoid
+			shooterSolenoid = new SingleSolenoid(SOLENOID_PORT);
+		} catch(Exception e)
+		{
+			System.err.println("Solenoid failed to initialize");
+		}
 		
 		// Instantiate the launcher itself
 		launcher = new Launcher(
@@ -142,6 +184,7 @@ public class ActuatorConfig
 				SensorConfig.getInstance().getAugerBottomLimitSwitch(), 
 				SensorConfig.getInstance().getAugerTopLimitSwitch(), 
 				SensorConfig.getInstance().getShooterPot(),
+				augerEncoder,
 			    shooterSolenoid
 				);
 	}

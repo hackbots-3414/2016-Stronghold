@@ -6,14 +6,10 @@ import java.util.concurrent.Executors;
 import org.fpsrobotics.actuators.ActuatorConfig;
 import org.fpsrobotics.actuators.ILauncher;
 import org.fpsrobotics.sensors.ButtonGamepad;
-import org.fpsrobotics.sensors.GamepadLogger;
+import org.fpsrobotics.sensors.ButtonJoystick;
 import org.fpsrobotics.sensors.IGamepad;
-import org.fpsrobotics.sensors.ILogger;
-import org.fpsrobotics.sensors.JoystickLogger;
-import org.fpsrobotics.sensors.OutputDevice;
 import org.fpsrobotics.sensors.SensorConfig;
 import org.usfirst.frc.team3414.robot.RobotStatus;
-import org.fpsrobotics.sensors.ButtonJoystick;
 
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -24,7 +20,7 @@ public class MullenatorTeleop implements ITeleopControl
 
 	public MullenatorTeleop()
 	{
-		executor = Executors.newFixedThreadPool(3);
+		executor = Executors.newFixedThreadPool(2);
 	}
 
 	@Override
@@ -34,14 +30,11 @@ public class MullenatorTeleop implements ITeleopControl
 		{
 			ActuatorConfig.getInstance().getDriveTrain().enablePID();
 			ActuatorConfig.getInstance().getDriveTrain().setControlMode(TalonControlMode.Speed);
-
 			double correctedYOne, correctedYTwo, yOne, yTwo;
-
 			boolean pidOn = true;
 
 			while (RobotStatus.isRunning())
 			{
-
 				if (SensorConfig.getInstance().getRightJoystick().getButtonValue(ButtonJoystick.FIVE))
 				{
 					pidOn = !pidOn;
@@ -56,7 +49,10 @@ public class MullenatorTeleop implements ITeleopControl
 						ActuatorConfig.getInstance().getDriveTrain().disablePID();
 
 					}
+					
+					while(SensorConfig.getInstance().getRightJoystick().getButtonValue(ButtonJoystick.FIVE));
 				}
+				
 				SmartDashboard.putBoolean("PID", pidOn);
 
 				if (pidOn)
@@ -68,10 +64,9 @@ public class MullenatorTeleop implements ITeleopControl
 					correctedYOne = yOne * 400;
 					correctedYTwo = yTwo * 400;
 
-					/*
-					 * Inverse Tangent Drive Control correctedYOne =
-					 * Math.atan(yOne)*(4/Math.PI)*400; correctedYTwo =
-					 * Math.atan(yTwo)*(4/Math.PI)*400;
+					  /* Inverse Tangent Drive Control 
+					 correctedYOne = Math.atan(yOne)*(4/Math.PI)*400; 
+					 correctedYTwo = Math.atan(yTwo)*(4/Math.PI)*400;
 					 */
 
 					System.out.println(correctedYOne + " " + correctedYTwo);
@@ -100,7 +95,6 @@ public class MullenatorTeleop implements ITeleopControl
 				}
 
 				System.out.println("Potentiometer " + SensorConfig.getInstance().getShooterPot().getCount());
-
 				SmartDashboard.putNumber("Angle", SensorConfig.getInstance().getGyro().getCount());
 
 				SensorConfig.getInstance().getTimer().waitTimeInMillis(50);
@@ -117,6 +111,7 @@ public class MullenatorTeleop implements ITeleopControl
 
 			while (RobotStatus.isRunning())
 			{
+				// Shooter movement commands
 				while (gamepad.getButtonValue(ButtonGamepad.TWO))
 				{
 					launcher.moveShooterDown();
@@ -129,14 +124,30 @@ public class MullenatorTeleop implements ITeleopControl
 
 				launcher.stopShooterLifter();
 
-				while (gamepad.getButtonValue(ButtonGamepad.THREE))
+				// Auger movement commands
+				while (gamepad.getButtonValue(ButtonGamepad.TWELVE))
 				{
-					launcher.intakeBoulder();
+					launcher.lowerAuger();
 				}
-
+				
+				while (gamepad.getButtonValue(ButtonGamepad.ELEVEN))
+				{
+					launcher.raiseAuger();
+				}
+				
+				launcher.stopAuger();
+				
+				// Launching commands
 				while (gamepad.getButtonValue(ButtonGamepad.ONE))
 				{
 					launcher.spinShooterUp();
+					
+					if(gamepad.getButtonValue(ButtonGamepad.SIX))
+					{
+						launcher.launchBoulder(); 
+						
+						while (gamepad.getButtonValue(ButtonGamepad.SIX) || gamepad.getButtonValue(ButtonGamepad.ONE));
+					}
 				}
 
 				if (gamepad.getButtonValue(ButtonGamepad.SEVEN))
@@ -145,31 +156,14 @@ public class MullenatorTeleop implements ITeleopControl
 					
 					while (gamepad.getButtonValue(ButtonGamepad.SEVEN));
 				}
+				
+				while (gamepad.getButtonValue(ButtonGamepad.THREE))
+				{
+					launcher.intakeBoulder();
+				}
 
 				launcher.stopShooterWheels();
 			}
-		});
-
-		executor.submit(() ->
-		{
-			ILauncher launcher;
-			IGamepad gamepad;
-
-			launcher = ActuatorConfig.getInstance().getLauncher();
-			gamepad = SensorConfig.getInstance().getGamepad();
-
-			while (RobotStatus.isRunning())
-			{
-				if (gamepad.getButtonValue(ButtonGamepad.SIX))
-				{
-					launcher.launchBoulder(); 
-					
-					while (gamepad.getButtonValue(ButtonGamepad.SIX));
-				}
-			}
-			// System.out.println(SensorConfig.getInstance().getShooterPot().getCount()
-			// + " Potentiometer");
-
 		});
 
 	}
