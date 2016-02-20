@@ -27,42 +27,42 @@ public class AutonomousSwitches implements ICounterSwitch
 		
 		
 		
-		if(ones.get() == false && twos.get() == false && fours.get() == false)
+		if(!ones.get() == false && !twos.get() == false && !fours.get() == false)
 		{
 			return 0;
 		}
 		
-		if(ones.get() == true && twos.get() == false && fours.get() == false)
+		if(!ones.get() == true && !twos.get() == false && !fours.get() == false)
 		{
 			return 1;
 		}
 		
-		if(ones.get() == false && twos.get() == true && fours.get() == false)
+		if(!ones.get() == false && !twos.get() == true && !fours.get() == false)
 		{
 			return 2;
 		}
 		
-		if(ones.get() == true && twos.get() == true && fours.get() == false)
+		if(!ones.get() == true && !twos.get() == true && !fours.get() == false)
 		{
 			return 3;
 		}
 		
-		if(ones.get() == false && twos.get() == false && fours.get() == true)
+		if(!ones.get() == false && !twos.get() == false && !fours.get() == true)
 		{
 			return 4;
 		}
 		
-		if(ones.get() == true && twos.get() == false && fours.get() == true)
+		if(!ones.get() == true && !twos.get() == false && !fours.get() == true)
 		{
 			return 5;
 		}
 		
-		if(ones.get() == false && twos.get() == true && fours.get() == true)
+		if(!ones.get() == false && !twos.get() == true && !fours.get() == true)
 		{
 			return 6;
 		}
 		
-		if(ones.get() == true && twos.get() == true && fours.get() == true)
+		if(!ones.get() == true && !twos.get() == true && !fours.get() == true)
 		{
 			return 7;
 		}

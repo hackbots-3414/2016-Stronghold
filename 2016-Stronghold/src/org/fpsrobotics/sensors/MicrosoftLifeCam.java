@@ -1,30 +1,30 @@
 package org.fpsrobotics.sensors;
 
 import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.vision.USBCamera;
 
 public class MicrosoftLifeCam implements ICamera
 {
-	 private CameraServer server;
+	private CameraServer server;
+	private String usbPort;
 	
 	public MicrosoftLifeCam(String usbPort)
 	{
 		server = CameraServer.getInstance();
 		server.setQuality(50);
-	    server.startAutomaticCapture(usbPort);
+		this.usbPort = usbPort;
 	}
 
 	@Override
 	public void enable() 
 	{
-		// TODO Auto-generated method stub
-		
+		server.startAutomaticCapture(usbPort);
 	}
 
 	@Override
 	public void disable() 
 	{
-		// TODO Auto-generated method stub
-		
+
 	}
 
 }

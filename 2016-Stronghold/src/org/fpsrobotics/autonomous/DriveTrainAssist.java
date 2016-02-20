@@ -18,21 +18,20 @@ public class DriveTrainAssist
 	{
 		driveTrain.disablePID();
 		
-		if(0 < gyro.getCount())
+		if(gyro.getCount() > 0)
 		{
-			while(0 < gyro.getCount())
+			while(gyro.getCount() > 0)
 			{
 				driveTrain.setSpeed(speed, -speed);
 			}
-		} else if(0 > gyro.getCount())
+		} else if(gyro.getCount() < 0)
 		{
-			while(0 > gyro.getCount())
+			while(gyro.getCount() < 0)
 			{
 				driveTrain.setSpeed(-speed, speed);
 			}
 		} 
 		
 		driveTrain.setSpeed(0, 0);
-		driveTrain.enablePID();
 	}
 }

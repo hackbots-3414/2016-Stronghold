@@ -137,6 +137,7 @@ public class ActuatorConfig
 				new CANMotor(augerIntakeMotor, false), 
 				new CANMotor(augerLifterMotor, false), 
 				SensorConfig.getInstance().getBottomLimitSwitch(),
+				SensorConfig.getInstance().getTopLimitSwitch(),
 				SensorConfig.getInstance().getAugerBottomLimitSwitch(), 
 				SensorConfig.getInstance().getAugerTopLimitSwitch(), 
 				SensorConfig.getInstance().getShooterPot(),

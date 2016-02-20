@@ -193,6 +193,8 @@ public class TankDrive implements IDriveTrain
 			
 			gyro.resetCount();
 			
+			SensorConfig.getInstance().getTimer().waitTimeInMillis(300);
+			
 			while(RobotStatus.isRunning() && 
 			((motorLeft.getCANMotorOne().getPIDFeedbackDevice().getCount()-initialCountLeft) >= -distance)
 		    && ((motorRight.getCANMotorOne().getPIDFeedbackDevice().getCount()-initialCountRight) >= -distance))

@@ -24,7 +24,7 @@ public class MullenatorTeleop implements ITeleopControl
 
 	public MullenatorTeleop()
 	{
-		executor = Executors.newFixedThreadPool(2);
+		executor = Executors.newFixedThreadPool(3);
 	}
 
 	@Override
@@ -34,7 +34,7 @@ public class MullenatorTeleop implements ITeleopControl
 		{
 			ActuatorConfig.getInstance().getDriveTrain().enablePID();
 			ActuatorConfig.getInstance().getDriveTrain().setControlMode(TalonControlMode.Speed);
-			
+
 			double correctedYOne, correctedYTwo, yOne, yTwo;
 
 			boolean pidOn = true;
@@ -45,17 +45,16 @@ public class MullenatorTeleop implements ITeleopControl
 				if (SensorConfig.getInstance().getRightJoystick().getButtonValue(ButtonJoystick.FIVE))
 				{
 					pidOn = !pidOn;
-					
 
 					if (pidOn)
 					{
 						ActuatorConfig.getInstance().getDriveTrain().enablePID();
 						ActuatorConfig.getInstance().getDriveTrain().setControlMode(TalonControlMode.Speed);
-						
+
 					} else
 					{
 						ActuatorConfig.getInstance().getDriveTrain().disablePID();
-						
+
 					}
 				}
 				SmartDashboard.putBoolean("PID", pidOn);
@@ -64,48 +63,27 @@ public class MullenatorTeleop implements ITeleopControl
 				{
 					yOne = SensorConfig.getInstance().getRightJoystick().getY();
 					yTwo = SensorConfig.getInstance().getLeftJoystick().getY();
-					
-					/* Linear Drive Control
-					correctedYOne = yOne*400;
-					correctedYTwo = yTwo*400;
-					*/
-					
-					/* Logarithmic Drive Control
-					if(yOne > 0)
-					{
-						correctedYOne = (Math.log10(yOne+.12) * 400 + 370);
-					} else if (yOne < 0)
-					{
-						correctedYOne = -(Math.log10(-yOne+.12) * 400 + 370);
-					} else
-					{
-						correctedYOne = 0;
-					}
-					
-					if(yOne > 0)
-					{
-						correctedYTwo = (Math.log10(yTwo+.12) * 400 + 370);
-					} else if (yOne < 0)
-					{
-						correctedYTwo = -(Math.log10(-yTwo+.12) * 400 + 370);
-					} else
-					{
-						correctedYTwo = 0;
-					}
-					*/
-					
-					/* Inverse Tangent Drive Control */
-					correctedYOne = Math.atan(yOne)*(4/Math.PI)*400;
-					correctedYTwo = Math.atan(yTwo)*(4/Math.PI)*400;
-					
-					if (correctedYOne > 20 || correctedYTwo > 20 || correctedYOne < -20 || correctedYTwo < -20)
+
+					/* Linear Drive Control */
+					correctedYOne = yOne * 400;
+					correctedYTwo = yTwo * 400;
+
+					/*
+					 * Inverse Tangent Drive Control correctedYOne =
+					 * Math.atan(yOne)*(4/Math.PI)*400; correctedYTwo =
+					 * Math.atan(yTwo)*(4/Math.PI)*400;
+					 */
+
+					System.out.println(correctedYOne + " " + correctedYTwo);
+
+					if (correctedYOne > 25 || correctedYOne < -25 || correctedYTwo > 25 || correctedYTwo < -25)
 					{
 						ActuatorConfig.getInstance().getDriveTrain().setSpeed(correctedYOne, correctedYTwo);
 					} else
 					{
 						ActuatorConfig.getInstance().getDriveTrain().setSpeed(0, 0);
 					}
-					
+
 				} else
 				{
 					correctedYOne = SensorConfig.getInstance().getRightJoystick().getY();
@@ -118,25 +96,13 @@ public class MullenatorTeleop implements ITeleopControl
 					{
 						ActuatorConfig.getInstance().getDriveTrain().setSpeed(0, 0);
 					}
-					
+
 				}
 
 				System.out.println("Potentiometer " + SensorConfig.getInstance().getShooterPot().getCount());
-				/*
-				 * System.out.println(correctedYOne + " " + correctedYTwo);
-				 * 
-				 * SmartDashboard.putNumber("PID Error Left",
-				 * ActuatorConfig.getInstance().getLeftEncoder().getError());
-				 * SmartDashboard.putNumber("PID Error Right",
-				 * ActuatorConfig.getInstance().getRightEncoder().getError());
-				 * 
-				 * SmartDashboard.putNumber("Left Encoder Value",
-				 * ActuatorConfig.getInstance().getLeftEncoder().getCount());
-				 * SmartDashboard.putNumber("Right Encoder Value",
-				 * ActuatorConfig.getInstance().getRightEncoder().getCount());
-				 */
 
 				SmartDashboard.putNumber("Angle", SensorConfig.getInstance().getGyro().getCount());
+
 				SensorConfig.getInstance().getTimer().waitTimeInMillis(50);
 			}
 		});
@@ -163,40 +129,48 @@ public class MullenatorTeleop implements ITeleopControl
 
 				launcher.stopShooterLifter();
 
-				while (gamepad.getButtonValue(ButtonGamepad.ONE))
-				{
-					launcher.spinShooterUp();
-				}
-
 				while (gamepad.getButtonValue(ButtonGamepad.THREE))
 				{
 					launcher.intakeBoulder();
 				}
 
-				if (gamepad.getButtonValue(ButtonGamepad.SIX))
+				while (gamepad.getButtonValue(ButtonGamepad.ONE))
 				{
-					launcher.launchBoulder();
+					launcher.spinShooterUp();
+				}
+
+				if (gamepad.getButtonValue(ButtonGamepad.SEVEN))
+				{
+					launcher.shootSequence();
+					
+					while (gamepad.getButtonValue(ButtonGamepad.SEVEN));
 				}
 
 				launcher.stopShooterWheels();
-
-				// System.out.println(SensorConfig.getInstance().getShooterPot().getCount()
-				// + " Potentiometer");
 			}
 		});
 
-		/*
-		 * executor.submit(() -> { ILogger joyLogger, gamepadLogger;
-		 * 
-		 * joyLogger = new
-		 * JoystickLogger(SensorConfig.getInstance().getLeftJoystick(),
-		 * SensorConfig.getInstance().getRightJoystick()); gamepadLogger = new
-		 * GamepadLogger(SensorConfig.getInstance().getGamepad());
-		 * 
-		 * while(RobotStatus.isRunning()) {
-		 * joyLogger.reportInformation(OutputDevice.SMARTDASHBOARD);
-		 * gamepadLogger.reportInformation(OutputDevice.SMARTDASHBOARD); } });
-		 */
+		executor.submit(() ->
+		{
+			ILauncher launcher;
+			IGamepad gamepad;
+
+			launcher = ActuatorConfig.getInstance().getLauncher();
+			gamepad = SensorConfig.getInstance().getGamepad();
+
+			while (RobotStatus.isRunning())
+			{
+				if (gamepad.getButtonValue(ButtonGamepad.SIX))
+				{
+					launcher.launchBoulder(); 
+					
+					while (gamepad.getButtonValue(ButtonGamepad.SIX));
+				}
+			}
+			// System.out.println(SensorConfig.getInstance().getShooterPot().getCount()
+			// + " Potentiometer");
+
+		});
 
 	}
 }

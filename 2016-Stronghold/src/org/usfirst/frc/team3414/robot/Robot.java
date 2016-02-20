@@ -12,11 +12,14 @@ import org.fpsrobotics.autonomous.AutonLowGoal;
 import org.fpsrobotics.autonomous.AutonRockWall;
 import org.fpsrobotics.autonomous.AutonRoughTerrain;
 import org.fpsrobotics.autonomous.IAutonomousControl;
+import org.fpsrobotics.sensors.IVision;
 import org.fpsrobotics.sensors.SensorConfig;
+import org.fpsrobotics.sensors.VisionCenterTarget;
 import org.fpsrobotics.teleop.ITeleopControl;
 import org.fpsrobotics.teleop.MullenatorTeleop;
 
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -37,22 +40,26 @@ public class Robot extends SampleRobot
     
     public void robotInit() 
     {
-    	
-    }
 
+    }
+    
+    IVision vision = new VisionCenterTarget();
+    
     public void autonomous() 
     {
+	    
     	RobotStatus.setIsRunning(true);
-    	// TODO: implement different autonomous modes
     	
 		executor.submit(() ->
 		{
-			
-			DigitalInput input = new DigitalInput(9);
-			
 			while(RobotStatus.isRunning())
 			{
-				System.out.println(input.get());
+				vision.runSequence();
+				
+				//System.out.println(SensorConfig.getInstance().getAutoSwitch().getValue());
+				
+				//SensorConfig.getInstance().getTimer().waitTimeInMillis(300);
+				
 				//SmartDashboard.putNumber("Autonomous Switches", SensorConfig.getInstance().getAutoSwitch().getValue());
 			}
 			
@@ -84,9 +91,14 @@ public class Robot extends SampleRobot
 	    	case 7:
 	    		break;
 	    	}
+	    	*/
+			
+			/*
+			auto = new AutonRockWall();
 	    	
 	    	auto.doAuto();
 	    	*/
+	    	
 		});
     	
     	/*

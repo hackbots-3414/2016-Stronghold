@@ -14,7 +14,7 @@ public class AutonRockWall implements IAutonomousControl
 		ActuatorConfig.getInstance().getDriveTrain().goStraight(0.8, 100000);
 		
 		// Straighten drive train
-		ActuatorConfig.getInstance().getDriveTrainAssist().centerDriveTrain(0.2);
+		ActuatorConfig.getInstance().getDriveTrainAssist().centerDriveTrain(0.1);
 		
 		// Wait
 		SensorConfig.getInstance().getTimer().waitTimeInMillis(250);

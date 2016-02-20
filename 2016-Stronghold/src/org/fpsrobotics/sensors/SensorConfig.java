@@ -11,19 +11,23 @@ public class SensorConfig
 {
 	private static SensorConfig singleton = null;
 	
-	private final int AUTO_SWITCH_ONES = 0;
-	private final int AUTO_SWITCH_TWOS = 1;
-	private final int AUTO_SWITCH_FOURS = 2;
+	private final int AUTO_SWITCH_ONES = 2;
+	private final int AUTO_SWITCH_TWOS = 3;
+	private final int AUTO_SWITCH_FOURS = 4;
 	
-	private final int DIGITAL_LIMIT_SWITCH_CHANNEL = 3;
+	private final int SHOOTER_BOTTOM_LIMIT_CHANNEL = 0;
+	private final int SHOOTER_TOP_LIMIT_CHANNEL = 1;
 	
 	private final int POTENTIOMETER_CHANNEL = 0;
 	
-	private final int AUGER_BOTTOM_LIMIT_SWITCH = 4;
-	private final int AUGER_TOP_LIMIT_SWITCH = 5;
+	private final int AUGER_BOTTOM_LIMIT_SWITCH = 5;
+	private final int AUGER_TOP_LIMIT_SWITCH = 6;
 	
 	private final String CAMERA_USB_PORT = "cam0";
-	private ICamera camera;
+	private final String CAMERA_USB_PORT_TWO = "cam1";
+	
+	//private ICamera cameraTwo;
+	//private ICamera cameraOne;
 	
 	
 	private IJoystick leftJoystick;
@@ -35,8 +39,8 @@ public class SensorConfig
 	
 	private ITimer timer;
 	
-	
 	private ILimitSwitch bottomLimitSwitch;
+	private ILimitSwitch topLimitSwitch;
 	private ILimitSwitch augerBottomLimitSwitch;
 	private ILimitSwitch augerTopLimitSwitch;
 	
@@ -54,23 +58,22 @@ public class SensorConfig
 		rightJoystick = new Logitech3DJoystick(1);
 		gamepad = new DualShockTwoController(2);
 		
-		/*
-		pdp = new PowerDistributionPanel();
-		*/
-		
 		pot = new Potentiometer(POTENTIOMETER_CHANNEL);
 		
-		//autoSwitch = new AutonomousSwitches(AUTO_SWITCH_ONES, AUTO_SWITCH_TWOS, AUTO_SWITCH_FOURS);
+		autoSwitch = new AutonomousSwitches(AUTO_SWITCH_ONES, AUTO_SWITCH_TWOS, AUTO_SWITCH_FOURS);
 		
-		bottomLimitSwitch = new DigitalLimitSwitch(DIGITAL_LIMIT_SWITCH_CHANNEL);
-		augerBottomLimitSwitch = new DigitalLimitSwitch(AUGER_BOTTOM_LIMIT_SWITCH);
-		augerTopLimitSwitch = new DigitalLimitSwitch(AUGER_TOP_LIMIT_SWITCH);
+		bottomLimitSwitch = new DigitalLimitSwitch(SHOOTER_BOTTOM_LIMIT_CHANNEL, true);
+		topLimitSwitch = new DigitalLimitSwitch(SHOOTER_TOP_LIMIT_CHANNEL, true);
+		augerBottomLimitSwitch = new DigitalLimitSwitch(AUGER_BOTTOM_LIMIT_SWITCH, true);
+		augerTopLimitSwitch = new DigitalLimitSwitch(AUGER_TOP_LIMIT_SWITCH, true);
 		
 		AHRS ahrs = new AHRS(SPI.Port.kMXP);
 		
 		gyro = new GyroscopeNavX(ahrs);
 		
-		camera = new MicrosoftLifeCam(CAMERA_USB_PORT);
+		//cameraOne = new MicrosoftLifeCam(CAMERA_USB_PORT);
+		
+		//cameraOne.enable();
 	}
 
 	public static synchronized SensorConfig getInstance()
@@ -129,23 +132,21 @@ public class SensorConfig
 		return augerTopLimitSwitch;
 	}
 	
+	public ILimitSwitch getTopLimitSwitch()
+	{
+		return topLimitSwitch;
+	}
+	
 	public IGyroscope getGyro()
 	{
 		return gyro;
 	}
 	
 	/*
-	public ICamera getCamera()
+	public ICamera getCameraOne()
 	{
-		return camera;
-	}
-	
-	public ILimitSwitch getAugerBottomLimitSwitch() {
-		return augerBottomLimitSwitch;
-	}
-
-	public ILimitSwitch getAugerTopLimitSwitch() {
-		return augerTopLimitSwitch;
+		return cameraOne;
 	}
 	*/
+	
 }
