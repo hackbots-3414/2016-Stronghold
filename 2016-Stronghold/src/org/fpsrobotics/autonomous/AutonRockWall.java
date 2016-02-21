@@ -14,8 +14,13 @@ public class AutonRockWall implements IAutonomousControl
 		// Move shooter to top limit
 		if (RobotStatus.isAuto())
 		{
-			ActuatorConfig.getInstance().getLauncher().moveShooterToTopLimit();
-			SensorConfig.getInstance().getTimer().waitTimeInMillis(1000);
+			for(int i = 0; i < 100; i++)
+			{
+				ActuatorConfig.getInstance().getLauncher().moveShooterToTopLimit();
+				SensorConfig.getInstance().getTimer().waitTimeInMillis(10);
+			}
+			
+			ActuatorConfig.getInstance().getLauncher().stopShooterLifter();
 		}
 		
 		// Go over rock wall
@@ -37,7 +42,14 @@ public class AutonRockWall implements IAutonomousControl
 
 		if (RobotStatus.isAuto())
 		{
-			ActuatorConfig.getInstance().getLauncher().moveShooterToPosition(400);
+			for(int i = 0; i < 100; i++)
+			{
+				ActuatorConfig.getInstance().getLauncher().moveShooterToPosition(400);
+				SensorConfig.getInstance().getTimer().waitTimeInMillis(10);
+			}
+			
+			ActuatorConfig.getInstance().getLauncher().stopShooterLifter();
+			
 			ActuatorConfig.getInstance().getLauncher().shootSequence();
 		}
 
