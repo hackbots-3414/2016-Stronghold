@@ -5,6 +5,7 @@ import org.fpsrobotics.sensors.ILimitSwitch;
 import org.fpsrobotics.sensors.SensorConfig;
 
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Creates a launcher for the 2016 season Stronghold. It uses two independent motors to fire the ball 
@@ -17,12 +18,12 @@ import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
  */
 public class Launcher implements ILauncher
 {
-	private final double INTAKE_SPEED = -0.4;
-	private final double SHOOT_SPEED = 1.0;
+	private final double INTAKE_SPEED = -0.6;
+	private double SHOOT_SPEED = 0.95;
 	
 	private final double INTAKE_AUGER_SPEED = 0.2;
 	
-	private final double LINEAR_ACTUATOR_SPEED = 0.7;
+	private final double LINEAR_ACTUATOR_SPEED = 0.5;
 	private final double AUGER_MOVE_SPEED = 0.5;
 
 	private double TOP_LIMIT_POT_VALUE_SHOOTER = 291;
@@ -69,6 +70,7 @@ public class Launcher implements ILauncher
 		this.augerEncoder = augerEncoder;
 		
 		
+		SmartDashboard.putNumber("Shooter Speed", 0.95);
 		//calibrate();
 	}
 
@@ -139,6 +141,8 @@ public class Launcher implements ILauncher
 	@Override
 	public void shootSequence()
 	{
+		SHOOT_SPEED = SmartDashboard.getNumber("Shooter Speed", 0.95);
+		
 		lowerAuger();
 		spinShooterUp();
 		SensorConfig.getInstance().getTimer().waitTimeInMillis(750);
@@ -171,7 +175,7 @@ public class Launcher implements ILauncher
 	}
 
 	@Override
-	public void moveShooterToPosition(int position)
+	public void moveShooterToPosition(double position)
 	{
 		// If the position is too high or too low for the shooter to go
 		if(position > BOTTOM_LIMIT_POT_VALUE_SHOOTER || position < TOP_LIMIT_POT_VALUE_SHOOTER)
@@ -185,7 +189,7 @@ public class Launcher implements ILauncher
 			// while this is so or we reach the top limit of our travel
 			while ((shooterPot.getCount() < position) && !shooterAtTopLimit())
 			{
-				moveShooterUp();
+				moveShooterDown();
 			}
 		} 
 		// If the shooter is lower than the position
@@ -194,7 +198,7 @@ public class Launcher implements ILauncher
 			// while this is so or we reach the bottom limit of travel
 			while ((shooterPot.getCount() > position) && !shooterAtBottomLimit())
 			{
-				moveShooterDown();
+				moveShooterUp();
 			}
 		}
 	}
@@ -300,7 +304,7 @@ public class Launcher implements ILauncher
 
 	@Override
 	public void spinShooterUp()
-	{
+	{	
 		shooterMotorLeft.setSpeed(SHOOT_SPEED);
 		shooterMotorRight.setSpeed(SHOOT_SPEED);
 	}

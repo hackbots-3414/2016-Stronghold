@@ -8,7 +8,7 @@ public interface ILauncher
 {
 	public void moveShooterToBottomLimit();
 	public void goToPresetPosition();
-	public void moveShooterToPosition(int position);
+	public void moveShooterToPosition(double position);
 	public void moveShooterUp();
 	public void moveShooterDown();
 	public void intakeBoulder();

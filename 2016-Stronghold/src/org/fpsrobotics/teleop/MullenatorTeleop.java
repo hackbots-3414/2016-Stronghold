@@ -21,6 +21,8 @@ public class MullenatorTeleop implements ITeleopControl
 	public MullenatorTeleop()
 	{
 		executor = Executors.newFixedThreadPool(2);
+		
+		SmartDashboard.putNumber("Preset", 1150);
 	}
 
 	@Override
@@ -60,14 +62,14 @@ public class MullenatorTeleop implements ITeleopControl
 					yOne = SensorConfig.getInstance().getRightJoystick().getY();
 					yTwo = SensorConfig.getInstance().getLeftJoystick().getY();
 
-					/* Linear Drive Control */
+					/* Linear Drive Control
 					correctedYOne = yOne * 400;
 					correctedYTwo = yTwo * 400;
+					*/
 
-					  /* Inverse Tangent Drive Control 
+					  /* Inverse Tangent Drive Control  */
 					 correctedYOne = Math.atan(yOne)*(4/Math.PI)*400; 
 					 correctedYTwo = Math.atan(yTwo)*(4/Math.PI)*400;
-					 */
 
 					System.out.println(correctedYOne + " " + correctedYTwo);
 
@@ -94,6 +96,11 @@ public class MullenatorTeleop implements ITeleopControl
 
 				}
 
+				/*
+				System.out.println("rate: " + ActuatorConfig.getInstance().getRightEncoder().getRate() + " " + ActuatorConfig.getInstance().getLeftEncoder().getRate());
+				System.out.println("error: " + ActuatorConfig.getInstance().getRightEncoder().getError() + " " + ActuatorConfig.getInstance().getLeftEncoder().getError());
+				*/
+				
 				System.out.println("Potentiometer " + SensorConfig.getInstance().getShooterPot().getCount());
 				SmartDashboard.putNumber("Angle", SensorConfig.getInstance().getGyro().getCount());
 
@@ -163,6 +170,24 @@ public class MullenatorTeleop implements ITeleopControl
 				}
 
 				launcher.stopShooterWheels();
+				
+				while (gamepad.getButtonValue(ButtonGamepad.FIVE))
+				{
+					launcher.moveShooterToPosition(SmartDashboard.getNumber("Preset", 1150));
+				}
+				
+				/*
+				if (gamepad.getButtonValue(ButtonGamepad.EIGHT))
+				{
+					SensorConfig.getInstance().getGyro().resetCount();
+					ActuatorConfig.getInstance().getDriveTrainAssist().centerDriveTrain(0.1);
+					
+					//ActuatorConfig.getInstance().getDriveTrain().enablePID();
+					//ActuatorConfig.getInstance().getDriveTrain().setControlMode(TalonControlMode.Speed);
+					
+					while(gamepad.getButtonValue(ButtonGamepad.EIGHT));
+				}
+				*/
 			}
 		});
 
