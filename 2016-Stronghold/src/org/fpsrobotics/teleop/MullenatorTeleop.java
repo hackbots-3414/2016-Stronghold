@@ -70,9 +70,7 @@ public class MullenatorTeleop implements ITeleopControl
 					  /* Inverse Tangent Drive Control  */
 					 correctedYOne = Math.atan(yOne)*(4/Math.PI)*400; 
 					 correctedYTwo = Math.atan(yTwo)*(4/Math.PI)*400;
-
-					System.out.println(correctedYOne + " " + correctedYTwo);
-
+					 
 					if (correctedYOne > 25 || correctedYOne < -25 || correctedYTwo > 25 || correctedYTwo < -25)
 					{
 						ActuatorConfig.getInstance().getDriveTrain().setSpeed(correctedYOne, correctedYTwo);
@@ -102,6 +100,7 @@ public class MullenatorTeleop implements ITeleopControl
 				*/
 				
 				System.out.println("Potentiometer " + SensorConfig.getInstance().getShooterPot().getCount());
+				
 				SmartDashboard.putNumber("Angle", SensorConfig.getInstance().getGyro().getCount());
 
 				SensorConfig.getInstance().getTimer().waitTimeInMillis(50);
