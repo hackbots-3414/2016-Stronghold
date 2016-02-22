@@ -170,9 +170,11 @@ public class MullenatorTeleop implements ITeleopControl
 
 				launcher.stopShooterWheels();
 				
-				while (gamepad.getButtonValue(ButtonGamepad.FIVE))
+				if (gamepad.getButtonValue(ButtonGamepad.FIVE))
 				{
 					launcher.moveShooterToPosition(SmartDashboard.getNumber("Preset", 1150));
+					
+					while (gamepad.getButtonValue(ButtonGamepad.FIVE));
 				}
 				
 				/*

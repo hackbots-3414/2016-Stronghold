@@ -27,7 +27,7 @@ public class SensorConfig
 	private final String CAMERA_USB_PORT_TWO = "cam1";
 	
 	//private ICamera cameraTwo;
-	//private ICamera cameraOne;
+	private ICamera cameraOne;
 	
 	
 	private IJoystick leftJoystick;
@@ -101,9 +101,9 @@ public class SensorConfig
 			System.err.println("No NavX MXP board found, or plugged into the wrong spot");
 		}
 		
-		//cameraOne = new MicrosoftLifeCam(CAMERA_USB_PORT);
+		cameraOne = new MicrosoftLifeCam(CAMERA_USB_PORT);
 		
-		//cameraOne.enable();
+		cameraOne.enable();
 	}
 
 	public static synchronized SensorConfig getInstance()

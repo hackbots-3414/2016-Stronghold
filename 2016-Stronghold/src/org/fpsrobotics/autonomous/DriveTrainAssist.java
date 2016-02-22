@@ -2,6 +2,7 @@ package org.fpsrobotics.autonomous;
 
 import org.fpsrobotics.actuators.IDriveTrain;
 import org.fpsrobotics.sensors.IGyroscope;
+import org.usfirst.frc.team3414.robot.RobotStatus;
 
 public class DriveTrainAssist
 {
@@ -22,6 +23,7 @@ public class DriveTrainAssist
 		{
 			while(gyro.getCount() > 0)
 			{
+				
 				driveTrain.setSpeed(speed, -speed);
 			}
 		} else if(gyro.getCount() < 0)

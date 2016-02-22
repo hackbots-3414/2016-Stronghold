@@ -151,14 +151,17 @@ public class TankDrive implements IDriveTrain
 		
 		if(-degrees < gyro.getCount())
 		{
-			while(-degrees < gyro.getCount())
+			while(-degrees < gyro.getCount() && RobotStatus.isRunning())
 			{
 				setSpeed(speed, -speed);
 			}
 		}
 		
 		setSpeed(0, 0);
-		enablePID();
+		
+		SensorConfig.getInstance().getTimer().waitTimeInMillis(200);
+		
+		//enablePID();
 	}
 
 	@Override
@@ -169,17 +172,20 @@ public class TankDrive implements IDriveTrain
 		
 		if(degrees > gyro.getCount())
 		{
-			while(degrees > gyro.getCount())
+			while(degrees > gyro.getCount() && RobotStatus.isRunning())
 			{
 				setSpeed(-speed, speed);
 			}
 		}
 		
 		setSpeed(0, 0);
-		enablePID();
+		
+		SensorConfig.getInstance().getTimer().waitTimeInMillis(200);
+		
+		//enablePID();
 	}
 
-	final double Kp = 0.03;
+	final double Kp = 0.01;
 
 	@Override
 	public void goStraight(double speed, int distance)
@@ -205,6 +211,8 @@ public class TankDrive implements IDriveTrain
 			enablePID();
 			
 			setSpeed(0,0);
+			
+			gyro.resetCount();
 			
 		} else
 		{

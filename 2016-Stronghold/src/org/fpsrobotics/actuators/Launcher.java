@@ -28,7 +28,7 @@ public class Launcher implements ILauncher
 
 	private double TOP_LIMIT_POT_VALUE_SHOOTER = 291;
 	private double BOTTOM_LIMIT_POT_VALUE_SHOOTER = 1863;
-	private final int SHOOTER_ENCODER_VALUE = 200;
+	private final int SHOOTER_POT_VALUE = 200;
 	
 	private double TOP_ENCODER_LIMIT_AUGER = 1000;
 	private double BOTTOM_ENCODER_LIMIT_AUGER = 0;
@@ -171,23 +171,17 @@ public class Launcher implements ILauncher
 	@Override
 	public void goToPresetPosition()
 	{
-		moveShooterToPosition(SHOOTER_ENCODER_VALUE);
+		moveShooterToPosition(SHOOTER_POT_VALUE);
 	}
 
 	@Override
 	public void moveShooterToPosition(double position)
 	{
-		// If the position is too high or too low for the shooter to go
-		if(position > BOTTOM_LIMIT_POT_VALUE_SHOOTER || position < TOP_LIMIT_POT_VALUE_SHOOTER)
-		{
-			return;
-		}
-		
 		// if the shooter is higher than the position
 		if (shooterPot.getCount() < position)
 		{
 			// while this is so or we reach the top limit of our travel
-			while ((shooterPot.getCount() < position) && !shooterAtTopLimit())
+			while ((shooterPot.getCount() < position))
 			{
 				moveShooterDown();
 			}
@@ -196,7 +190,7 @@ public class Launcher implements ILauncher
 		else
 		{
 			// while this is so or we reach the bottom limit of travel
-			while ((shooterPot.getCount() > position) && !shooterAtBottomLimit())
+			while ((shooterPot.getCount() > position))
 			{
 				moveShooterUp();
 			}
