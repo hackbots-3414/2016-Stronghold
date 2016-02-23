@@ -71,15 +71,15 @@ public class TankDrive implements IDriveTrain
 	@Override
 	public void driveLeft(double speed)
 	{
-		// TODO Auto-generated method stub
-
+		turnLeft(speed, 90);
+		goStraight(speed);
 	}
 
 	@Override
 	public void driveRight(double speed)
 	{
-		// TODO Auto-generated method stub
-
+		turnRight(speed, 90);
+		goStraight(speed);
 	}
 
 	@Override

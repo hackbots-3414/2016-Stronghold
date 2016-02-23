@@ -22,7 +22,7 @@ public class MullenatorTeleop implements ITeleopControl
 	{
 		executor = Executors.newFixedThreadPool(2);
 		
-		SmartDashboard.putNumber("Preset", 1150);
+		SmartDashboard.putNumber("Preset", 477);
 	}
 
 	@Override
@@ -101,8 +101,6 @@ public class MullenatorTeleop implements ITeleopControl
 				
 				System.out.println("Potentiometer " + SensorConfig.getInstance().getShooterPot().getCount());
 				
-				SmartDashboard.putNumber("Angle", SensorConfig.getInstance().getGyro().getCount());
-
 				SensorConfig.getInstance().getTimer().waitTimeInMillis(50);
 			}
 		});
@@ -172,7 +170,7 @@ public class MullenatorTeleop implements ITeleopControl
 				
 				while (gamepad.getButtonValue(ButtonGamepad.FIVE))
 				{
-					launcher.moveShooterToPosition(SmartDashboard.getNumber("Preset", 1150));
+					launcher.moveShooterToPosition(SmartDashboard.getNumber("Preset", 477));
 				}
 				
 				launcher.stopShooterLifter();

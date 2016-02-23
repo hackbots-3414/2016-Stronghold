@@ -5,7 +5,7 @@ import java.util.concurrent.Executors;
 
 import org.fpsrobotics.actuators.ActuatorConfig;
 import org.fpsrobotics.autonomous.AutonDoNothing;
-import org.fpsrobotics.autonomous.AutonLowGoal;
+import org.fpsrobotics.autonomous.AutonLowBar;
 import org.fpsrobotics.autonomous.AutonRockWall;
 import org.fpsrobotics.autonomous.AutonRoughTerrain;
 import org.fpsrobotics.autonomous.IAutonomousControl;
@@ -45,23 +45,23 @@ public class Robot extends SampleRobot
 		autoChooser = new SendableChooser();
 
 		autoChooser.addDefault("Do Nothing", new AutonDoNothing());
-		autoChooser.addObject("Low Goal", new AutonLowGoal());
+		autoChooser.addObject("Low Bar", new AutonLowBar());
 		autoChooser.addObject("Rock Wall", new AutonRockWall());
 		autoChooser.addObject("Rough Terrain", new AutonRoughTerrain());
 
 		SmartDashboard.putData("Autonomous Chooser", autoChooser);
 	}
-	
+
 	public void autonomous()
 	{
 		RobotStatus.setIsRunning(true);
 		RobotStatus.setIsAuto(true);
 		RobotStatus.setIsTeleop(false);
-		
+
 		executor.submit(() ->
 		{
 			System.out.println("Auto Running");
-			
+
 			((IAutonomousControl) autoChooser.getSelected()).doAuto();
 		});
 	}
@@ -71,7 +71,7 @@ public class Robot extends SampleRobot
 		RobotStatus.setIsRunning(true);
 		RobotStatus.setIsAuto(false);
 		RobotStatus.setIsTeleop(true);
-		
+
 		teleop.doTeleop();
 	}
 

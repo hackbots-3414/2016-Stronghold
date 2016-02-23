@@ -6,8 +6,7 @@ public class AutonDoNothing implements IAutonomousControl
 	@Override
 	public void doAuto()
 	{
-		// TODO Auto-generated method stub
-		
+		System.out.println("Didn't know how to do it -Raul");
 	}
 
 }

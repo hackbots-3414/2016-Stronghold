@@ -29,7 +29,6 @@ public class SensorConfig
 	//private ICamera cameraTwo;
 	private ICamera cameraOne;
 	
-	
 	private IJoystick leftJoystick;
 	private IJoystick rightJoystick;
 	
