@@ -17,7 +17,7 @@ public class AutonLowGoal implements IAutonomousControl
 		{
 			for(int i = 0; i < 100; i++)
 			{
-				ActuatorConfig.getInstance().getLauncher().moveShooterToPosition(1100);
+				ActuatorConfig.getInstance().getLauncher().moveShooterToPosition(1400);
 				SensorConfig.getInstance().getTimer().waitTimeInMillis(10);
 			}
 			
@@ -27,7 +27,7 @@ public class AutonLowGoal implements IAutonomousControl
 		// Go over rock wall
 		if (RobotStatus.isAuto())
 		{
-			ActuatorConfig.getInstance().getDriveTrain().goStraight(0.5, 100000);
+			ActuatorConfig.getInstance().getDriveTrain().goStraight(0.5, 80000);
 		}
 
 		if (RobotStatus.isAuto())

@@ -26,7 +26,7 @@ public class AutonRockWall implements IAutonomousControl
 		// Go over rock wall
 		if (RobotStatus.isAuto())
 		{
-			ActuatorConfig.getInstance().getDriveTrain().goStraight(0.7, 100000);
+			ActuatorConfig.getInstance().getDriveTrain().goStraight(0.7, 80000);
 		}
 
 		if (RobotStatus.isAuto())
