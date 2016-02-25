@@ -11,9 +11,9 @@ public class SensorConfig
 {
 	private static SensorConfig singleton = null;
 	
-	private final int AUTO_SWITCH_ONES = 2;
-	private final int AUTO_SWITCH_TWOS = 3;
-	private final int AUTO_SWITCH_FOURS = 4;
+	//private final int AUTO_SWITCH_ONES = 2;
+	//private final int AUTO_SWITCH_TWOS = 3;
+	//private final int AUTO_SWITCH_FOURS = 4;
 	
 	private final int SHOOTER_BOTTOM_LIMIT_CHANNEL = 0;
 	private final int SHOOTER_TOP_LIMIT_CHANNEL = 1;
@@ -23,8 +23,12 @@ public class SensorConfig
 	private final int AUGER_BOTTOM_LIMIT_SWITCH = 5;
 	private final int AUGER_TOP_LIMIT_SWITCH = 6;
 	
+	private final int PRESSURE_SWITCH_CHANNEL = 2;
+	
 	private final String CAMERA_USB_PORT = "cam0";
-	private final String CAMERA_USB_PORT_TWO = "cam1";
+	//private final String CAMERA_USB_PORT_TWO = "cam1";
+	
+	private ILimitSwitch pressureSwitch;
 	
 	//private ICamera cameraTwo;
 	private ICamera cameraOne;
@@ -73,7 +77,7 @@ public class SensorConfig
 		
 		try
 		{
-			autoSwitch = new AutonomousSwitches(AUTO_SWITCH_ONES, AUTO_SWITCH_TWOS, AUTO_SWITCH_FOURS, true);
+			//autoSwitch = new AutonomousSwitches(AUTO_SWITCH_ONES, AUTO_SWITCH_TWOS, AUTO_SWITCH_FOURS, true);
 		} catch(Exception e)
 		{
 			System.err.println("Autonomous switches failed to initialize");
@@ -85,6 +89,7 @@ public class SensorConfig
 			topLimitSwitch = new DigitalLimitSwitch(SHOOTER_TOP_LIMIT_CHANNEL, true);
 			augerBottomLimitSwitch = new DigitalLimitSwitch(AUGER_BOTTOM_LIMIT_SWITCH, true);
 			augerTopLimitSwitch = new DigitalLimitSwitch(AUGER_TOP_LIMIT_SWITCH, true);
+			pressureSwitch = new IS1000PressureSwitch(PRESSURE_SWITCH_CHANNEL, true);
 		} catch (Exception e)
 		{
 			System.err.println("A limit switch failed to initialize, stopping to avoid damage");
@@ -169,6 +174,11 @@ public class SensorConfig
 	public IGyroscope getGyro()
 	{
 		return gyro;
+	}
+	
+	public ILimitSwitch getPressureSwitch()
+	{
+		return pressureSwitch;
 	}
 	
 	/*

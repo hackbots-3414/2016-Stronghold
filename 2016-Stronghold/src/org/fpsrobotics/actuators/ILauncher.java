@@ -13,6 +13,7 @@ public interface ILauncher
 	public void moveShooterDown();
 	public void intakeBoulder();
 	public void shootSequence();
+	public void shootSequence(double speed);
 	public void stopShooterWheels();
 	public void moveShooterToTopLimit();
 	public void raiseAuger();
@@ -21,6 +22,9 @@ public interface ILauncher
 	public void launchBoulder();
 	public void augerGoToPosition(int position);
 	public void stopShooterLifter();
+	public void stopAugerLifter();
+	public void raiseAugerToTopLimit();
+	public void lowerAugerToBottomLimit();
+	public void spinAugerUp();
 	public void stopAuger();
-
 }

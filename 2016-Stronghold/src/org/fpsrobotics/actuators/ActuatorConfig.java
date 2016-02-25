@@ -236,6 +236,11 @@ public class ActuatorConfig
 		return driveAssist;
 	}
 	
+	public IPIDFeedbackDevice getAugerEncoder()
+	{
+		return augerEncoder;
+	}
+	
 	
 	
 }

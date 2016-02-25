@@ -21,8 +21,9 @@ public class MullenatorTeleop implements ITeleopControl
 	public MullenatorTeleop()
 	{
 		executor = Executors.newFixedThreadPool(2);
-		
+
 		SmartDashboard.putNumber("Preset", 477);
+		SmartDashboard.putNumber("Shoot Speed", 0.8);
 	}
 
 	@Override
@@ -51,10 +52,11 @@ public class MullenatorTeleop implements ITeleopControl
 						ActuatorConfig.getInstance().getDriveTrain().disablePID();
 
 					}
-					
-					while(SensorConfig.getInstance().getRightJoystick().getButtonValue(ButtonJoystick.FIVE));
+
+					while (SensorConfig.getInstance().getRightJoystick().getButtonValue(ButtonJoystick.FIVE))
+						;
 				}
-				
+
 				SmartDashboard.putBoolean("PID", pidOn);
 
 				if (pidOn)
@@ -62,15 +64,15 @@ public class MullenatorTeleop implements ITeleopControl
 					yOne = SensorConfig.getInstance().getRightJoystick().getY();
 					yTwo = SensorConfig.getInstance().getLeftJoystick().getY();
 
-					/* Linear Drive Control
-					correctedYOne = yOne * 400;
-					correctedYTwo = yTwo * 400;
-					*/
+					/*
+					 * Linear Drive Control correctedYOne = yOne * 400;
+					 * correctedYTwo = yTwo * 400;
+					 */
 
-					  /* Inverse Tangent Drive Control  */
-					 correctedYOne = Math.atan(yOne)*(4/Math.PI)*400; 
-					 correctedYTwo = Math.atan(yTwo)*(4/Math.PI)*400;
-					 
+					/* Inverse Tangent Drive Control */
+					correctedYOne = Math.atan(yOne) * (4 / Math.PI) * 400;
+					correctedYTwo = Math.atan(yTwo) * (4 / Math.PI) * 400;
+
 					if (correctedYOne > 25 || correctedYOne < -25 || correctedYTwo > 25 || correctedYTwo < -25)
 					{
 						ActuatorConfig.getInstance().getDriveTrain().setSpeed(correctedYOne, correctedYTwo);
@@ -95,12 +97,19 @@ public class MullenatorTeleop implements ITeleopControl
 				}
 
 				/*
-				System.out.println("rate: " + ActuatorConfig.getInstance().getRightEncoder().getRate() + " " + ActuatorConfig.getInstance().getLeftEncoder().getRate());
-				System.out.println("error: " + ActuatorConfig.getInstance().getRightEncoder().getError() + " " + ActuatorConfig.getInstance().getLeftEncoder().getError());
-				*/
-				
-				System.out.println("Potentiometer " + SensorConfig.getInstance().getShooterPot().getCount());
-				
+				 * System.out.println("rate: " +
+				 * ActuatorConfig.getInstance().getRightEncoder().getRate() +
+				 * " " +
+				 * ActuatorConfig.getInstance().getLeftEncoder().getRate());
+				 * System.out.println("error: " +
+				 * ActuatorConfig.getInstance().getRightEncoder().getError() +
+				 * " " +
+				 * ActuatorConfig.getInstance().getLeftEncoder().getError());
+				 */
+
+				//System.out.println("Potentiometer " + SensorConfig.getInstance().getShooterPot().getCount());
+				System.out.println("Encoder " + ActuatorConfig.getInstance().getAugerEncoder().getCount());
+
 				SensorConfig.getInstance().getTimer().waitTimeInMillis(50);
 			}
 		});
@@ -133,23 +142,23 @@ public class MullenatorTeleop implements ITeleopControl
 				{
 					launcher.lowerAuger();
 				}
-				
+
 				while (gamepad.getButtonValue(ButtonGamepad.ELEVEN))
 				{
 					launcher.raiseAuger();
 				}
-				
-				launcher.stopAuger();
-				
+
+				launcher.stopAugerLifter();
+
 				// Launching commands
 				while (gamepad.getButtonValue(ButtonGamepad.ONE))
 				{
 					launcher.spinShooterUp();
-					
-					if(gamepad.getButtonValue(ButtonGamepad.SIX))
+
+					if (gamepad.getButtonValue(ButtonGamepad.SIX))
 					{
-						launcher.launchBoulder(); 
-						
+						launcher.launchBoulder();
+
 						while (gamepad.getButtonValue(ButtonGamepad.SIX) || gamepad.getButtonValue(ButtonGamepad.ONE));
 					}
 				}
@@ -157,36 +166,58 @@ public class MullenatorTeleop implements ITeleopControl
 				if (gamepad.getButtonValue(ButtonGamepad.SEVEN))
 				{
 					launcher.shootSequence();
-					
+
 					while (gamepad.getButtonValue(ButtonGamepad.SEVEN));
 				}
 				
+				if (gamepad.getButtonValue(ButtonGamepad.EIGHT))
+				{
+					launcher.shootSequence(SmartDashboard.getNumber("Shoot Speed", 0.85));
+
+					while (gamepad.getButtonValue(ButtonGamepad.EIGHT));
+				}
+
 				while (gamepad.getButtonValue(ButtonGamepad.THREE))
 				{
 					launcher.intakeBoulder();
 				}
 
 				launcher.stopShooterWheels();
-				
+
 				while (gamepad.getButtonValue(ButtonGamepad.FIVE))
 				{
 					launcher.moveShooterToPosition(SmartDashboard.getNumber("Preset", 477));
 				}
-				
+
 				launcher.stopShooterLifter();
+
+				while (gamepad.getButtonValue(ButtonGamepad.NINE))
+				{
+					launcher.spinAugerUp();
+				}
+				
+				launcher.stopAuger();
 				
 				/*
-				if (gamepad.getButtonValue(ButtonGamepad.EIGHT))
+				 * if (gamepad.getButtonValue(ButtonGamepad.EIGHT)) {
+				 * SensorConfig.getInstance().getGyro().resetCount();
+				 * ActuatorConfig.getInstance().getDriveTrainAssist().
+				 * centerDriveTrain(0.1);
+				 * 
+				 * //ActuatorConfig.getInstance().getDriveTrain().enablePID( );
+				 * //ActuatorConfig.getInstance().getDriveTrain().
+				 * setControlMode(TalonControlMode.Speed);
+				 * 
+				 * while(gamepad.getButtonValue(ButtonGamepad.EIGHT)); }
+				 */
+
+				if (SensorConfig.getInstance().getPressureSwitch().getValue())
 				{
-					SensorConfig.getInstance().getGyro().resetCount();
-					ActuatorConfig.getInstance().getDriveTrainAssist().centerDriveTrain(0.1);
-					
-					//ActuatorConfig.getInstance().getDriveTrain().enablePID();
-					//ActuatorConfig.getInstance().getDriveTrain().setControlMode(TalonControlMode.Speed);
-					
-					while(gamepad.getButtonValue(ButtonGamepad.EIGHT));
+					SmartDashboard.putBoolean("Pressure", true);
+				} else
+				{
+					SmartDashboard.putBoolean("Pressure", false);
 				}
-				*/
 			}
 		});
 

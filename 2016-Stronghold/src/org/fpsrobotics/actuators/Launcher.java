@@ -5,7 +5,6 @@ import org.fpsrobotics.sensors.ILimitSwitch;
 import org.fpsrobotics.sensors.SensorConfig;
 
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Creates a launcher for the 2016 season Stronghold. It uses two independent
@@ -22,7 +21,7 @@ public class Launcher implements ILauncher
 	private final double INTAKE_SPEED = -0.6;
 	private double SHOOT_SPEED = 0.95;
 
-	private final double INTAKE_AUGER_SPEED = 0.2;
+	private final double INTAKE_AUGER_SPEED = 0.8;
 
 	private final double LINEAR_ACTUATOR_SPEED = 0.5;
 	private final double AUGER_MOVE_SPEED = 0.5;
@@ -60,8 +59,7 @@ public class Launcher implements ILauncher
 		this.topLimitAuger = topLimitAuger;
 		this.shooterActuator = shooterActuator;
 		this.augerEncoder = augerEncoder;
-
-		SmartDashboard.putNumber("Shooter Speed", 0.95);
+		
 		// calibrate();
 	}
 
@@ -132,14 +130,7 @@ public class Launcher implements ILauncher
 	@Override
 	public void shootSequence()
 	{
-		SHOOT_SPEED = SmartDashboard.getNumber("Shooter Speed", 0.95);
-
-		lowerAuger();
-		jostle();
-		SensorConfig.getInstance().getTimer().waitTimeInMillis(400);
-		spinShooterUp();
-		SensorConfig.getInstance().getTimer().waitTimeInMillis(1300);
-		launchBoulder();
+		shootSequence(SHOOT_SPEED);
 	}
 
 	@Override
@@ -171,7 +162,7 @@ public class Launcher implements ILauncher
 	public void moveShooterToPosition(double position)
 	{
 		if (shooterPot.getCount() < position - 50 || shooterPot.getCount() > position + 50)
-		{	
+		{
 			// if the shooter is higher than the position
 			if (shooterPot.getCount() < position)
 			{
@@ -272,6 +263,22 @@ public class Launcher implements ILauncher
 			augerLifterMotor.setSpeed(-AUGER_MOVE_SPEED);
 		}
 	}
+	
+	public void lowerAugerToBottomLimit()
+	{
+		while(!isAugerAtBottomLimit())
+		{
+			lowerAuger();
+		}
+	}
+	
+	public void raiseAugerToTopLimit()
+	{
+		while(!isAugerAtTopLimit())
+		{
+			raiseAuger();
+		}
+	}
 
 	private boolean isAugerAtBottomLimit()
 	{
@@ -298,10 +305,9 @@ public class Launcher implements ILauncher
 	@Override
 	public void spinShooterUp()
 	{
-		shooterMotorLeft.setSpeed(SHOOT_SPEED);
-		shooterMotorRight.setSpeed(SHOOT_SPEED);
+		spinShooterUp(SHOOT_SPEED);
 	}
-	
+
 	private void jostle()
 	{
 		stopShooterWheels();
@@ -320,7 +326,7 @@ public class Launcher implements ILauncher
 		shooterActuator.turnOff();
 	}
 
-	public void stopAuger()
+	public void stopAugerLifter()
 	{
 		augerLifterMotor.stop();
 	}
@@ -344,6 +350,35 @@ public class Launcher implements ILauncher
 				}
 			}
 		}
+	}
+
+	private void spinShooterUp(double speed)
+	{
+		shooterMotorLeft.setSpeed(speed);
+		shooterMotorRight.setSpeed(speed);
+	}
+
+	@Override
+	public void shootSequence(double speed)
+	{
+		//lowerAugerToBottomLimit();
+		jostle();
+		SensorConfig.getInstance().getTimer().waitTimeInMillis(400);
+		spinShooterUp(speed);
+		SensorConfig.getInstance().getTimer().waitTimeInMillis(1300);
+		launchBoulder();
+	}
+
+	@Override
+	public void spinAugerUp()
+	{
+		augerIntakeMotor.setSpeed(INTAKE_AUGER_SPEED);
+	}
+
+	@Override
+	public void stopAuger()
+	{
+		augerIntakeMotor.stop();
 	}
 
 }
