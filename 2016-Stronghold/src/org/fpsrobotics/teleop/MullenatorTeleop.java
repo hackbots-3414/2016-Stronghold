@@ -37,6 +37,7 @@ public class MullenatorTeleop implements ITeleopControl
 			boolean pidOn = true;
 			boolean deadZoned = false;
 
+			// Drive Train Loop
 			while (RobotStatus.isRunning())
 			{
 				if (SensorConfig.getInstance().getRightJoystick().getButtonValue(ButtonJoystick.FIVE))
@@ -138,7 +139,7 @@ public class MullenatorTeleop implements ITeleopControl
 		});
 
 		
-		
+		// Shooter Loop
 		executor.submit(() ->
 		{
 			ILauncher launcher;
@@ -146,35 +147,108 @@ public class MullenatorTeleop implements ITeleopControl
 
 			launcher = ActuatorConfig.getInstance().getLauncher();
 			gamepad = SensorConfig.getInstance().getGamepad();
+			
+			boolean movedShooter = true;
+			boolean movedAuger = true;
+			boolean movedShooterWheels = true;
+			boolean movedAugerWheels = true;
 
 			while (RobotStatus.isRunning())
 			{
-				// Shooter movement commands
+				// Shooter movement controls
 				while (gamepad.getButtonValue(ButtonGamepad.TWO))
 				{
 					launcher.moveShooterDown();
+					movedShooter = true;
 				}
 
 				while (gamepad.getButtonValue(ButtonGamepad.FOUR))
 				{
 					launcher.moveShooterUp();
+					movedShooter = true;
+				}
+				
+				while (gamepad.getButtonValue(ButtonGamepad.FIVE))
+				{
+					//launcher.moveShooterToPosition(SmartDashboard.getNumber("Preset", 477));
+					
+					launcher.moveShooterToBottomLimit();
+					launcher.augerGoToPosition(1000);
+					
+					movedShooter = true;
 				}
 
-				launcher.stopShooterLifter();
+				if(movedShooter)
+				{
+					launcher.stopShooterLifter();
+					movedShooter = false;
+				}
 
-				// Auger movement commands
+				// Auger movement controls
 				while (gamepad.getButtonValue(ButtonGamepad.ONE))
 				{
 					launcher.lowerAuger();
+					movedAuger = true;
 				}
 
 				while (gamepad.getButtonValue(ButtonGamepad.SIX))
 				{
 					launcher.raiseAuger();
+					movedAuger = true;
 				}
 
-				launcher.stopAugerLifter();
+				if(movedAuger)
+				{
+					launcher.stopAugerLifter();
+					movedAuger = false;
+				}
+				
+				// Auger wheel controls
+				while (gamepad.getButtonValue(ButtonGamepad.NINE))
+				{
+					launcher.spinAugerUp();
+					
+					movedAugerWheels = true;
+				}
+				
+				if(movedAugerWheels)
+				{
+					launcher.stopAuger();
+					movedAugerWheels = false;
+				} 
+				
+				// Shooter launching controls
+				if (gamepad.getButtonValue(ButtonGamepad.SEVEN))
+				{
+					launcher.shootSequence();
 
+					while (gamepad.getButtonValue(ButtonGamepad.SEVEN));
+					
+					movedShooterWheels = true;
+				}
+				
+				if (gamepad.getButtonValue(ButtonGamepad.EIGHT))
+				{
+					launcher.shootSequence(SmartDashboard.getNumber("Shoot Speed", 0.85));
+
+					while (gamepad.getButtonValue(ButtonGamepad.EIGHT));
+					
+					movedShooterWheels = true;
+				}
+
+				while (gamepad.getButtonValue(ButtonGamepad.THREE))
+				{
+					launcher.intakeBoulder();
+					
+					movedShooterWheels = true;
+				}
+
+				if(movedShooterWheels)
+				{
+					launcher.stopShooterWheels();
+					movedShooterWheels = false;
+				}
+				
 				/* Manual Launching
 				while (gamepad.getButtonValue(ButtonGamepad.ONE))
 				{
@@ -189,44 +263,7 @@ public class MullenatorTeleop implements ITeleopControl
 				}
 				*/
 				
-				if (gamepad.getButtonValue(ButtonGamepad.SEVEN))
-				{
-					launcher.shootSequence();
-
-					while (gamepad.getButtonValue(ButtonGamepad.SEVEN));
-				}
-				
-				if (gamepad.getButtonValue(ButtonGamepad.EIGHT))
-				{
-					launcher.shootSequence(SmartDashboard.getNumber("Shoot Speed", 0.85));
-
-					while (gamepad.getButtonValue(ButtonGamepad.EIGHT));
-				}
-
-				while (gamepad.getButtonValue(ButtonGamepad.THREE))
-				{
-					launcher.intakeBoulder();
-				}
-
-				launcher.stopShooterWheels();
-
-				while (gamepad.getButtonValue(ButtonGamepad.FIVE))
-				{
-					//launcher.moveShooterToPosition(SmartDashboard.getNumber("Preset", 477));
-					
-					launcher.moveShooterToBottomLimit();
-					launcher.augerGoToPosition(1000);
-				}
-
-				launcher.stopShooterLifter();
-
-				while (gamepad.getButtonValue(ButtonGamepad.NINE))
-				{
-					launcher.spinAugerUp();
-				}
-				
-				launcher.stopAuger();
-				
+				// Pressure sensor feedback
 				if (SensorConfig.getInstance().getPressureSwitch().getValue())
 				{
 					SmartDashboard.putBoolean("Pressure", true);
