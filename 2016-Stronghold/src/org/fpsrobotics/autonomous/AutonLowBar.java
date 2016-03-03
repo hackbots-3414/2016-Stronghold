@@ -10,6 +10,11 @@ public class AutonLowBar implements IAutonomousControl
 	@Override
 	public void doAuto()
 	{
+		if (RobotStatus.isAuto())
+		{
+			ActuatorConfig.getInstance().getLauncher().augerGoToPosition(1150);
+		}
+		
 		// Move shooter to top limit
 		if (RobotStatus.isAuto())
 		{

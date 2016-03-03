@@ -172,13 +172,27 @@ public class ActuatorConfig
 			System.err.println("Solenoid failed to initialize");
 		}
 		
+		CANMotor augerLifterMotorCAN = new CANMotor(augerLifterMotor, false);
+				
+		
+		
+		// Auger PID
+		augerLifterMotorCAN.enablePID();
+		
+		augerLifterMotor.reverseSensor(false);
+		
+		augerLifterMotorCAN.setControlMode(TalonControlMode.Speed); // Speed means use encoder rates 
+		   															// to control how fast the robot is moving
+		
+		augerEncoder.resetCount();
+		
 		// Instantiate the launcher itself
 		launcher = new Launcher(
 				new CANMotor(leftShooterMotor, true),
 				new CANMotor(rightShooterMotor, false),
 				new CANMotor(linearActuator, true),
 				new CANMotor(augerIntakeMotor, false), 
-				new CANMotor(augerLifterMotor, false), 
+				augerLifterMotorCAN,
 				SensorConfig.getInstance().getBottomLimitSwitch(),
 				SensorConfig.getInstance().getTopLimitSwitch(),
 				SensorConfig.getInstance().getAugerBottomLimitSwitch(), 

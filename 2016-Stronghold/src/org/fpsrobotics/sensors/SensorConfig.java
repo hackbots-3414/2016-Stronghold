@@ -11,34 +11,26 @@ public class SensorConfig
 {
 	private static SensorConfig singleton = null;
 	
-	//private final int AUTO_SWITCH_ONES = 2;
-	//private final int AUTO_SWITCH_TWOS = 3;
-	//private final int AUTO_SWITCH_FOURS = 4;
-	
 	private final int SHOOTER_BOTTOM_LIMIT_CHANNEL = 0;
 	private final int SHOOTER_TOP_LIMIT_CHANNEL = 1;
 	
 	private final int POTENTIOMETER_CHANNEL = 0;
 	
-	private final int AUGER_BOTTOM_LIMIT_SWITCH = 5;
-	private final int AUGER_TOP_LIMIT_SWITCH = 6;
+	private final int AUGER_BOTTOM_LIMIT_SWITCH = 2;
+	private final int AUGER_TOP_LIMIT_SWITCH = 3;
 	
-	private final int PRESSURE_SWITCH_CHANNEL = 2;
+	private final int PRESSURE_SWITCH_CHANNEL = 9;
 	
 	private final String CAMERA_USB_PORT = "cam0";
-	//private final String CAMERA_USB_PORT_TWO = "cam1";
 	
 	private ILimitSwitch pressureSwitch;
 	
-	//private ICamera cameraTwo;
 	private ICamera cameraOne;
 	
 	private IJoystick leftJoystick;
 	private IJoystick rightJoystick;
 	
 	IPIDFeedbackDevice pot;
-	
-	private ICounterSwitch autoSwitch;
 	
 	private ITimer timer;
 	
@@ -77,18 +69,12 @@ public class SensorConfig
 		
 		try
 		{
-			//autoSwitch = new AutonomousSwitches(AUTO_SWITCH_ONES, AUTO_SWITCH_TWOS, AUTO_SWITCH_FOURS, true);
-		} catch(Exception e)
-		{
-			System.err.println("Autonomous switches failed to initialize");
-		}
-		
-		try
-		{
 			bottomLimitSwitch = new DigitalLimitSwitch(SHOOTER_BOTTOM_LIMIT_CHANNEL, true);
 			topLimitSwitch = new DigitalLimitSwitch(SHOOTER_TOP_LIMIT_CHANNEL, true);
+			
 			augerBottomLimitSwitch = new DigitalLimitSwitch(AUGER_BOTTOM_LIMIT_SWITCH, true);
 			augerTopLimitSwitch = new DigitalLimitSwitch(AUGER_TOP_LIMIT_SWITCH, true);
+			
 			pressureSwitch = new IS1000PressureSwitch(PRESSURE_SWITCH_CHANNEL, true);
 		} catch (Exception e)
 		{
@@ -105,9 +91,9 @@ public class SensorConfig
 			System.err.println("No NavX MXP board found, or plugged into the wrong spot");
 		}
 		
-		cameraOne = new MicrosoftLifeCam(CAMERA_USB_PORT);
+		//cameraOne = new MicrosoftLifeCam(CAMERA_USB_PORT);
 		
-		cameraOne.enable();
+		//cameraOne.enable();
 	}
 
 	public static synchronized SensorConfig getInstance()
@@ -128,11 +114,6 @@ public class SensorConfig
 	public IJoystick getRightJoystick() 
 	{
 		return rightJoystick;
-	}
-	
-	public ICounterSwitch getAutoSwitch() 
-	{
-		return autoSwitch;
 	}
 	
 	public ITimer getTimer() {
