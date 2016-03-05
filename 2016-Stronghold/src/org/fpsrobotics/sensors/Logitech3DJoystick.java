@@ -53,6 +53,10 @@ public class Logitech3DJoystick implements IJoystick
 			return joy.getRawButton(6);
 		case SEVEN:
 			return joy.getRawButton(7);
+		case NINE:
+			return joy.getRawButton(9);
+		case TEN:
+			return joy.getRawButton(10);
 		default:
 			return false;
 		}

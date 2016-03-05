@@ -91,9 +91,9 @@ public class SensorConfig
 			System.err.println("No NavX MXP board found, or plugged into the wrong spot");
 		}
 		
-		//cameraOne = new MicrosoftLifeCam(CAMERA_USB_PORT);
+		cameraOne = new MicrosoftLifeCam(CAMERA_USB_PORT);
 		
-		//cameraOne.enable();
+		cameraOne.enable();
 	}
 
 	public static synchronized SensorConfig getInstance()

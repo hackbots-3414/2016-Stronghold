@@ -76,12 +76,16 @@ public class MullenatorTeleop implements ITeleopControl
 
 					if (correctedYOne > 25 || correctedYOne < -25 || correctedYTwo > 25 || correctedYTwo < -25)
 					{
+						SmartDashboard.putNumber("Left Drive", correctedYOne);
+						SmartDashboard.putNumber("Right Drive", correctedYTwo);
 						ActuatorConfig.getInstance().getDriveTrain().setSpeed(correctedYOne, correctedYTwo);
 						deadZoned = false;
 					} else
 					{
 						if(!deadZoned)
 						{
+							SmartDashboard.putNumber("Left Drive", 0.0);
+							SmartDashboard.putNumber("Right Drive", 0.0);
 							ActuatorConfig.getInstance().getDriveTrain().setSpeed(0, 0);
 							deadZoned = true;
 						} else
@@ -99,6 +103,8 @@ public class MullenatorTeleop implements ITeleopControl
 					{
 						try
 						{
+							SmartDashboard.putNumber("Left Drive", correctedYOne);
+							SmartDashboard.putNumber("Right Drive", correctedYTwo);
 						ActuatorConfig.getInstance().getDriveTrain().setSpeed(correctedYOne, correctedYTwo);
 						} catch(Exception e)
 						{
@@ -130,7 +136,29 @@ public class MullenatorTeleop implements ITeleopControl
 				//System.out.println("Auger Encoder Error " + ActuatorConfig.getInstance().getAugerEncoder().getError());
 				//System.out.println("Auger Limits " + SensorConfig.getInstance().getAugerBottomLimitSwitch().getValue() + SensorConfig.getInstance().getAugerTopLimitSwitch().getValue());
 				//System.out.println("Shooter Limits " + SensorConfig.getInstance().getBottomLimitSwitch().getValue() + " " + SensorConfig.getInstance().getTopLimitSwitch().getValue());
-				
+//				if (SensorConfig.getInstance().getRightJoystick().getButtonValue(ButtonJoystick.TEN))
+//				{
+//					ActuatorConfig.getInstance().getDriveTrain().disablePID();
+//					ActuatorConfig.getInstance().getDriveTrain().turnRight(0.1);
+//					while (SensorConfig.getInstance().getRightJoystick().getButtonValue(ButtonJoystick.TEN)); {}
+//
+//					ActuatorConfig.getInstance().getDriveTrain().goStraight(0);
+//					ActuatorConfig.getInstance().getDriveTrain().enablePID();
+//				}
+//				
+//				if (SensorConfig.getInstance().getRightJoystick().getButtonValue(ButtonJoystick.NINE))
+//				{
+//					
+//					ActuatorConfig.getInstance().getDriveTrain().disablePID();
+//					ActuatorConfig.getInstance().getDriveTrain().turnLeft(0.1);
+//					while (SensorConfig.getInstance().getRightJoystick().getButtonValue(ButtonJoystick.NINE));
+//					{
+//						
+//					}
+//
+//					ActuatorConfig.getInstance().getDriveTrain().goStraight(0);
+//					ActuatorConfig.getInstance().getDriveTrain().enablePID();
+//				}
 				
 				SmartDashboard.putNumber("Shooter Pot", SensorConfig.getInstance().getShooterPot().getCount());
 				
@@ -168,22 +196,22 @@ public class MullenatorTeleop implements ITeleopControl
 					movedShooter = true;
 				}
 				
-				while (gamepad.getButtonValue(ButtonGamepad.FIVE))
-				{
-					//launcher.moveShooterToPosition(SmartDashboard.getNumber("Preset", 477));
-					
-					launcher.moveShooterToBottomLimit();
-					launcher.augerGoToPosition(1000);
-					
-					movedShooter = true;
-				}
+//				while (gamepad.getButtonValue(ButtonGamepad.FIVE))
+//				{
+//					//launcher.moveShooterToPosition(SmartDashboard.getNumber("Preset", 477));
+//					
+//					launcher.moveShooterToBottomLimit();
+//					launcher.augerGoToPosition(1000);
+//					
+//					movedShooter = true;
+//				}
 
 				if(movedShooter)
 				{
 					launcher.stopShooterLifter();
 					movedShooter = false;
 				}
-
+/*
 				// Auger movement controls
 				while (gamepad.getButtonValue(ButtonGamepad.ONE))
 				{
@@ -216,6 +244,7 @@ public class MullenatorTeleop implements ITeleopControl
 					launcher.stopAuger();
 					movedAugerWheels = false;
 				} 
+				*/
 				
 				// Shooter launching controls
 				if (gamepad.getButtonValue(ButtonGamepad.SEVEN))

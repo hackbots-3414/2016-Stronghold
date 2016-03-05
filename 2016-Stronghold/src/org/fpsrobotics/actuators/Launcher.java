@@ -35,7 +35,7 @@ public class Launcher implements ILauncher
 	private final double LINEAR_ACTUATOR_SPEED = 0.5;
 
 	//private double TOP_LIMIT_POT_VALUE_SHOOTER = 291; // alpha
-	private double TOP_LIMIT_POT_VALUE_SHOOTER = 300; // beta
+	private double TOP_LIMIT_POT_VALUE_SHOOTER = 130; // beta
 	private double BOTTOM_LIMIT_POT_VALUE_SHOOTER = 1500; // beta
 	//private double BOTTOM_LIMIT_POT_VALUE_SHOOTER = 1863; // alpha
 
