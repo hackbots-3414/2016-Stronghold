@@ -1,5 +1,7 @@
 package org.fpsrobotics.actuators;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.concurrent.ExecutorService;
 
 import org.fpsrobotics.PID.IPIDFeedbackDevice;
@@ -26,39 +28,30 @@ public class Launcher implements ILauncher
 
 	private final double INTAKE_AUGER_SPEED = -0.8;
 
-	private final double AUGER_DOWN_SPEED_VBUS = -0.2;
-	private final double AUGER_UP_SPEED_VBUS = 0.5;
-
-	private final double AUGER_DOWN_SPEED_SPEED = -75;
-	private final double AUGER_UP_SPEED_SPEED = 100;
+	private final double AUGER_LIFTER_MIDDLE_TRAVEL_SPEED = 0.8;
+	private final double AUGER_LIFTER_SPEED = 0.5;
 
 	private final double LINEAR_ACTUATOR_SPEED = 0.5;
 
-	//private double TOP_LIMIT_POT_VALUE_SHOOTER = 291; // alpha
-	private double TOP_LIMIT_POT_VALUE_SHOOTER = 130; // beta
-	private double BOTTOM_LIMIT_POT_VALUE_SHOOTER = 1500; // beta
-	//private double BOTTOM_LIMIT_POT_VALUE_SHOOTER = 1863; // alpha
+	private double TOP_LIMIT_POT_VALUE_SHOOTER;
+	private double BOTTOM_LIMIT_POT_VALUE_SHOOTER;
 
-	private final int SHOOTER_POT_VALUE = 477;
-	private final int SHOOTER_POT_LOWER_SHOOTING_LIMIT = 0; // define later
-	private final int SHOOTER_POT_BOWLING_LIMIT = 0; // define later
-
-	private double TOP_ENCODER_LIMIT_AUGER = 2600;
-	private double BOTTOM_ENCODER_LIMIT_AUGER = 0;
+	private double TOP_POT_LIMIT_AUGER;
+	private double BOTTOM_POT_LIMIT_AUGER;
 
 	private final double CALIBRATION_SPEED = 0.1;
 
 	private ICANMotor shooterMotorLeft, shooterMotorRight, augerIntakeMotor, shooterLifterMotor;
 	private ICANMotor augerLifterMotor;
 	private ILimitSwitch bottomLimitShooter, topLimitShooter, bottomLimitAuger, topLimitAuger;
-	private IPIDFeedbackDevice shooterPot, augerEncoder;
+	private IPIDFeedbackDevice shooterPot, augerPot;
 
 	private ISolenoid shooterActuator;
 
 	public Launcher(ICANMotor shooterMotorLeft, ICANMotor shooterMotorRight, ICANMotor shooterLifterMotor,
 			ICANMotor augerIntakeMotor, ICANMotor augerLifterMotor, ILimitSwitch shooterBottomLimit,
 			ILimitSwitch topLimitShooter, ILimitSwitch bottomLimitAuger, ILimitSwitch topLimitAuger,
-			IPIDFeedbackDevice shooterPot, IPIDFeedbackDevice augerEncoder, ISolenoid shooterActuator)
+			IPIDFeedbackDevice shooterPot, IPIDFeedbackDevice augerPot, ISolenoid shooterActuator, boolean isAlpha)
 	{
 		this.shooterMotorLeft = shooterMotorLeft;
 		this.shooterMotorRight = shooterMotorRight;
@@ -71,11 +64,23 @@ public class Launcher implements ILauncher
 		this.topLimitShooter = topLimitShooter;
 		this.topLimitAuger = topLimitAuger;
 		this.shooterActuator = shooterActuator;
-		this.augerEncoder = augerEncoder;
+		this.augerPot = augerPot;
 
 		// calibrate();
-		
-		augerEncoder.resetCount();
+
+		if(isAlpha)
+		{
+			TOP_LIMIT_POT_VALUE_SHOOTER = 291;
+			BOTTOM_LIMIT_POT_VALUE_SHOOTER = 1863;
+			TOP_POT_LIMIT_AUGER = 0; // fix when auger is added
+			BOTTOM_POT_LIMIT_AUGER = 1500; // fix when auger is added
+		} else
+		{
+			TOP_LIMIT_POT_VALUE_SHOOTER = 130;
+			BOTTOM_LIMIT_POT_VALUE_SHOOTER = 1500;
+			TOP_POT_LIMIT_AUGER = 0; // fix when auger is added
+			BOTTOM_POT_LIMIT_AUGER = 1500; // fix when auger is added
+		}
 	}
 
 	/**
@@ -117,9 +122,9 @@ public class Launcher implements ILauncher
 
 		augerLifterMotor.stop();
 
-		augerEncoder.resetCount();
+		augerPot.resetCount();
 
-		BOTTOM_ENCODER_LIMIT_AUGER = augerEncoder.getCount();
+		BOTTOM_POT_LIMIT_AUGER = augerPot.getCount();
 
 		augerLifterMotor.setSpeed(CALIBRATION_SPEED);
 
@@ -130,7 +135,7 @@ public class Launcher implements ILauncher
 
 		augerLifterMotor.stop();
 
-		TOP_ENCODER_LIMIT_AUGER = augerEncoder.getCount();
+		TOP_POT_LIMIT_AUGER = augerPot.getCount();
 	}
 
 	@Override
@@ -166,13 +171,7 @@ public class Launcher implements ILauncher
 		shooterLifterMotor.stop();
 
 	}
-
-	@Override
-	public void goToPresetPosition()
-	{
-		moveShooterToPosition(SHOOTER_POT_VALUE);
-	}
-
+	
 	@Override
 	public void moveShooterToPosition(double position)
 	{
@@ -264,90 +263,56 @@ public class Launcher implements ILauncher
 	@Override
 	public void raiseAuger()
 	{
-		if (!isAugerAtTopLimit())
-		{
-			if (augerLifterMotor.getControlMode() == TalonControlMode.PercentVbus)
-			{
-				if (augerEncoder.getCount() > (TOP_ENCODER_LIMIT_AUGER - 500))
-				{
-					augerLifterMotor.setSpeed(AUGER_UP_SPEED_VBUS / 3);
-				} else
-				{
-					augerLifterMotor.setSpeed(AUGER_UP_SPEED_VBUS);
-				}
-
-			} else
-			{
-				if (augerEncoder.getCount() > (TOP_ENCODER_LIMIT_AUGER - 500))
-				{
-					augerLifterMotor.setSpeed(AUGER_UP_SPEED_SPEED / 5);
-				} else
-				{
-					augerLifterMotor.setSpeed(AUGER_UP_SPEED_SPEED);
-				}
-			}
-
-		} else
-		{
-			augerLifterMotor.stop();
-		}
+		raiseAuger(AUGER_LIFTER_SPEED);
 	}
 
 	private void raiseAuger(double speed)
 	{
+		if (speed < 0)
+		{
+			speed = -speed;
+		}
+
 		if (!isAugerAtTopLimit())
 		{
-			if (augerEncoder.getCount() > (TOP_ENCODER_LIMIT_AUGER - 500))
-			{
-				augerLifterMotor.setSpeed(speed / 4);
-			} else
+			if (augerPot.getCount() > TOP_POT_LIMIT_AUGER + 600) // getting
+																	// close to
+																	// top limit
 			{
 				augerLifterMotor.setSpeed(speed);
+			} else
+			{
+				augerLifterMotor.setSpeed(AUGER_LIFTER_MIDDLE_TRAVEL_SPEED);
 			}
-
-		} else
-		{
-
-			augerLifterMotor.stop();
-
-			TOP_ENCODER_LIMIT_AUGER = (augerEncoder.getCount() - 500);
-
-			SmartDashboard.putNumber("Top Limit", TOP_ENCODER_LIMIT_AUGER);
-
 		}
 	}
 
 	private void lowerAuger(double speed)
 	{
+		if (speed < 0)
+		{
+			speed = -speed;
+		}
+
 		if (!isAugerAtBottomLimit())
 		{
-			augerLifterMotor.setSpeed(-speed);
-		} else
-		{
-			augerLifterMotor.stop();
-
-			augerEncoder.resetCount();
-
-			SmartDashboard.putNumber("Bottom Limit", BOTTOM_ENCODER_LIMIT_AUGER);
+			if (augerPot.getCount() < BOTTOM_POT_LIMIT_AUGER - 600) // getting
+																	// close to
+																	// bottom
+																	// limit
+			{
+				augerLifterMotor.setSpeed(-speed);
+			} else
+			{
+				augerLifterMotor.setSpeed(-AUGER_LIFTER_MIDDLE_TRAVEL_SPEED);
+			}
 		}
 	}
 
 	@Override
 	public void lowerAuger()
 	{
-		if (!isAugerAtBottomLimit())
-		{
-			if (augerLifterMotor.getControlMode() == TalonControlMode.PercentVbus)
-			{
-				augerLifterMotor.setSpeed(AUGER_DOWN_SPEED_VBUS);
-			} else
-			{
-				augerLifterMotor.setSpeed(AUGER_DOWN_SPEED_SPEED);
-			}
-		} else
-		{
-			augerLifterMotor.stop();
-		}
+		lowerAuger(AUGER_LIFTER_SPEED);
 	}
 
 	public void lowerAugerToBottomLimit()
@@ -368,14 +333,7 @@ public class Launcher implements ILauncher
 
 	private boolean isAugerAtBottomLimit()
 	{
-		if (bottomLimitAuger.getValue())
-		{
-			augerEncoder.resetCount();
-
-			SmartDashboard.putNumber("Bottom Limit", BOTTOM_ENCODER_LIMIT_AUGER);
-		}
-
-		if (bottomLimitAuger.getValue() || augerEncoder.getCount() < BOTTOM_ENCODER_LIMIT_AUGER)
+		if (bottomLimitAuger.getValue() || augerPot.getCount() > BOTTOM_POT_LIMIT_AUGER)
 		{
 			return true;
 		} else
@@ -386,14 +344,7 @@ public class Launcher implements ILauncher
 
 	private boolean isAugerAtTopLimit()
 	{
-		if (topLimitAuger.getValue())
-		{
-			TOP_ENCODER_LIMIT_AUGER = (augerEncoder.getCount() - 300);
-
-			SmartDashboard.putNumber("Top Limit", TOP_ENCODER_LIMIT_AUGER);
-		}
-
-		if (topLimitAuger.getValue() || augerEncoder.getCount() > TOP_ENCODER_LIMIT_AUGER)
+		if (topLimitAuger.getValue() || augerPot.getCount() < TOP_POT_LIMIT_AUGER)
 		{
 			return true;
 		} else
@@ -438,35 +389,30 @@ public class Launcher implements ILauncher
 	@Override
 	public void augerGoToPosition(int position)
 	{
-		if (augerEncoder.getCount() > position + 30 || augerEncoder.getCount() < position - 30)
+		if (augerPot.getCount() < position - 50 || augerPot.getCount() > position + 50)
 		{
-			if (augerEncoder.getCount() < position)
+			// if the auger is higher than the position
+			if (augerPot.getCount() < position)
 			{
-				while (!isAugerAtTopLimit() && augerEncoder.getCount() < position)
+				// while this is so or we reach the top limit of our travel
+				while ((augerPot.getCount() < position))
 				{
-					if (augerEncoder.getCount() < (position - 50))
-					{
-						raiseAuger(50);
-					} else
-					{
-						raiseAuger(25);
-					}
-				}
-			} else
-			{
-				while (!isAugerAtBottomLimit() && augerEncoder.getCount() > position)
-				{
-					if (augerEncoder.getCount() > (position + 50))
-					{
-						lowerAuger(50);
-					} else
-					{
-						lowerAuger(25);
-					}
+					lowerAuger();
 				}
 			}
+			// If the shooter is lower than the position
+			else
+			{
+				// while this is so or we reach the bottom limit of travel
+				while ((augerPot.getCount() > position))
+				{
+					raiseAuger();
+				}
+			}
+		} else
+		{
+			stopAugerLifter();
 		}
-
 	}
 
 	private void spinShooterUp(double speed)
@@ -479,16 +425,16 @@ public class Launcher implements ILauncher
 	public void shootSequence(double speed)
 	{
 		augerLifterMotor.disablePID();
-		
+
 		SensorConfig.getInstance().getTimer().waitTimeInMillis(400);
-		
+
 		// lowerAugerToBottomLimit();
 		jostle();
 		SensorConfig.getInstance().getTimer().waitTimeInMillis(400);
 		spinShooterUp(speed);
 		SensorConfig.getInstance().getTimer().waitTimeInMillis(1300);
 		launchBoulder();
-		
+
 		augerLifterMotor.enablePID();
 		augerLifterMotor.setControlMode(TalonControlMode.Speed);
 	}
