@@ -3,39 +3,72 @@ package org.fpsrobotics.sensors;
 import edu.wpi.first.wpilibj.Joystick;
 
 /**
- * 
  * Implements the buttons and joystick motions on the Logitech 3D Joystick.
- *
  */
 public class Logitech3DJoystick implements IJoystick
 {
 	private Joystick joy;
+	private static final int HORIZONTAL_AXIS = 0;
+	private static final int VERTICAL_AXIS = 1;
+	private static final int TWIST_AXIS = 2;
+	private static final int SWITCH_AXIS = 3;
+	private final static double TOLERANCE = 0.2;
 
-	public Logitech3DJoystick(int channel)
+	public Logitech3DJoystick(Joystick joy)
 	{
-		joy = new Joystick(channel);
+		this.joy = joy;
 	}
 
 	@Override
 	public double getX()
 	{
-		return joy.getRawAxis(0);
+		if (Math.abs(joy.getRawAxis(HORIZONTAL_AXIS)) < TOLERANCE)
+		{
+			return 0.0;
+		} else
+		{
+			return joy.getRawAxis(HORIZONTAL_AXIS);
+		}
 	}
 
 	@Override
 	public double getY()
 	{
-		return joy.getRawAxis(1);
+		if (Math.abs(joy.getRawAxis(VERTICAL_AXIS)) < TOLERANCE)
+		{
+			return 0.0;
+		} else
+		{
+			return joy.getRawAxis(VERTICAL_AXIS);
+		}
 	}
 
 	@Override
 	public double getTwist()
 	{
-		return joy.getTwist();
+		if (Math.abs(joy.getRawAxis(TWIST_AXIS)) < TOLERANCE)
+		{
+			return 0.0;
+		} else
+		{
+			return joy.getRawAxis(TWIST_AXIS);
+		}
 	}
 
 	@Override
-	public boolean getButtonValue(ButtonJoystick value)
+	public double getSwitch()
+	{
+		if (Math.abs(joy.getRawAxis(SWITCH_AXIS)) < TOLERANCE)
+		{
+			return 0.0;
+		} else
+		{
+			return joy.getRawAxis(SWITCH_AXIS);
+		}
+	}
+
+	@Override
+	public boolean getButtonValue(EJoystickButtons value)
 	{
 		switch (value)
 		{
@@ -53,10 +86,16 @@ public class Logitech3DJoystick implements IJoystick
 			return joy.getRawButton(6);
 		case SEVEN:
 			return joy.getRawButton(7);
+		case EIGHT:
+			return joy.getRawButton(8);
 		case NINE:
 			return joy.getRawButton(9);
 		case TEN:
 			return joy.getRawButton(10);
+		case ELEVEN:
+			return joy.getRawButton(11);
+		case TWELVE:
+			return joy.getRawButton(12);
 		default:
 			return false;
 		}

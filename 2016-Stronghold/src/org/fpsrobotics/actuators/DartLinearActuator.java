@@ -3,17 +3,20 @@ package org.fpsrobotics.actuators;
 import org.fpsrobotics.sensors.IHallEffectSensor;
 
 /**
- * Controls the Dart Linear Actuator available in the 2016 season.
- * This class is used when a Dart Linear Actuator has hall effect sensors attached to it in order to monitor it's upper and lower limits.
+ * Controls the Dart Linear Actuator available in the 2016 season. This class is
+ * used when a Dart Linear Actuator has hall effect sensors attached to it in
+ * order to monitor it's upper and lower limits.
+ * 
+ * NOT USED FOR 2016 SEASON
  */
 public class DartLinearActuator implements ILinearActuator
 {
 	private IMotor screwMotor;
 	private IHallEffectSensor topLimitSensor;
 	private IHallEffectSensor bottomLimitSensor;
-	
+
 	private final double LINEAR_ACTUATOR_SPEED = 0.8;
-	
+
 	public DartLinearActuator(IMotor screwMotor, IHallEffectSensor topLimitSensor, IHallEffectSensor bottomLimitSensor)
 	{
 		this.screwMotor = screwMotor;
@@ -25,12 +28,12 @@ public class DartLinearActuator implements ILinearActuator
 	public void goToTopLimit()
 	{
 		screwMotor.setSpeed(LINEAR_ACTUATOR_SPEED);
-		
-		while(!topLimitSensor.isTriggered())
+
+		while (!topLimitSensor.isTriggered())
 		{
-			
+
 		}
-		
+
 		screwMotor.stop();
 	}
 
@@ -38,21 +41,21 @@ public class DartLinearActuator implements ILinearActuator
 	public void goToBottomLimit()
 	{
 		screwMotor.setSpeed(-LINEAR_ACTUATOR_SPEED);
-		
-		while(!bottomLimitSensor.isTriggered())
+
+		while (!bottomLimitSensor.isTriggered())
 		{
-			
+
 		}
-		
+
 		screwMotor.stop();
 	}
 
 	@Override
 	public void setSpeed(double speed)
 	{
-		if(speed > 0)
+		if (speed > 0)
 		{
-			if(topLimitSensor.isTriggered())
+			if (topLimitSensor.isTriggered())
 			{
 				screwMotor.stop();
 				return;
@@ -60,9 +63,9 @@ public class DartLinearActuator implements ILinearActuator
 			{
 				screwMotor.setSpeed(speed);
 			}
-		} else if(speed < 0)
+		} else if (speed < 0)
 		{
-			if(bottomLimitSensor.isTriggered())
+			if (bottomLimitSensor.isTriggered())
 			{
 				screwMotor.stop();
 				return;
@@ -81,5 +84,5 @@ public class DartLinearActuator implements ILinearActuator
 	{
 		setSpeed(0.0);
 	}
-	
+
 }

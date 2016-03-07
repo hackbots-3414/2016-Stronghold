@@ -3,31 +3,33 @@ package org.fpsrobotics.actuators;
 import org.fpsrobotics.PID.IPIDFeedbackDevice;
 import org.fpsrobotics.sensors.IGyroscope;
 import org.fpsrobotics.sensors.SensorConfig;
-import org.fpsrobotics.teleop.PIDOverride;
 import org.usfirst.frc.team3414.robot.RobotStatus;
+import org.fpsrobotics.actuators.*;
 
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Creates a drive train that has two double motors on either side with encoders
- * on each gearbox. It also has an optional gyroscope attached in order to
- * enable straight movement.
+ * on each gearbox. It also has an optional gyroscope attached in order for
+ * straight movement.
  *
+ *
+ * NOT USED FOR 2016 SEASON
  */
-public class TankDrive implements IDriveTrain
+public class MechanumDrive implements IMechanumDrive
 {
 	private DoubleMotor motorLeft, motorRight;
 
 	private IGyroscope gyro;
 
-	public TankDrive(DoubleMotor motorLeft, DoubleMotor motorRight)
+	public MechanumDrive(DoubleMotor motorLeft, DoubleMotor motorRight)
 	{
 		this.motorLeft = motorLeft;
 		this.motorRight = motorRight;
 	}
 
-	public TankDrive(DoubleMotor motorLeft, DoubleMotor motorRight, IGyroscope gyro)
+	public MechanumDrive(DoubleMotor motorLeft, DoubleMotor motorRight, IGyroscope gyro)
 	{
 		this.motorLeft = motorLeft;
 		this.motorRight = motorRight;
@@ -39,20 +41,6 @@ public class TankDrive implements IDriveTrain
 	{
 		motorLeft.setSpeed(leftSpeed);
 		motorRight.setSpeed(rightSpeed);
-	}
-	
-	@Override
-	public void setSpeed(double speed)
-	{
-		motorLeft.setSpeed(speed);
-		motorRight.setSpeed(speed);
-	}
-
-	@Override
-	public void stop()
-	{
-		motorLeft.stop();
-		motorRight.stop();
 	}
 
 	@Override
@@ -70,31 +58,31 @@ public class TankDrive implements IDriveTrain
 	}
 
 	@Override
-	public void goForward(double speed)
+	public void goStraight(double speed)
 	{
-		motorLeft.setSpeed(Math.abs(speed));
-		motorRight.setSpeed(Math.abs(speed));
+		motorLeft.setSpeed(speed);
+		motorRight.setSpeed(speed);
 	}
 
 	@Override
 	public void goBackward(double speed)
 	{
-		motorLeft.setSpeed(-Math.abs(speed));
-		motorRight.setSpeed(-Math.abs(speed));
+		motorLeft.setSpeed(-speed);
+		motorRight.setSpeed(-speed);
 	}
 
 	@Override
 	public void driveLeft(double speed)
 	{
 		turnLeft(speed, 90);
-		goForward(speed);
+		goStraight(speed);
 	}
 
 	@Override
 	public void driveRight(double speed)
 	{
 		turnRight(speed, 90);
-		goForward(speed);
+		goStraight(speed);
 	}
 
 	@Override
@@ -119,9 +107,6 @@ public class TankDrive implements IDriveTrain
 	}
 
 	@Override
-	/**
-	 * For both sides, motorLeft and motorRight
-	 */
 	public void setPIDFeedbackDevice(IPIDFeedbackDevice device)
 	{
 		motorLeft.setPIDFeedbackDevice(device);
@@ -129,9 +114,6 @@ public class TankDrive implements IDriveTrain
 	}
 
 	@Override
-	/**
-	 * Defaults to return motorLeft
-	 */
 	public IPIDFeedbackDevice getPIDFeedbackDevice()
 	{
 		return motorLeft.getPIDFeedbackDevice();
@@ -152,18 +134,12 @@ public class TankDrive implements IDriveTrain
 	}
 
 	@Override
-	/**
-	 * Defaults to return motorLeft
-	 */
 	public TalonControlMode getControlMode()
 	{
 		return motorLeft.getControlMode();
 	}
 
 	@Override
-	/**
-	 * For both sides, motorLeft and motorRight
-	 */
 	public void setControlMode(TalonControlMode mode)
 	{
 		motorLeft.setControlMode(mode);
@@ -173,56 +149,46 @@ public class TankDrive implements IDriveTrain
 	@Override
 	public void turnLeft(double speed, double degrees)
 	{
-		if (gyro != null)
-		{
-			gyro.resetCount();
-			disablePID();
+		gyro.resetCount();
+		disablePID();
 
-			if (-degrees < gyro.getCount())
+		if (-degrees < gyro.getCount())
+		{
+			while (-degrees < gyro.getCount() && RobotStatus.isRunning())
 			{
-				while ((-degrees < gyro.getCount()) && RobotStatus.isRunning())
-				{
-					setSpeed(speed, -speed);
-				}
+				setSpeed(speed, -speed);
 			}
-
-			stop();
-
-			SensorConfig.getInstance().getTimer().waitTimeInMillis(200);
 		}
-		if (!PIDOverride.getInstance().isTeleopDisablePID())
-		{
-			enablePID();
-		}
+
+		setSpeed(0, 0);
+
+		SensorConfig.getInstance().getTimer().waitTimeInMillis(200);
+
+		// enablePID();
 	}
 
 	@Override
 	public void turnRight(double speed, double degrees)
 	{
-		if (gyro != null)
-		{
-			gyro.resetCount();
-			disablePID();
+		gyro.resetCount();
+		disablePID();
 
-			if (degrees > gyro.getCount())
+		if (degrees > gyro.getCount())
+		{
+			while (degrees > gyro.getCount() && RobotStatus.isRunning())
 			{
-				while (degrees > gyro.getCount() && RobotStatus.isRunning())
-				{
-					setSpeed(-speed, speed);
-				}
+				setSpeed(-speed, speed);
 			}
-
-			stop();
-
-			SensorConfig.getInstance().getTimer().waitTimeInMillis(200);
 		}
-		if (!PIDOverride.getInstance().isTeleopDisablePID())
-		{
-			enablePID();
-		}
+
+		setSpeed(0, 0);
+
+		SensorConfig.getInstance().getTimer().waitTimeInMillis(200);
+
+		// enablePID();
 	}
 
-	private final double Kp = 0.01;
+	final double Kp = 0.01;
 
 	@Override
 	public void goStraight(double speed, int distance)
@@ -246,21 +212,20 @@ public class TankDrive implements IDriveTrain
 				drive(-speed, -gyro.getCount() * Kp);
 			}
 
+			enablePID();
+
 			setSpeed(0, 0);
 
 			gyro.resetCount();
 
-			if (!PIDOverride.getInstance().isTeleopDisablePID())
-			{
-				enablePID();
-			}
 		} else
 		{
 			try
 			{
-				throw new Exception("No Gyroscope: goStraight method unavailable");
+				throw new Exception("Josh made a PNG (Raul), no gyroscope");
 			} catch (Exception e)
 			{
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -273,7 +238,7 @@ public class TankDrive implements IDriveTrain
 		goStraight(-speed, distance);
 	}
 
-	private final double m_sensitivity = 0.5;
+	final double m_sensitivity = 0.5;
 
 	private void drive(double outputMagnitude, double curve)
 	{

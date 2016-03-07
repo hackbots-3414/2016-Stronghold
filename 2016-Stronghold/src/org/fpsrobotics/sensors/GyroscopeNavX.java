@@ -8,19 +8,21 @@ import com.kauailabs.navx.frc.AHRS;
  */
 public class GyroscopeNavX implements IGyroscope
 {
-	AHRS ahrs;
-	
-	boolean enabled = true;
-	
+	private AHRS ahrs;
+	private boolean isEnabled = true;
+
 	public GyroscopeNavX(AHRS ahrs)
 	{
 		this.ahrs = ahrs;
 	}
 
 	@Override
+	/**
+	 * Returns values in between 0 and 0
+	 */
 	public double getCount()
 	{
-		if(enabled)
+		if (isEnabled)
 		{
 			return ahrs.getYaw();
 		} else
@@ -32,13 +34,13 @@ public class GyroscopeNavX implements IGyroscope
 	@Override
 	public void enable()
 	{
-		enabled = true;
+		isEnabled = true;
 	}
 
 	@Override
 	public void disable()
 	{
-		enabled= false;
+		isEnabled = false;
 	}
 
 	@Override

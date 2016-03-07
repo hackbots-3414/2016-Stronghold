@@ -3,36 +3,34 @@ package org.fpsrobotics.actuators;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
 /**
- * Used to control a double solenoid connected to the pneumatics breakout board in the 2016 season.
+ * Used to control a double solenoid connected to the pneumatics breakout board
+ * in the 2016 season.
  *
+ * NOT USED FOR 2016 SEASON
  */
 public class DoubleSolenoid implements ISolenoid
 {
-//	private int channelOne;
-//	private int channelTwo;
 	private edu.wpi.first.wpilibj.DoubleSolenoid solenoid;
-	
-	public DoubleSolenoid(int channelOne, int channelTwo)
+
+	public DoubleSolenoid(edu.wpi.first.wpilibj.DoubleSolenoid solenoid)
 	{
-		solenoid = new edu.wpi.first.wpilibj.DoubleSolenoid(channelOne, channelTwo);
-//		this.channelOne = channelOne;
-//		this.channelTwo = channelTwo;
+		this.solenoid = solenoid;
 	}
-	
+
 	@Override
-	public void turnOn() 
+	public void engage()
 	{
 		solenoid.set(Value.kForward);
 	}
 
 	@Override
-	public void turnOff() 
+	public void disengage()
 	{
 		solenoid.set(Value.kReverse);
 	}
 
 	@Override
-	public void set(SolenoidValues value) 
+	public void set(ESolenoidValues value)
 	{
 		switch (value)
 		{

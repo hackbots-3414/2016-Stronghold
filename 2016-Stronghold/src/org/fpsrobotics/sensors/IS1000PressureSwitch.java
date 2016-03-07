@@ -9,24 +9,24 @@ import edu.wpi.first.wpilibj.DigitalInput;
 public class IS1000PressureSwitch implements ILimitSwitch
 {
 
-	DigitalInput pressureSwitch;
-	boolean inverted = false;
-	
+	private DigitalInput pressureSwitch;
+	private boolean isInverted = false;
+
 	public IS1000PressureSwitch(int channel)
 	{
 		pressureSwitch = new DigitalInput(channel);
 	}
-	
+
 	public IS1000PressureSwitch(int channel, boolean inverted)
 	{
-		this.inverted = inverted;
+		this.isInverted = inverted;
 		pressureSwitch = new DigitalInput(channel);
 	}
-	
+
 	@Override
-	public boolean getValue()
+	public boolean isHit()
 	{
-		if(inverted)
+		if (isInverted)
 		{
 			return !pressureSwitch.get();
 		} else

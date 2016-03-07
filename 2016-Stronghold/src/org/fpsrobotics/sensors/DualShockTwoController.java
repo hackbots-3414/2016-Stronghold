@@ -9,44 +9,61 @@ import edu.wpi.first.wpilibj.Joystick;
 public class DualShockTwoController implements IGamepad
 {
 	private Joystick joy;
+	private static final double TOLERANCE = 0.2;
 
-	public DualShockTwoController(int channel)
+	public DualShockTwoController(Joystick joy)
 	{
-		joy = new Joystick(channel);
+		this.joy = joy;
 	}
 
-	// horizontal left 1
-	// vertical left 2
-
-	// horizontal right 3
-	// vertical right 4
-
 	@Override
-	public double getAnalogStickValue(AnalogStick stick, GamepadDirection direction)
+	/**
+	 * left horizontal 1; left vertical 2; right horizontal 3; right vertical 4
+	 */
+	public double getAnalogStickValue(EAnalogStickAxis axis)
 	{
-		if (stick == AnalogStick.LEFT)
+		switch (axis)
 		{
-			if (direction == GamepadDirection.HORIZONTAL)
+		case LEFT_HORIZONAL:
+			if (Math.abs(joy.getRawAxis(1)) < TOLERANCE)
 			{
-				return joy.getRawAxis(0);
+				return 0.0;
 			} else
 			{
 				return joy.getRawAxis(1);
 			}
-		} else
-		{
-			if (direction == GamepadDirection.HORIZONTAL)
+		case LEFT_VERTICAL:
+			if (Math.abs(joy.getRawAxis(2)) < TOLERANCE)
 			{
-				return joy.getRawAxis(2);
+				return 0.0;
 			} else
 			{
-				return -joy.getRawAxis(3);
+				return joy.getRawAxis(2);
 			}
+		case RIGHT_HORIZONTAL:
+			if (Math.abs(joy.getRawAxis(3)) < TOLERANCE)
+			{
+				return 0.0;
+			} else
+			{
+				return joy.getRawAxis(3);
+			}
+		case RIGHT_VERTICAL:
+			if (Math.abs(joy.getRawAxis(4)) < TOLERANCE)
+			{
+				return 0.0;
+			} else
+			{
+				return joy.getRawAxis(4);
+			}
+
+		default:
+			return 0.0;
 		}
 	}
 
 	@Override
-	public boolean getButtonValue(ButtonGamepad button)
+	public boolean getButtonValue(EJoystickButtons button)
 	{
 		switch (button)
 		{

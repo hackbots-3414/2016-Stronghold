@@ -4,9 +4,11 @@ package org.fpsrobotics.actuators;
  * Describes a generic pneumatic solenoid
  *
  */
-public interface ISolenoid 
+public interface ISolenoid
 {
-	public void turnOn();
-	public void turnOff();
-	public void set(SolenoidValues value);
+	public void engage();
+
+	public void disengage();
+
+	public void set(ESolenoidValues value);
 }

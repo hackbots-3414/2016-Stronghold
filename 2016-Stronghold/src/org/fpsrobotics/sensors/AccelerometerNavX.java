@@ -4,30 +4,35 @@ import com.kauailabs.navx.frc.AHRS;
 
 public class AccelerometerNavX implements IAccelerometer
 {
-	AHRS ahrs;
-	
+	private AHRS ahrs;
+	private final static double GRAVITY = 9.80;
+
 	public AccelerometerNavX(AHRS ahrs)
 	{
 		this.ahrs = ahrs;
 	}
 
 	@Override
-	public double getX() {
-		return ahrs.getWorldLinearAccelX()*9.8;
+	public double getX()
+	{
+		return ahrs.getWorldLinearAccelX() * GRAVITY;
 	}
 
 	@Override
-	public double getY() {
-		return ahrs.getWorldLinearAccelY()*9.8;
+	public double getY()
+	{
+		return ahrs.getWorldLinearAccelY() * GRAVITY;
 	}
 
 	@Override
-	public double getZ() {
-		return ahrs.getWorldLinearAccelZ()*9.8;
+	public double getZ()
+	{
+		return ahrs.getWorldLinearAccelZ() * GRAVITY;
 	}
 
 	@Override
-	public void reset() {
+	public void reset()
+	{
 		ahrs.resetDisplacement();
 	}
 

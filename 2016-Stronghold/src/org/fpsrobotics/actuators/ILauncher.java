@@ -6,25 +6,65 @@ package org.fpsrobotics.actuators;
  */
 public interface ILauncher
 {
-	public void moveShooterToBottomLimit();
-	public void goToPresetPosition();
-	public void moveShooterToPosition(double position);
-	public void moveShooterUp();
-	public void moveShooterDown();
-	public void intakeBoulder();
-	public void shootSequence();
-	public void shootSequence(double speed);
-	public void stopShooterWheels();
-	public void moveShooterToTopLimit();
-	public void raiseAuger();
-	public void lowerAuger();
-	public void spinShooterUp();
-	public void launchBoulder();
-	public void augerGoToPosition(int position);
+	public boolean isAugerCalibrated();
+	
+	// Lifter Functions
+//	public void lowerShooterToBottomLimit();
+	
+//	public void raiseShooterToTopLimit();
+	
+	public void raiseShooter();
+
+	public void lowerShooter();
+	
 	public void stopShooterLifter();
+	
+	public void moveShooterToPosition(double position);
+	
+	// Shooter Functions
+	
+	public void intakeBoulder();
+	
+	public void stopIntakeBoulder();
+	
+	public void launchBoulder();
+	
+	public void spinShooterWheels();
+	
+	public void stopShooterWheels();
+	
+	// Auger Functions
+	
+	public void raiseAuger();
+
+	public void lowerAuger();
+	
 	public void stopAugerLifter();
-	public void raiseAugerToTopLimit();
-	public void lowerAugerToBottomLimit();
-	public void spinAugerUp();
-	public void stopAuger();
+	
+	public void spinAugerWheels();
+
+	public void stopAugerWheels();
+	
+//	public void raiseAugerToTopLimit();
+
+//	public void lowerAugerToBottomLimit();
+	
+	public void moveAugerToPosition(int position);
+	
+	//Sequences
+
+	public void moveShooterToPreset(EShooterPresets preset);
+	
+	public void moveAugerToPreset(EAugerPresets preset);
+
+	public void shootSequence();
+
+	public void shootSequence(double speed);
+
+	
+
+	
+
+	
+
 }

@@ -1,20 +1,13 @@
 package org.fpsrobotics.actuators;
 
-import org.fpsrobotics.PID.IPIDEnabledDevice;
-
 /**
- * Describes a drive train that can be controlled by the driver or the code in
- * autonomous mode.
- *
+ * NOT USED FOR 2016 SEASON
  */
-public interface IDriveTrain extends IPIDEnabledDevice
+public interface IMechanumDrive
 {
+	
 	public void setSpeed(double leftSpeed, double rightSpeed);
-	
-	public void setSpeed(double speed);
 
-	public void stop();
-	
 	public void turnLeft(double speed);
 
 	public void turnLeft(double speed, double degrees);
@@ -23,7 +16,7 @@ public interface IDriveTrain extends IPIDEnabledDevice
 
 	public void turnRight(double speed, double degrees);
 
-	public void goForward(double speed);
+	public void goStraight(double speed);
 
 	public void goStraight(double speed, int distance);
 
@@ -34,4 +27,5 @@ public interface IDriveTrain extends IPIDEnabledDevice
 	public void driveLeft(double speed);
 
 	public void driveRight(double speed);
+	
 }

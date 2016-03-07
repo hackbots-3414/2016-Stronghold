@@ -9,6 +9,7 @@ import org.fpsrobotics.autonomous.AutonLowBar;
 import org.fpsrobotics.autonomous.AutonRockWall;
 import org.fpsrobotics.autonomous.AutonRoughTerrain;
 import org.fpsrobotics.autonomous.IAutonomousControl;
+import org.fpsrobotics.autonomous.MullenatorAutonomous;
 import org.fpsrobotics.sensors.IVision;
 import org.fpsrobotics.sensors.SensorConfig;
 import org.fpsrobotics.sensors.VisionCenterTarget;
@@ -24,10 +25,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends SampleRobot
 {
-	ITeleopControl teleop;
-	IAutonomousControl auto;
+	private ITeleopControl teleop;
+	private IAutonomousControl auto;
 	private ExecutorService executor;
-	SendableChooser autoChooser;
+//	private SendableChooser autoChooser;
 
 	public Robot()
 	{
@@ -37,19 +38,19 @@ public class Robot extends SampleRobot
 
 	public void robotInit()
 	{
-		makeAutoChooser();
+//		makeAutoChooser();
 	}
 
 	private void makeAutoChooser()
 	{
-		autoChooser = new SendableChooser();
-
-		autoChooser.addDefault("Do Nothing", new AutonDoNothing());
-		autoChooser.addObject("Low Bar", new AutonLowBar());
-		autoChooser.addObject("Rock Wall", new AutonRockWall());
-		autoChooser.addObject("Rough Terrain", new AutonRoughTerrain());
-
-		SmartDashboard.putData("Autonomous Chooser", autoChooser);
+//		autoChooser = new SendableChooser();
+//
+//		autoChooser.addDefault("Do Nothing", new AutonDoNothing());
+//		autoChooser.addObject("Low Bar", new AutonLowBar());
+//		autoChooser.addObject("Rock Wall", new AutonRockWall());
+//		autoChooser.addObject("Rough Terrain", new AutonRoughTerrain());
+//
+//		SmartDashboard.putData("Autonomous Chooser", autoChooser);
 	}
 
 	public void autonomous()
@@ -58,12 +59,13 @@ public class Robot extends SampleRobot
 		RobotStatus.setIsAuto(true);
 		RobotStatus.setIsTeleop(false);
 
-		executor.submit(() ->
-		{
-			System.out.println("Auto Running");
-
-			((IAutonomousControl) autoChooser.getSelected()).doAuto();
-		});
+//		executor.submit(() ->
+//		{
+//			System.out.println("Auto Running");
+//
+//			((IAutonomousControl) autoChooser.getSelected()).doAuto();
+//		});
+		MullenatorAutonomous.getInstance().doAuto();
 	}
 
 	public void operatorControl()

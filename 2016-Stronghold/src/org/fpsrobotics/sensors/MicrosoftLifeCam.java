@@ -7,7 +7,7 @@ public class MicrosoftLifeCam implements ICamera
 {
 	private CameraServer server;
 	private String usbPort;
-	
+
 	public MicrosoftLifeCam(String usbPort)
 	{
 		server = CameraServer.getInstance();
@@ -16,13 +16,13 @@ public class MicrosoftLifeCam implements ICamera
 	}
 
 	@Override
-	public void enable() 
+	public void enable()
 	{
 		server.startAutomaticCapture(usbPort);
 	}
 
 	@Override
-	public void disable() 
+	public void disable()
 	{
 
 	}

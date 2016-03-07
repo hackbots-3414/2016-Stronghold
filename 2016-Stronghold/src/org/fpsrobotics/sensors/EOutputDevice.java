@@ -1,6 +1,6 @@
 package org.fpsrobotics.sensors;
 
-public enum OutputDevice 
+public enum EOutputDevice
 {
 	SMARTDASHBOARD, FILE;
 }

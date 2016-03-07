@@ -3,32 +3,33 @@ package org.fpsrobotics.actuators;
 import edu.wpi.first.wpilibj.Solenoid;
 
 /**
- * This controls a single pneumatic solenoid, one that can either let air through a single tube or restrict it.
+ * This controls a single pneumatic solenoid, one that can either let air
+ * through a single tube or restrict it.
  *
  */
 public class SingleSolenoid implements ISolenoid
 {
 	private Solenoid solenoid;
-	
+
 	public SingleSolenoid(int channel)
 	{
 		solenoid = new Solenoid(channel);
 	}
 
 	@Override
-	public void turnOn() 
+	public void engage()
 	{
 		solenoid.set(true);
 	}
 
 	@Override
-	public void turnOff() 
+	public void disengage()
 	{
 		solenoid.set(false);
 	}
 
 	@Override
-	public void set(SolenoidValues value) 
+	public void set(ESolenoidValues value)
 	{
 		switch (value)
 		{
@@ -37,7 +38,7 @@ public class SingleSolenoid implements ISolenoid
 			break;
 		default:
 			solenoid.set(false);
-			
+
 		}
 	}
 

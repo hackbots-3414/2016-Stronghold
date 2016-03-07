@@ -9,18 +9,19 @@ public class QuadEncoder implements IPIDFeedbackDevice
 {
 	private Encoder encoder;
 	private boolean isEnabled;
-	
+
 	public QuadEncoder(int channelA, int channelB)
 	{
 		encoder = new Encoder(channelA, channelB);
-		encoder.reset();
-		
+		resetCount();
+
 		isEnabled = true;
 	}
 
 	@Override
-	public double getCount() {
-		if(isEnabled)
+	public double getCount()
+	{
+		if (isEnabled)
 		{
 			return encoder.get();
 		} else
@@ -30,35 +31,40 @@ public class QuadEncoder implements IPIDFeedbackDevice
 	}
 
 	@Override
-	public void enable() {
+	public void enable()
+	{
 		isEnabled = true;
 	}
 
 	@Override
-	public void disable() {
+	public void disable()
+	{
 		isEnabled = false;
 	}
 
 	@Override
-	public void resetCount() {
+	public void resetCount()
+	{
 		encoder.reset();
 	}
 
 	@Override
-	public FeedbackDevice whatPIDDevice() {
+	public FeedbackDevice whatPIDDevice()
+	{
 		return FeedbackDevice.QuadEncoder;
 	}
 
 	@Override
-	public double getError() {
+	public double getError()
+	{
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public double getRate() {
+	public double getRate()
+	{
 		return encoder.getRate();
 	}
-
 
 }

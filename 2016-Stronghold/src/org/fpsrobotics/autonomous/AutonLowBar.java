@@ -1,6 +1,8 @@
 package org.fpsrobotics.autonomous;
 
 import org.fpsrobotics.actuators.ActuatorConfig;
+import org.fpsrobotics.actuators.EAugerPresets;
+import org.fpsrobotics.actuators.EShooterPresets;
 import org.fpsrobotics.sensors.SensorConfig;
 import org.usfirst.frc.team3414.robot.RobotStatus;
 
@@ -10,55 +12,53 @@ public class AutonLowBar implements IAutonomousControl
 	@Override
 	public void doAuto()
 	{
-		if (RobotStatus.isAuto())
+		while (RobotStatus.isAuto())
 		{
-			ActuatorConfig.getInstance().getLauncher().augerGoToPosition(1150);
-		}
-		
-		// Move shooter to top limit
-		if (RobotStatus.isAuto())
-		{
-			for (int i = 0; i < 100; i++)
-			{
-				ActuatorConfig.getInstance().getLauncher().moveShooterToPosition(1400);
-				SensorConfig.getInstance().getTimer().waitTimeInMillis(10);
-			}
+			//TODO: What did this do?
+			ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.POSITION1150);
 
-			ActuatorConfig.getInstance().getLauncher().stopShooterLifter();
-		}
+			if (!RobotStatus.isAuto())
+				break;
 
-		// Go over rock wall
-		if (RobotStatus.isAuto())
-		{
+			// Move shooter to top limit
+			// ActuatorConfig.getInstance().getLauncher().moveShooterToPosition(1400);
+			ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.LOW_BAR);
+
+			if (!RobotStatus.isAuto())
+				break;
+
+			// Go over rock wall
 			ActuatorConfig.getInstance().getDriveTrain().goStraight(0.5, 80000);
-		}
 
-		if (RobotStatus.isAuto())
-		{
+			if (!RobotStatus.isAuto())
+				break;
+
 			SensorConfig.getInstance().getTimer().waitTimeInMillis(300);
-		}
 
-		// Straighten drive train
-		if (RobotStatus.isAuto())
-		{
+			if (!RobotStatus.isAuto())
+				break;
+
+			// Straighten drive train
 			ActuatorConfig.getInstance().getDriveTrainAssist().centerDriveTrain(0.1);
-		}
 
-		// Angle toward goal
+			// Angle toward goal
+			// TODO: Implement this Auto
 
-		// Shoot
-		if (RobotStatus.isAuto())
-		{
-			for (int i = 0; i < 100; i++)
-			{
-				ActuatorConfig.getInstance().getLauncher().moveShooterToPosition(400);
-				SensorConfig.getInstance().getTimer().waitTimeInMillis(10);
-			}
+			if (!RobotStatus.isAuto())
+				break;
 
-			ActuatorConfig.getInstance().getLauncher().stopShooterLifter();
-
+			// Shoot
+			//TODO: What did this do?
+			ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.POSITION400);
+			
+			if (!RobotStatus.isAuto())
+				break;
+			
 			ActuatorConfig.getInstance().getLauncher().shootSequence();
+
+			break;
 		}
+
 	}
 
 }

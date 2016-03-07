@@ -12,21 +12,21 @@ import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
  */
 public class Potentiometer implements IPIDFeedbackDevice
 {
-	private AnalogInput analog;
+	private AnalogInput pot;
 	private boolean isEnabled;
-	
-	public Potentiometer(int channel)
+
+	public Potentiometer(AnalogInput pot)
 	{
-		analog = new AnalogInput(channel);
+		this.pot = pot;
 		isEnabled = true;
 	}
 
 	@Override
 	public double getCount()
 	{
-		if(isEnabled)
+		if (isEnabled)
 		{
-			return analog.getValue();
+			return pot.getValue();
 		} else
 		{
 			return 0;
@@ -48,7 +48,7 @@ public class Potentiometer implements IPIDFeedbackDevice
 	@Override
 	public void resetCount()
 	{
-		analog.resetAccumulator();
+		pot.resetAccumulator();
 	}
 
 	@Override
@@ -58,13 +58,15 @@ public class Potentiometer implements IPIDFeedbackDevice
 	}
 
 	@Override
-	public double getError() {
+	public double getError()
+	{
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public double getRate() {
+	public double getRate()
+	{
 		// TODO: make it return rate of rotation
 		return 0;
 	}
