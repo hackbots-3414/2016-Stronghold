@@ -1,5 +1,9 @@
 package org.fpsrobotics.actuators;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+
 import org.fpsrobotics.PID.IPIDFeedbackDevice;
 import org.fpsrobotics.autonomous.DriveTrainAssist;
 import org.fpsrobotics.sensors.BuiltInCANTalonEncoder;
@@ -58,7 +62,7 @@ public class ActuatorConfig
 	private IPIDFeedbackDevice rightDriveEncoder;
 
 	// Auger encoder
-	private IPIDFeedbackDevice augerEncoder;
+	private IPIDFeedbackDevice augerPotentiometer;
 
 	// Drive train
 	private IDriveTrain driveTrain;
@@ -73,7 +77,6 @@ public class ActuatorConfig
 	// Auger motors
 	private CANTalon augerIntakeMotor;
 	private CANTalon augerLifterMotor;
-	private CANMotor augerLifterMotorCAN;
 
 	// Shooter lifter motor
 	private CANTalon linearActuator;
@@ -83,6 +86,46 @@ public class ActuatorConfig
 
 	private ActuatorConfig()
 	{
+		boolean isAlpha = true;
+
+		// distinguish alpha and beta
+		FileReader fileReader = null;
+		try
+		{
+			fileReader = new FileReader("/AlphaOrBeta.txt"); // make sure file
+																// exists at
+																// this exact
+																// path
+		} catch (FileNotFoundException e1)
+		{
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		try
+		{
+			BufferedReader textReader = new BufferedReader(fileReader);
+
+			if (textReader.readLine().equals("alpha"))
+			{
+				isAlpha = true;
+			} else if (textReader.readLine().equals("beta"))
+			{
+				isAlpha = false;
+			} else
+			{
+				System.err.println(
+						"File is openable but doesn't specify alpha or beta on the first line, assuming alpha.");
+			}
+
+			textReader.close();
+
+		} catch (Exception e)
+		{
+			System.err.println("Cannot determine if alpha or beta, assuming alpha");
+			isAlpha = true;
+		}
+
 		try
 		{
 			// Instantiate CANTalons
@@ -154,7 +197,6 @@ public class ActuatorConfig
 			// Instantiate auger motors
 			augerIntakeMotor = new CANTalon(AUGER_INTAKE_MOTOR);
 			augerLifterMotor = new CANTalon(AUGER_LIFTER_MOTOR);
-			augerLifterMotorCAN = new CANMotor(augerLifterMotor, false);
 		} catch (Exception e)
 		{
 			System.err.println("Auger motors failed to initalize");
@@ -163,7 +205,7 @@ public class ActuatorConfig
 		try
 		{
 			// Instantiate auger encoder
-			augerEncoder = new BuiltInCANTalonEncoder(augerLifterMotor);
+			augerPotentiometer = new BuiltInCANTalonEncoder(augerLifterMotor);
 		} catch (Exception e)
 		{
 			System.err.println("Auger encoder failed to initialize");
@@ -178,22 +220,7 @@ public class ActuatorConfig
 			System.err.println("Shooter Solenoid failed to initialize");
 		}
 
-		// Auger PID
-		augerLifterMotorCAN.enablePID();
-
-		augerLifterMotor.reverseSensor(false);
-
-		augerLifterMotorCAN.setControlMode(TalonControlMode.Speed); // Speed
-																	// means use
-																	// encoder
-																	// rates
-																	// to
-																	// control
-																	// how fast
-																	// the robot
-																	// is moving
-
-		augerEncoder.resetCount();
+		augerPotentiometer.resetCount();
 
 		// Instantiate the launcher itself
 		launcher = new Launcher(
@@ -201,9 +228,8 @@ public class ActuatorConfig
 				new CANMotor(linearActuator, true), shooterSolenoid,
 				SensorConfig.getInstance().getShooterBottomLimitSwitch(),
 				SensorConfig.getInstance().getShooterTopLimitSwitch(), SensorConfig.getInstance().getShooterPot(),
-				new CANMotor(augerIntakeMotor, false), augerLifterMotorCAN,
-				SensorConfig.getInstance().getAugerBottomLimitSwitch(),
-				SensorConfig.getInstance().getAugerTopLimitSwitch(), augerEncoder);
+				new CANMotor(augerIntakeMotor, false), SensorConfig.getInstance().getAugerBottomLimitSwitch(),
+				SensorConfig.getInstance().getAugerTopLimitSwitch(), augerPotentiometer, isAlpha);
 	}
 
 	public static synchronized ActuatorConfig getInstance()
@@ -258,7 +284,7 @@ public class ActuatorConfig
 
 	public IPIDFeedbackDevice getAugerEncoder()
 	{
-		return augerEncoder;
+		return augerPotentiometer;
 	}
 
 }
