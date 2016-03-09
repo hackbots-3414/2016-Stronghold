@@ -29,8 +29,9 @@ public class Launcher implements ILauncher
 	private final double LINEAR_ACTUATOR_SPEED = 0.5;
 
 	// Shooter Functions
-	private final double INTAKE_SPEED = -0.6;
-	private double SHOOT_SPEED = 0.95;
+	private final double INTAKE_SPEED = -0.4;
+	private double SHOOT_SPEED = 0.90;
+	//TODO: GOT RID OF SMARTDASHBOARD INPUT SHOT - redo that
 
 	// Auger Functions
 	private final double INTAKE_AUGER_SPEED = -0.8;
@@ -50,7 +51,7 @@ public class Launcher implements ILauncher
 
 	private boolean isAugerCalibrated;
 
-	private ICANMotor shooterMotors, augerIntakeMotor, shooterLifterMotor;
+	private ICANMotor leftShooterMotor, rightShooterMotor, augerIntakeMotor, shooterLifterMotor;
 	private ICANMotor augerLifterMotor;
 	private ILimitSwitch bottomLimitShooter, topLimitShooter, bottomLimitAuger, topLimitAuger;
 	private IPIDFeedbackDevice shooterPot, augerPot;
@@ -61,7 +62,7 @@ public class Launcher implements ILauncher
 
 	/**
 	 * 
-	 * @param shooterMotors
+	 * @param leftShooterMotor
 	 * @param shooterLifterMotor
 	 * @param shooterActuator
 	 * @param shooterBottomLimit
@@ -73,13 +74,14 @@ public class Launcher implements ILauncher
 	 * @param topLimitAuger
 	 * @param augerPot
 	 */
-	public Launcher(ICANMotor shooterMotors, ICANMotor shooterLifterMotor, ISolenoid shooterActuator,
+	public Launcher(ICANMotor leftShooterMotor, ICANMotor rightShooterMotor, ICANMotor shooterLifterMotor, ISolenoid shooterActuator,
 			ILimitSwitch shooterBottomLimit, ILimitSwitch shooterTopLimit, IPIDFeedbackDevice shooterPot,
 			ICANMotor augerIntakeMotor, ICANMotor augerLifterMotor, ILimitSwitch bottomLimitAuger,
 			ILimitSwitch topLimitAuger, IPIDFeedbackDevice augerPot, boolean isAlpha)
 	{
 		// Shooter
-		this.shooterMotors = shooterMotors;
+		this.leftShooterMotor = leftShooterMotor;
+		this.rightShooterMotor = rightShooterMotor;
 		this.shooterLifterMotor = shooterLifterMotor;
 		this.shooterActuator = shooterActuator;
 		this.bottomLimitShooter = shooterBottomLimit;
@@ -280,14 +282,16 @@ public class Launcher implements ILauncher
 	{
 		augerIntakeMotor.setSpeed(INTAKE_AUGER_SPEED);
 
-		shooterMotors.setSpeed(INTAKE_SPEED);
+		rightShooterMotor.setSpeed(INTAKE_SPEED);
+		leftShooterMotor.setSpeed(INTAKE_SPEED);
 	}
 
 	@Override
 	public void stopIntakeBoulder()
 	{
 		augerIntakeMotor.stop();
-		shooterMotors.stop();
+		rightShooterMotor.stop();
+		leftShooterMotor.stop();
 	}
 
 	@Override
@@ -311,13 +315,15 @@ public class Launcher implements ILauncher
 
 	private void spinShooterWheels(double speed)
 	{
-		shooterMotors.setSpeed(speed);
+		leftShooterMotor.setSpeed(speed);
+		rightShooterMotor.setSpeed(speed);
 	}
 
 	private void jostle()
 	{
 		stopShooterWheels();
-		shooterMotors.setSpeed(0.4);
+		leftShooterMotor.setSpeed(0.4);
+		rightShooterMotor.setSpeed(0.4);
 		SensorConfig.getInstance().getTimer().waitTimeInMillis(400);
 		stopShooterWheels();
 	}
@@ -325,7 +331,9 @@ public class Launcher implements ILauncher
 	@Override
 	public void stopShooterWheels()
 	{
-		shooterMotors.stop();
+		rightShooterMotor.stop();
+		
+		leftShooterMotor.stop();
 	}
 
 	// Auger Functions
@@ -532,7 +540,7 @@ public class Launcher implements ILauncher
 	@Override
 	public void shootSequence(double speed)
 	{
-		augerLifterMotor.disablePID();
+//		augerLifterMotor.disablePID();
 
 		SensorConfig.getInstance().getTimer().waitTimeInMillis(400);
 
@@ -544,8 +552,8 @@ public class Launcher implements ILauncher
 		SensorConfig.getInstance().getTimer().waitTimeInMillis(1300);
 		launchBoulder();
 
-		augerLifterMotor.enablePID();
-		augerLifterMotor.setControlMode(TalonControlMode.Speed);
+//		augerLifterMotor.enablePID();
+//		augerLifterMotor.setControlMode(TalonControlMode.Speed);
 	}
 
 }

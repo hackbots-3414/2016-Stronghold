@@ -13,6 +13,7 @@ import org.fpsrobotics.sensors.SensorConfig;
 
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Singleton class that creates and distributes all of the actuators (motors,
@@ -92,7 +93,7 @@ public class ActuatorConfig
 		FileReader fileReader = null;
 		try
 		{
-			fileReader = new FileReader("/AlphaOrBeta.txt"); // make sure file
+			fileReader = new FileReader("/home/lvuser/AlphaOrBeta.txt"); // make sure file
 																// exists at
 																// this exact
 																// path
@@ -106,10 +107,12 @@ public class ActuatorConfig
 		{
 			BufferedReader textReader = new BufferedReader(fileReader);
 
-			if (textReader.readLine().equals("alpha"))
+			String text = textReader.readLine();
+			
+			if (text.equals("alpha"))
 			{
 				isAlpha = true;
-			} else if (textReader.readLine().equals("beta"))
+			} else if (text.equals("beta"))
 			{
 				isAlpha = false;
 			} else
@@ -118,6 +121,8 @@ public class ActuatorConfig
 						"File is openable but doesn't specify alpha or beta on the first line, assuming alpha.");
 			}
 
+			SmartDashboard.putBoolean("isAlpha", isAlpha);
+			
 			textReader.close();
 
 		} catch (Exception e)
@@ -224,11 +229,12 @@ public class ActuatorConfig
 
 		// Instantiate the launcher itself
 		launcher = new Launcher(
-				new DoubleMotor(new CANMotor(leftShooterMotor, true), new CANMotor(rightShooterMotor, false)),
+				new CANMotor(leftShooterMotor, true), new CANMotor(rightShooterMotor, false),
+//				new DoubleMotor(new CANMotor(leftShooterMotor, true), new CANMotor(rightShooterMotor, true)),
 				new CANMotor(linearActuator, true), shooterSolenoid,
 				SensorConfig.getInstance().getShooterBottomLimitSwitch(),
 				SensorConfig.getInstance().getShooterTopLimitSwitch(), SensorConfig.getInstance().getShooterPot(),
-				new CANMotor(augerIntakeMotor, false), SensorConfig.getInstance().getAugerBottomLimitSwitch(),
+				new CANMotor(augerIntakeMotor, false), new CANMotor(augerLifterMotor, false), SensorConfig.getInstance().getAugerBottomLimitSwitch(),
 				SensorConfig.getInstance().getAugerTopLimitSwitch(), augerPotentiometer, isAlpha);
 	}
 

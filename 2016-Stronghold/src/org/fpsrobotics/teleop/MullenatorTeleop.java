@@ -24,14 +24,14 @@ public class MullenatorTeleop implements ITeleopControl
 	{
 		executor = Executors.newFixedThreadPool(2);
 
-		SmartDashboard.putNumber("Preset", 477);
-		SmartDashboard.putNumber("Shoot Speed", 0.8);
+		// SmartDashboard.putNumber("Preset", 477);
+//		SmartDashboard.putNumber("Shoot Speed", 0.40);
 	}
 
-//	private boolean launchReadyA = false;
-//	private boolean launchReadyB = false;
-//	private boolean augerLockOut = false;
-//	private final static long TIMEOUT = 2000;
+	private boolean launchReadyA = false;
+	private boolean launchReadyB = false;
+	private boolean augerLockOut = false;
+	private final static long TIMEOUT = 500;
 
 	@Override
 	public void doTeleop()
@@ -57,7 +57,7 @@ public class MullenatorTeleop implements ITeleopControl
 			while (RobotStatus.isRunning())
 			{
 				// Toggle PID
-				if ((SensorConfig.getInstance().getRightJoystick().getButtonValue(EJoystickButtons.FIVE)) && !lockA
+				if ((SensorConfig.getInstance().getLeftJoystick().getButtonValue(EJoystickButtons.FIVE)) && !lockA
 						&& !lockB)
 				{
 					lockA = true;
@@ -66,14 +66,14 @@ public class MullenatorTeleop implements ITeleopControl
 					PIDOverride.getInstance().setTeleopDisablePID(true);
 					pidOn = false;
 				}
-				if ((!SensorConfig.getInstance().getRightJoystick().getButtonValue(EJoystickButtons.FIVE)) && lockA
+				if ((!SensorConfig.getInstance().getLeftJoystick().getButtonValue(EJoystickButtons.FIVE)) && lockA
 						&& !lockB)
 				{
 					lockA = false;
 					lockB = true;
 					// DO 2 - On Release
 				}
-				if ((SensorConfig.getInstance().getRightJoystick().getButtonValue(EJoystickButtons.FIVE)) && !lockA
+				if ((SensorConfig.getInstance().getLeftJoystick().getButtonValue(EJoystickButtons.FIVE)) && !lockA
 						&& lockB)
 				{
 					lockA = true;
@@ -83,7 +83,7 @@ public class MullenatorTeleop implements ITeleopControl
 					PIDOverride.getInstance().setTeleopDisablePID(false);
 					pidOn = true;
 				}
-				if ((!SensorConfig.getInstance().getRightJoystick().getButtonValue(EJoystickButtons.FIVE)) && lockA
+				if ((!SensorConfig.getInstance().getLeftJoystick().getButtonValue(EJoystickButtons.FIVE)) && lockA
 						&& lockB)
 				{
 					lockA = false;
@@ -96,8 +96,8 @@ public class MullenatorTeleop implements ITeleopControl
 				// With PID
 				if (pidOn)
 				{
-					yOne = SensorConfig.getInstance().getRightJoystick().getY();
-					yTwo = SensorConfig.getInstance().getLeftJoystick().getY();
+					yOne = SensorConfig.getInstance().getLeftJoystick().getY();
+					yTwo = SensorConfig.getInstance().getRightJoystick().getY();
 
 					/*
 					 * Linear Drive Control correctedYOne = yOne * 400;
@@ -131,26 +131,31 @@ public class MullenatorTeleop implements ITeleopControl
 					// Without PID
 				} else
 				{
-					// TODO: Why is (left -> right, right -> left) like this?
 
 					if (SensorConfig.getInstance().getLeftJoystick().getButtonValue(EJoystickButtons.ONE))
 					{
 						notPIDspeedMultiplyer = 0.5;
+						SmartDashboard.putBoolean("DRIVE BY HALF", true);
 					} else
 					{
 						notPIDspeedMultiplyer = 1.0;
+						SmartDashboard.putBoolean("DRIVE BY HALF", false);
 					}
 
-					if (SensorConfig.getInstance().getLeftJoystick().getButtonValue(EJoystickButtons.ONE))
+					if (SensorConfig.getInstance().getRightJoystick().getButtonValue(EJoystickButtons.ONE))
 					{
 						ActuatorConfig.getInstance().getDriveTrain()
 								.setSpeed(SensorConfig.getInstance().getRightJoystick().getY() * notPIDspeedMultiplyer);
+						SmartDashboard.putBoolean("DRIVE TOGETHER", true);
 					} else
 					{
 						ActuatorConfig.getInstance().getDriveTrain().setSpeed(
-								SensorConfig.getInstance().getRightJoystick().getY() * notPIDspeedMultiplyer,
-								SensorConfig.getInstance().getLeftJoystick().getY() * notPIDspeedMultiplyer);
+								SensorConfig.getInstance().getLeftJoystick().getY() * notPIDspeedMultiplyer,
+								SensorConfig.getInstance().getRightJoystick().getY() * notPIDspeedMultiplyer);
+						SmartDashboard.putBoolean("DRIVE TOGETHER", false);
 					}
+					SmartDashboard.putNumber("Left R * SpeedMultiplyer",
+							SensorConfig.getInstance().getRightJoystick().getY() * notPIDspeedMultiplyer);
 
 				}
 
@@ -213,185 +218,383 @@ public class MullenatorTeleop implements ITeleopControl
 
 				SmartDashboard.putNumber("Shooter Pot", SensorConfig.getInstance().getShooterPot().getCount());
 
-				SensorConfig.getInstance().getTimer().waitTimeInMillis(100);
+				try
+				{
+					Thread.sleep(100);
+				} catch (Exception e)
+				{
+					e.printStackTrace();
+				}
 			}
 		});
 
-		// Shooter Loop
-		executor.submit(() ->
-		{
-			boolean movedShooter = true;
-			boolean movedAuger = true;
-			boolean movedShooterWheels = true;
-			boolean movedAugerWheels = true;
-
-			while (RobotStatus.isRunning())
-			{
-				// Shooter movement controls
-				while (gamepad.getButtonValue(EJoystickButtons.TWO))
-				{
-					launcher.lowerShooter();
-					movedShooter = true;
-				}
-
-				while (gamepad.getButtonValue(EJoystickButtons.FOUR))
-				{
-					launcher.raiseShooter();
-					movedShooter = true;
-				}
-
-				// while (gamepad.getButtonValue(EJoystickButtons.FIVE))
-				// {
-				// //launcher.moveShooterToPosition(SmartDashboard.getNumber("Preset",
-				// 477));
-				//
-				// launcher.moveShooterToBottomLimit();
-				// launcher.augerGoToPosition(1000);
-				//
-				// movedShooter = true;
-				// }
-
-				if (movedShooter)
-				{
-					launcher.stopShooterLifter();
-					movedShooter = false;
-				}
-				/*
-				 * // Auger movement controls while
-				 * (gamepad.getButtonValue(EJoystickButtons.ONE)) {
-				 * launcher.lowerAuger(); movedAuger = true; } while
-				 * (gamepad.getButtonValue(EJoystickButtons.SIX)) {
-				 * launcher.raiseAuger(); movedAuger = true; } if(movedAuger) {
-				 * launcher.stopAugerLifter(); movedAuger = false; }
-				 * 
-				 * // Auger wheel controls while
-				 * (gamepad.getButtonValue(EJoystickButtons.NINE)) {
-				 * launcher.spinAugerUp();
-				 * 
-				 * movedAugerWheels = true; }
-				 * 
-				 * if(movedAugerWheels) { launcher.stopAuger(); movedAugerWheels
-				 * = false; }
-				 */
-
-				// Shooter launching controls
-				if (gamepad.getButtonValue(EJoystickButtons.SEVEN))
-				{
-					launcher.shootSequence();
-
-					while (gamepad.getButtonValue(EJoystickButtons.SEVEN))
-						;
-
-					movedShooterWheels = true;
-				}
-
-				if (gamepad.getButtonValue(EJoystickButtons.EIGHT))
-				{
-					launcher.shootSequence(SmartDashboard.getNumber("Shoot Speed", 0.85));
-
-					while (gamepad.getButtonValue(EJoystickButtons.EIGHT))
-						;
-
-					movedShooterWheels = true;
-				}
-
-				while (gamepad.getButtonValue(EJoystickButtons.THREE))
-				{
-					launcher.intakeBoulder();
-
-					movedShooterWheels = true;
-				}
-
-				if (movedShooterWheels)
-				{
-					launcher.stopShooterWheels();
-					movedShooterWheels = false;
-				}
-
-				/*
-				 * Manual Launching while
-				 * (gamepad.getButtonValue(EJoystickButtons.ONE)) {
-				 * launcher.spinShooterUp(); if
-				 * (gamepad.getButtonValue(EJoystickButtons.SIX)) {
-				 * launcher.launchBoulder(); while
-				 * (gamepad.getButtonValue(EJoystickButtons.SIX) ||
-				 * gamepad.getButtonValue(EJoystickButtons.ONE)); } }
-				 */
-
-				// Pressure sensor feedback
-				if (SensorConfig.getInstance().getPressureSwitch().isHit())
-				{
-					SmartDashboard.putBoolean("Pressure", true);
-				} else
-				{
-					SmartDashboard.putBoolean("Pressure", false);
-				}
-
-				SensorConfig.getInstance().getTimer().waitTimeInMillis(100);
-			}
-		});
-
-		/*
-		 * // LIFTER executor.submit(() -> { while (RobotStatus.isRunning()) {
-		 * // With internal while statements if
-		 * (gamepad.getButtonValue(EJoystickButtons.TEN)) {
-		 * launcher.moveShooterToPreset(EShooterPresets.TOP_LIMIT); } if
+		 // Shooter Loop
+		 executor.submit(() ->
+		 {
+		 boolean movedShooter = true;
+		 boolean movedAuger = true;
+		 boolean movedShooterWheels = true;
+		 boolean movedAugerWheels = true;
+		
+		 while (RobotStatus.isRunning())
+		 {
+		 // Shooter movement controls
+		 while (gamepad.getButtonValue(EJoystickButtons.TWO))
+		 {
+		 launcher.lowerShooter();
+		 movedShooter = true;
+		 }
+		
+		 while (gamepad.getButtonValue(EJoystickButtons.FOUR))
+		 {
+		 launcher.raiseShooter();
+		 movedShooter = true;
+		 }
+		
+		 // while (gamepad.getButtonValue(EJoystickButtons.FIVE))
+		 // {
+		 //
+		 //launcher.moveShooterToPosition(SmartDashboard.getNumber("Preset",
+		 // 477));
+		 //
+		 // launcher.moveShooterToBottomLimit();
+		 // launcher.augerGoToPosition(1000);
+		 //
+		 // movedShooter = true;
+		 // }
+		
+		 if (movedShooter)
+		 {
+		 launcher.stopShooterLifter();
+		 movedShooter = false;
+		 }
+		 /*
+		 * // Auger movement controls while
+		 * (gamepad.getButtonValue(EJoystickButtons.ONE)) {
+		 * launcher.lowerAuger(); movedAuger = true; } while
+		 * (gamepad.getButtonValue(EJoystickButtons.SIX)) {
+		 * launcher.raiseAuger(); movedAuger = true; } if(movedAuger) {
+		 * launcher.stopAugerLifter(); movedAuger = false; }
+		 *
+		 * // Auger wheel controls while
 		 * (gamepad.getButtonValue(EJoystickButtons.NINE)) {
-		 * launcher.moveShooterToPreset(EShooterPresets.BOTTOM_LIMIT); } if
-		 * (gamepad.getButtonValue(EJoystickButtons.THREE)) {
-		 * launcher.moveShooterToPreset(EShooterPresets.LOAD_BOULDER); }
-		 * 
-		 * if (gamepad.getButtonValue(EJoystickButtons.FOUR)) {
-		 * launcher.raiseShooter(); } else if
-		 * (gamepad.getButtonValue(EJoystickButtons.TWO)) {
-		 * launcher.lowerShooter(); } else { launcher.stopShooterLifter(); }
-		 * SensorConfig.getInstance().getTimer().waitTimeInMillis(50); } });
-		 * 
-		 * // AUGER executor.submit(() -> { while (RobotStatus.isRunning()) { if
-		 * (!augerLockOut) { if
-		 * (gamepad.getAnalogStickValue(EAnalogStickAxis.LEFT_VERTICAL) > 0.0) {
-		 * launcher.raiseAuger(); } else if
-		 * (gamepad.getAnalogStickValue(EAnalogStickAxis.LEFT_VERTICAL) < 0.0) {
-		 * launcher.lowerAuger(); } else { launcher.stopAugerLifter(); } }
-		 * SensorConfig.getInstance().getTimer().waitTimeInMillis(50); } });
-		 * 
-		 * // LAUNCHER executor.submit(() -> { boolean lockOutA = false; boolean
-		 * lockOutB = false;
-		 * 
-		 * while (RobotStatus.isRunning()) { // Launch Ball Sequence; locks out
-		 * other options if (!lockOutA && !lockOutB && !launchReadyA &&
-		 * gamepad.getButtonValue(EJoystickButtons.SEVEN)) { augerLockOut =
-		 * true; lockOutA = true; launcher.shootSequence(); } if (lockOutA &&
-		 * !gamepad.getButtonValue(EJoystickButtons.SEVEN)) {
-		 * SensorConfig.getInstance().getTimer().waitTimeInMillis(TIMEOUT);
-		 * lockOutA = false; augerLockOut = false; }
-		 * 
-		 * // Intake Ball; locks out other options if (!lockOutA &&
-		 * !launchReadyA && gamepad.getButtonValue(EJoystickButtons.EIGHT)) {
-		 * lockOutB = true; launcher.intakeBoulder(); } if (lockOutB &&
-		 * !gamepad.getButtonValue(EJoystickButtons.EIGHT)) {
-		 * launcher.stopIntakeBoulder();
-		 * SensorConfig.getInstance().getTimer().waitTimeInMillis(TIMEOUT);
-		 * lockOutB = false; }
-		 * 
-		 * // ONLY WANT TO SHOOT WHEN WHEELS SPINNING if (!lockOutA && !lockOutB
-		 * && gamepad.getButtonValue(EJoystickButtons.FIVE)) {
-		 * launcher.spinShooterWheels(); launchReadyA = true; } if (launchReadyA
-		 * && !gamepad.getButtonValue(EJoystickButtons.FIVE)) {
-		 * launcher.stopShooterWheels(); launchReadyA = false;
-		 * SensorConfig.getInstance().getTimer().waitTimeInMillis(TIMEOUT); }
-		 * 
-		 * if (launchReadyB && gamepad.getButtonValue(EJoystickButtons.SIX)) {
-		 * launcher.launchBoulder(); launchReadyB = false;
-		 * SensorConfig.getInstance().getTimer().waitTimeInMillis(TIMEOUT); }
-		 * SensorConfig.getInstance().getTimer().waitTimeInMillis(50); } });
-		 * 
-		 * executor.submit(() -> { while (RobotStatus.isRunning()) { if
-		 * (launchReadyA) { augerLockOut = true;
-		 * launcher.moveAugerToPreset(EAugerPresets.LAUNCH);
-		 * SensorConfig.getInstance().getTimer().waitTimeInMillis(TIMEOUT); if
-		 * (launchReadyA) { launchReadyB = true; } } else { augerLockOut =
-		 * false; launchReadyB = false; } } });
+		 * launcher.spinAugerUp();
+		 *
+		 * movedAugerWheels = true; }
+		 *
+		 * if(movedAugerWheels) { launcher.stopAuger(); movedAugerWheels
+		 * = false; }
 		 */
+		
+		 // Shooter launching controls
+		 if (gamepad.getButtonValue(EJoystickButtons.SEVEN))
+		 {
+		 launcher.shootSequence();
+		
+		 while (gamepad.getButtonValue(EJoystickButtons.SEVEN))
+		 ;
+		
+		 movedShooterWheels = true;
+		 }
+		
+		 if (gamepad.getButtonValue(EJoystickButtons.EIGHT))
+		 {
+		 launcher.shootSequence(SmartDashboard.getNumber("Shoot Speed",
+		 0.85));
+		
+		 while (gamepad.getButtonValue(EJoystickButtons.EIGHT))
+		 ;
+		
+		 movedShooterWheels = true;
+		 }
+		
+		 while (gamepad.getButtonValue(EJoystickButtons.THREE))
+		 {
+		 launcher.intakeBoulder();
+		
+		 movedShooterWheels = true;
+		 }
+		
+		 if (movedShooterWheels)
+		 {
+		 launcher.stopShooterWheels();
+		 movedShooterWheels = false;
+		 }
+		
+		 /*
+		 * Manual Launching while
+		 * (gamepad.getButtonValue(EJoystickButtons.ONE)) {
+		 * launcher.spinShooterUp(); if
+		 * (gamepad.getButtonValue(EJoystickButtons.SIX)) {
+		 * launcher.launchBoulder(); while
+		 * (gamepad.getButtonValue(EJoystickButtons.SIX) ||
+		 * gamepad.getButtonValue(EJoystickButtons.ONE)); } }
+		 */
+		
+		 // Pressure sensor feedback
+		 if (SensorConfig.getInstance().getPressureSwitch().isHit())
+		 {
+		 SmartDashboard.putBoolean("Pressure", true);
+		 } else
+		 {
+		 SmartDashboard.putBoolean("Pressure", false);
+		 }
+		
+		 SensorConfig.getInstance().getTimer().waitTimeInMillis(100);
+		 }
+		 });
+
+		// // LIFTER
+		// executor.submit(() ->
+		// {
+		// while (RobotStatus.isRunning())
+		// {
+		// // With internal while statements
+		// if (gamepad.getButtonValue(EJoystickButtons.TEN))
+		// {
+		// launcher.moveShooterToPreset(EShooterPresets.TOP_LIMIT);
+		// }
+		// if (gamepad.getButtonValue(EJoystickButtons.NINE))
+		// {
+		// launcher.moveShooterToPreset(EShooterPresets.BOTTOM_LIMIT);
+		// }
+		//
+		// if (gamepad.getButtonValue(EJoystickButtons.FOUR))
+		// {
+		// launcher.raiseShooter();
+		// } else if (gamepad.getButtonValue(EJoystickButtons.TWO))
+		// {
+		// launcher.lowerShooter();
+		// } else
+		// {
+		// launcher.stopShooterLifter();
+		// }
+		// try
+		// {
+		// Thread.sleep(100);
+		// } catch (Exception e)
+		// {
+		// e.printStackTrace();
+		// }
+		// }
+		// });
+
+		// // AUGER
+		// executor.submit(() ->
+		// {
+		// while (RobotStatus.isRunning())
+		// {
+		// if (!augerLockOut)
+		// {
+		// if (gamepad.getAnalogStickValue(EAnalogStickAxis.LEFT_VERTICAL) >
+		// 0.0)
+		// {
+		// launcher.raiseAuger();
+		// } else if
+		// (gamepad.getAnalogStickValue(EAnalogStickAxis.LEFT_VERTICAL) < 0.0)
+		// {
+		// launcher.lowerAuger();
+		// } else
+		// {
+		// launcher.stopAugerLifter();
+		// }
+		// }
+		// try
+		// {
+		// Thread.sleep(100);
+		// } catch (Exception e)
+		// {
+		// e.printStackTrace();
+		// }
+		// }
+		// });
+		// TODO: Include auger to max, auger to min, auger to pull up, auger
+		// pull up, auger to pick up ball, auger to shoot,
+
+//		// LAUNCHER
+//		executor.submit(() ->
+//		{
+//			boolean launchSequenceLockOut = false;
+//			boolean intakeLockout = false;
+//
+//			while (RobotStatus.isRunning())
+//			{
+//
+//				// With internal while statements
+//				if (gamepad.getButtonValue(EJoystickButtons.TEN))
+//				{
+//					launcher.moveShooterToPreset(EShooterPresets.TOP_LIMIT);
+//				}
+//				if (gamepad.getButtonValue(EJoystickButtons.NINE))
+//				{
+//					launcher.moveShooterToPreset(EShooterPresets.BOTTOM_LIMIT);
+//				}
+//				if (gamepad.getButtonValue(EJoystickButtons.FOUR))
+//				{
+//					launcher.raiseShooter();
+//					while (gamepad.getButtonValue(EJoystickButtons.FOUR))
+//						;
+//					launcher.stopShooterLifter();
+//				} else if (gamepad.getButtonValue(EJoystickButtons.TWO))
+//				{
+//					launcher.lowerShooter();
+//					while (gamepad.getButtonValue(EJoystickButtons.TWO))
+//						;
+//					launcher.stopShooterLifter();
+//				} 
+//
+//				// Launch Ball Sequence; locks out other options
+//				if (!launchSequenceLockOut && !intakeLockout && !launchReadyA
+//						&& gamepad.getButtonValue(EJoystickButtons.SEVEN))
+//				{
+//					augerLockOut = true;
+//					SmartDashboard.putBoolean("Auger Lock Out", true);
+//					SmartDashboard.putBoolean("Launch Sequence Lock Out", true);
+//					launchSequenceLockOut = true;
+//					launcher.shootSequence();
+//					// TODO: move auger out of the way
+//				}
+//				if (launchSequenceLockOut && !gamepad.getButtonValue(EJoystickButtons.SEVEN))
+//				{
+//					SmartDashboard.putBoolean("Auger Lock Out", false);
+//					SmartDashboard.putBoolean("Launch Sequence Lock Out", false);
+//					try
+//					{
+//						Thread.sleep(TIMEOUT);
+//					} catch (Exception e)
+//					{
+//						e.printStackTrace();
+//					}
+//					launchSequenceLockOut = false;
+//					augerLockOut = false;
+//				}
+//
+//				// Launch Ball Sequence; locks out other options
+//				if (!launchSequenceLockOut && !intakeLockout && !launchReadyA
+//						&& gamepad.getButtonValue(EJoystickButtons.EIGHT))
+//				{
+//					augerLockOut = true;
+//					SmartDashboard.putBoolean("Auger Lock Out", true);
+//					SmartDashboard.putBoolean("Launch Sequence Lock Out", true);
+//					launchSequenceLockOut = true;
+//					launcher.shootSequence(0.60);
+//					// TODO: move auger out of the way
+//				}
+//				if (launchSequenceLockOut && !gamepad.getButtonValue(EJoystickButtons.EIGHT))
+//				{
+//					SmartDashboard.putBoolean("Auger Lock Out", false);
+//					SmartDashboard.putBoolean("Launch Sequence Lock Out", false);
+//					try
+//					{
+//						Thread.sleep(TIMEOUT);
+//					} catch (Exception e)
+//					{
+//						e.printStackTrace();
+//					}
+//					launchSequenceLockOut = false;
+//					augerLockOut = false;
+//				}
+//
+//				// Intake Ball; locks out other options
+//				if (!launchSequenceLockOut && !launchReadyA && gamepad.getButtonValue(EJoystickButtons.THREE))
+//				{
+//					intakeLockout = true;
+//					launcher.intakeBoulder();
+//				}
+//				if (intakeLockout && !gamepad.getButtonValue(EJoystickButtons.THREE))
+//				{
+//					launcher.stopIntakeBoulder();
+//					try
+//					{
+//						Thread.sleep(TIMEOUT);
+//					} catch (Exception e)
+//					{
+//						e.printStackTrace();
+//					}
+//					intakeLockout = false;
+//				}
+//
+//				// ONLY WANT TO SHOOT WHEN WHEELS SPINNING
+//				if (!launchSequenceLockOut && !intakeLockout && gamepad.getButtonValue(EJoystickButtons.FIVE))
+//				{
+//					launcher.spinShooterWheels();
+//					launchReadyA = true;
+//				}
+//				if (launchReadyA && !gamepad.getButtonValue(EJoystickButtons.FIVE))
+//				{
+//					launcher.stopShooterWheels();
+//					launchReadyA = false;
+//					try
+//					{
+//						Thread.sleep(TIMEOUT);
+//					} catch (Exception e)
+//					{
+//						e.printStackTrace();
+//					}
+//				}
+//
+////				if (launchReadyB && gamepad.getButtonValue(EJoystickButtons.SIX))
+//				if ( gamepad.getButtonValue(EJoystickButtons.SIX))
+//				{
+//					launcher.launchBoulder();
+//					launchReadyB = false;
+//					try
+//					{
+//						Thread.sleep(TIMEOUT);
+//					} catch (Exception e)
+//					{
+//						e.printStackTrace();
+//					}
+//				}
+//				try
+//				{
+//					Thread.sleep(100);
+//				} catch (Exception e)
+//				{
+//					e.printStackTrace();
+//				}
+//
+//				SmartDashboard.putBoolean("Inkate Lock Out", intakeLockout);
+//				SmartDashboard.putBoolean("Launch Ready A", launchReadyA);
+//				SmartDashboard.putBoolean("Launch Ready B", launchReadyB);
+//			}
+//		});
+
+//		executor.submit(() ->
+//		{
+//			while (RobotStatus.isRunning())
+//			{
+//				if (launchReadyA)
+//				{
+//					augerLockOut = true;
+//					SmartDashboard.putBoolean("Auger Lock Out", true);
+//					// launcher.moveAugerToPreset(EAugerPresets.LAUNCH);
+//					try
+//					{
+//						Thread.sleep(TIMEOUT);
+//					} catch (Exception e)
+//					{
+//						e.printStackTrace();
+//					}
+//					if (launchReadyA)
+//					{
+//						launchReadyB = true;
+//					}
+//				} else
+//				{
+//					augerLockOut = false;
+//					SmartDashboard.putBoolean("Auger Lock Out", false);
+//					launchReadyB = false;
+//				}
+//				try
+//				{
+//					Thread.sleep(100);
+//				} catch (Exception e)
+//				{
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+
 	}
 }

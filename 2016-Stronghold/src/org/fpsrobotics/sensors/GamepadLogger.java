@@ -5,8 +5,6 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
 
-import org.fpsrobotics.sensors.loggerstuff.EGamepadDirection;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class GamepadLogger implements ILogger
@@ -42,20 +40,20 @@ public class GamepadLogger implements ILogger
 	{
 		if(device == EOutputDevice.SMARTDASHBOARD)
 		{
-			SmartDashboard.putNumber("Left X ", gamepad.getAnalogStickValue(EAnalogStickAxis.LEFT, EGamepadDirection.HORIZONTAL));
-			SmartDashboard.putNumber("Right X ", gamepad.getAnalogStickValue(EAnalogStickAxis.RIGHT, EGamepadDirection.HORIZONTAL));
+			SmartDashboard.putNumber("Left X ", gamepad.getAnalogStickValue(EAnalogStickAxis.LEFT_HORIZONTAL));
+			SmartDashboard.putNumber("Right X ", gamepad.getAnalogStickValue(EAnalogStickAxis.RIGHT_HORIZONTAL));
 			
-			SmartDashboard.putNumber("Left Y ", gamepad.getAnalogStickValue(EAnalogStickAxis.LEFT, EGamepadDirection.VERTICAL));
-			SmartDashboard.putNumber("Right Y ", gamepad.getAnalogStickValue(EAnalogStickAxis.RIGHT, EGamepadDirection.VERTICAL));
+			SmartDashboard.putNumber("Left Y ", gamepad.getAnalogStickValue(EAnalogStickAxis.LEFT_VERTICAL));
+			SmartDashboard.putNumber("Right Y ", gamepad.getAnalogStickValue(EAnalogStickAxis.RIGHT_VERTICAL));
 			
 		} else if(device == EOutputDevice.FILE)
 		{
 			
-			writer.println("Left X " + gamepad.getAnalogStickValue(EAnalogStickAxis.LEFT, EGamepadDirection.HORIZONTAL));
-			writer.println("Right X " + gamepad.getAnalogStickValue(EAnalogStickAxis.RIGHT, EGamepadDirection.HORIZONTAL));
+			writer.println("Left X " + gamepad.getAnalogStickValue(EAnalogStickAxis.LEFT_HORIZONTAL));
+			writer.println("Right X " + gamepad.getAnalogStickValue(EAnalogStickAxis.RIGHT_HORIZONTAL));
 			
-			writer.println("Left Y " + gamepad.getAnalogStickValue(EAnalogStickAxis.LEFT, EGamepadDirection.VERTICAL));
-			writer.println("Right Y " + gamepad.getAnalogStickValue(EAnalogStickAxis.RIGHT, EGamepadDirection.VERTICAL));
+			writer.println("Left Y " + gamepad.getAnalogStickValue(EAnalogStickAxis.LEFT_VERTICAL));
+			writer.println("Right Y " + gamepad.getAnalogStickValue(EAnalogStickAxis.RIGHT_VERTICAL));
 			
 		}
 	}

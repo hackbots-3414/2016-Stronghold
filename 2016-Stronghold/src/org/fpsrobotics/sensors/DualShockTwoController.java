@@ -24,7 +24,7 @@ public class DualShockTwoController implements IGamepad
 	{
 		switch (axis)
 		{
-		case LEFT_HORIZONAL:
+		case LEFT_HORIZONTAL:
 			if (Math.abs(joy.getRawAxis(1)) < TOLERANCE)
 			{
 				return 0.0;
