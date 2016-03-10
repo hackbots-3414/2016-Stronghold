@@ -7,8 +7,6 @@ import java.io.FileReader;
 import org.fpsrobotics.PID.IPIDFeedbackDevice;
 import org.fpsrobotics.autonomous.DriveTrainAssist;
 import org.fpsrobotics.sensors.BuiltInCANTalonEncoder;
-import org.fpsrobotics.sensors.Gyroscope;
-import org.fpsrobotics.sensors.ILimitSwitch;
 import org.fpsrobotics.sensors.SensorConfig;
 
 import edu.wpi.first.wpilibj.CANTalon;
@@ -87,49 +85,46 @@ public class ActuatorConfig
 
 	private ActuatorConfig()
 	{
-		boolean isAlpha = true;
-
-		// distinguish alpha and beta
-		FileReader fileReader = null;
-		try
-		{
-			fileReader = new FileReader("/home/lvuser/AlphaOrBeta.txt"); // make sure file
-																// exists at
-																// this exact
-																// path
-		} catch (FileNotFoundException e1)
-		{
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-
-		try
-		{
-			BufferedReader textReader = new BufferedReader(fileReader);
-
-			String text = textReader.readLine();
-			
-			if (text.equals("alpha"))
-			{
-				isAlpha = true;
-			} else if (text.equals("beta"))
-			{
-				isAlpha = false;
-			} else
-			{
-				System.err.println(
-						"File is openable but doesn't specify alpha or beta on the first line, assuming alpha.");
-			}
-
-			SmartDashboard.putBoolean("isAlpha", isAlpha);
-			
-			textReader.close();
-
-		} catch (Exception e)
-		{
-			System.err.println("Cannot determine if alpha or beta, assuming alpha");
-			isAlpha = true;
-		}
+		boolean isAlpha = SmartDashboard.getBoolean("IsAlpha", true);
+		// boolean isAlpha = true;
+		// // distinguish alpha and beta
+		// FileReader fileReader = null;
+		// try
+		// {
+		// fileReader = new FileReader("/home/lvuser/AlphaOrBeta.txt"); // make
+		// // sure file exists at this exact path
+		// } catch (FileNotFoundException e1)
+		// {
+		// e1.printStackTrace();
+		// }
+		//
+		// try
+		// {
+		// BufferedReader textReader = new BufferedReader(fileReader);
+		//
+		// String text = textReader.readLine();
+		//
+		// if (text.equals("alpha"))
+		// {
+		// isAlpha = true;
+		// } else if (text.equals("beta"))
+		// {
+		// isAlpha = false;
+		// } else
+		// {
+		// System.err.println(
+		// "File is openable but doesn't specify alpha or beta on the first
+		// line, assuming alpha.");
+		// }
+		// SmartDashboard.putBoolean("isAlpha", isAlpha);
+		// textReader.close();
+		//
+		// } catch (Exception e)
+		// {
+		// System.err.println("Cannot determine if alpha or beta, assuming
+		// alpha");
+		// isAlpha = true;
+		// }
 
 		try
 		{
@@ -179,10 +174,7 @@ public class ActuatorConfig
 		// set it to use PID by default
 		driveTrain.enablePID();
 		driveTrain.setControlMode(TalonControlMode.Speed); // Speed means use
-															// encoder rates
-															// to control how
-															// fast the robot is
-															// moving
+		// encoder rates to control how fast the robot is moving
 
 		try
 		{
@@ -228,14 +220,26 @@ public class ActuatorConfig
 		augerPotentiometer.resetCount();
 
 		// Instantiate the launcher itself
-		launcher = new Launcher(
-				new CANMotor(leftShooterMotor, true), new CANMotor(rightShooterMotor, false),
-//				new DoubleMotor(new CANMotor(leftShooterMotor, true), new CANMotor(rightShooterMotor, true)),
+		launcher = new Launcher(new CANMotor(leftShooterMotor, true), new CANMotor(rightShooterMotor, false),
 				new CANMotor(linearActuator, true), shooterSolenoid,
 				SensorConfig.getInstance().getShooterBottomLimitSwitch(),
 				SensorConfig.getInstance().getShooterTopLimitSwitch(), SensorConfig.getInstance().getShooterPot(),
-				new CANMotor(augerIntakeMotor, false), new CANMotor(augerLifterMotor, false), SensorConfig.getInstance().getAugerBottomLimitSwitch(),
+				new CANMotor(augerIntakeMotor, false), new CANMotor(augerLifterMotor, false),
+				SensorConfig.getInstance().getAugerBottomLimitSwitch(),
 				SensorConfig.getInstance().getAugerTopLimitSwitch(), augerPotentiometer, isAlpha);
+
+		// launcher = new Launcher(
+		// new DoubleMotor(new CANMotor(leftShooterMotor, true), new
+		// CANMotor(rightShooterMotor, true)),
+		// new CANMotor(linearActuator, true), shooterSolenoid,
+		// SensorConfig.getInstance().getShooterBottomLimitSwitch(),
+		// SensorConfig.getInstance().getShooterTopLimitSwitch(),
+		// SensorConfig.getInstance().getShooterPot(),
+		// new CANMotor(augerIntakeMotor, false), new CANMotor(augerLifterMotor,
+		// false),
+		// SensorConfig.getInstance().getAugerBottomLimitSwitch(),
+		// SensorConfig.getInstance().getAugerTopLimitSwitch(),
+		// augerPotentiometer, isAlpha);
 	}
 
 	public static synchronized ActuatorConfig getInstance()
