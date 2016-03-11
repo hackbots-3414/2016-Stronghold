@@ -9,6 +9,7 @@ public class VisionCenterTarget implements IVision
 	CameraServer server = CameraServer.getInstance();
 	NetworkTable table;
 	
+	
 	public VisionCenterTarget()
 	{
 		
@@ -26,6 +27,7 @@ public class VisionCenterTarget implements IVision
 		centerXs = table.getNumberArray("centerX", defaultValue);
 		
 		System.out.println("centerX: " + centerXs[0]);
+		
 		/*
 		for(double centerX: centerXs)
 		{

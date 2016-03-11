@@ -86,6 +86,7 @@ public class SensorConfig
 		{
 			AHRS ahrs = new AHRS(SPI.Port.kMXP);
 			gyro = new GyroscopeNavX(ahrs);
+			
 		} catch(Exception e)
 		{
 			System.err.println("No NavX MXP board found, or plugged into the wrong spot");

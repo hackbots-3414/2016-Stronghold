@@ -117,7 +117,6 @@ public class MullenatorTeleop implements ITeleopControl
 					}
 
 				}
-
 				/*
 				 * System.out.println("rate: " +
 				 * ActuatorConfig.getInstance().getRightEncoder().getRate() +
@@ -128,6 +127,11 @@ public class MullenatorTeleop implements ITeleopControl
 				 * " " +
 				 * ActuatorConfig.getInstance().getLeftEncoder().getError());
 				 */
+				System.out.println("error: " + ActuatorConfig.getInstance().getRightEncoder().getError() + " " + ActuatorConfig.getInstance().getLeftEncoder().getError());
+				System.out.println("rate  " + ActuatorConfig.getInstance().getRightEncoder().getCount() + " " + ActuatorConfig.getInstance().getLeftEncoder().getCount());
+				//System.out.println("Potentiometer " + SensorConfig.getInstance().getShooterPot().getCount());
+				SmartDashboard.putNumber("Angle", SensorConfig.getInstance().getGyro().getCount());
+
 
 				//System.out.println("Potentiometer " + SensorConfig.getInstance().getShooterPot().getCount());
 
@@ -207,12 +211,25 @@ public class MullenatorTeleop implements ITeleopControl
 //				}
 
 				if(movedShooter)
+				launcher.stopShooterLifter();
+
+				// Auger movement commands
+				while (gamepad.getButtonValue(ButtonGamepad.NINE))
 				{
 					launcher.stopShooterLifter();
 					movedShooter = false;
 				}
 /*
 				// Auger movement controls
+				
+				while (gamepad.getButtonValue(ButtonGamepad.TEN))
+				{
+					launcher.raiseAuger();
+				}
+				
+				launcher.stopAuger();
+				
+				// Launching commands
 				while (gamepad.getButtonValue(ButtonGamepad.ONE))
 				{
 					launcher.lowerAuger();

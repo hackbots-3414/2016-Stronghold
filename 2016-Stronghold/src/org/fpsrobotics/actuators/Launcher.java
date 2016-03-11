@@ -25,13 +25,19 @@ public class Launcher implements ILauncher
 {
 	private final double INTAKE_SPEED = -0.6;
 	private double SHOOT_SPEED = 0.95;
+//	private final double SHOOT_SPEED = 0.85;
+	
+//	private final double INTAKE_AUGER_SPEED = 0.2;
+	
+	private final double LINEAR_ACTUATOR_SPEED = 0.7;
+	private final double AUGER_MOVE_SPEED = 0.5;
 
 	private final double INTAKE_AUGER_SPEED = -0.8;
 
 	private final double AUGER_LIFTER_MIDDLE_TRAVEL_SPEED = 0.8;
 	private final double AUGER_LIFTER_SPEED = 0.5;
 
-	private final double LINEAR_ACTUATOR_SPEED = 0.5;
+//	private final double LINEAR_ACTUATOR_SPEED = 0.5;
 
 	private double TOP_LIMIT_POT_VALUE_SHOOTER;
 	private double BOTTOM_LIMIT_POT_VALUE_SHOOTER;
