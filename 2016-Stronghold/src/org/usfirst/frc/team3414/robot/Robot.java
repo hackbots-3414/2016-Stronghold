@@ -28,7 +28,7 @@ public class Robot extends SampleRobot
 	private ITeleopControl teleop;
 	private IAutonomousControl auto;
 	private ExecutorService executor;
-//	private SendableChooser autoChooser;
+	private SendableChooser autoChooser;
 
 	public Robot()
 	{
@@ -38,19 +38,19 @@ public class Robot extends SampleRobot
 
 	public void robotInit()
 	{
-//		makeAutoChooser();
+		makeAutoChooser();
 	}
 
 	private void makeAutoChooser()
 	{
-//		autoChooser = new SendableChooser();
-//
-//		autoChooser.addDefault("Do Nothing", new AutonDoNothing());
-//		autoChooser.addObject("Low Bar", new AutonLowBar());
-//		autoChooser.addObject("Rock Wall", new AutonRockWall());
-//		autoChooser.addObject("Rough Terrain", new AutonRoughTerrain());
-//
-//		SmartDashboard.putData("Autonomous Chooser", autoChooser);
+		autoChooser = new SendableChooser();
+
+		autoChooser.addDefault("Do Nothing", new AutonDoNothing());
+		autoChooser.addObject("Low Bar", new AutonLowBar());
+		autoChooser.addObject("Rock Wall", new AutonRockWall());
+		autoChooser.addObject("Rough Terrain", new AutonRoughTerrain());
+
+		SmartDashboard.putData("Autonomous Chooser", autoChooser);
 	}
 
 	public void autonomous()
@@ -59,13 +59,13 @@ public class Robot extends SampleRobot
 		RobotStatus.setIsAuto(true);
 		RobotStatus.setIsTeleop(false);
 
-//		executor.submit(() ->
-//		{
-//			System.out.println("Auto Running");
-//
-//			((IAutonomousControl) autoChooser.getSelected()).doAuto();
-//		});
-		MullenatorAutonomous.getInstance().doAuto();
+		executor.submit(() ->
+		{
+			System.out.println("Auto Running");
+
+			((IAutonomousControl) autoChooser.getSelected()).doAuto();
+		});
+//		MullenatorAutonomous.getInstance().doAuto();
 	}
 
 	public void operatorControl()

@@ -6,6 +6,7 @@ import org.fpsrobotics.actuators.ActuatorConfig;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SPI;
 
@@ -77,11 +78,11 @@ public class SensorConfig
 
 		try
 		{
-			shooterBottomLimitSwitch = new DigitalLimitSwitch(SHOOTER_BOTTOM_LIMIT_CHANNEL, true);
-			shooterTopLimitSwitch = new DigitalLimitSwitch(SHOOTER_TOP_LIMIT_CHANNEL, true);
+			shooterBottomLimitSwitch = new DigitalLimitSwitch(new DigitalInput(SHOOTER_BOTTOM_LIMIT_CHANNEL), true);
+			shooterTopLimitSwitch = new DigitalLimitSwitch(new DigitalInput(SHOOTER_TOP_LIMIT_CHANNEL), true);
 
-			augerBottomLimitSwitch = new DigitalLimitSwitch(AUGER_BOTTOM_LIMIT_SWITCH, true);
-			augerTopLimitSwitch = new DigitalLimitSwitch(AUGER_TOP_LIMIT_SWITCH, true);
+			augerBottomLimitSwitch = new DigitalLimitSwitch(new DigitalInput(AUGER_BOTTOM_LIMIT_SWITCH), true);
+			augerTopLimitSwitch = new DigitalLimitSwitch(new DigitalInput(AUGER_TOP_LIMIT_SWITCH), true);
 
 			pressureSwitch = new IS1000PressureSwitch(PRESSURE_SWITCH_CHANNEL, true);
 		} catch (Exception e)
@@ -101,9 +102,9 @@ public class SensorConfig
 
 		try
 		{
-			autoSwitchOnes = new DigitalLimitSwitch(AUTO_SWITCH_ONE_CHANNEL, true);
-			autoSwitchTwos = new DigitalLimitSwitch(AUTO_SWITCH_TWO_CHANNEL, true);
-			autoSwitchFours = new DigitalLimitSwitch(AUTO_SWITCH_FOUR_CHANNEL, true);
+			autoSwitchOnes = new DigitalLimitSwitch(new DigitalInput(AUTO_SWITCH_ONE_CHANNEL), true);
+			autoSwitchTwos = new DigitalLimitSwitch(new DigitalInput(AUTO_SWITCH_TWO_CHANNEL), true);
+			autoSwitchFours = new DigitalLimitSwitch(new DigitalInput(AUTO_SWITCH_FOUR_CHANNEL), true);
 		} catch (Exception e)
 		{
 			System.err.println("Auto Switches failed to initialize: Make sure to set SmartDashboard to not 0");

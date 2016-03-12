@@ -22,40 +22,60 @@ public class DualShockTwoController implements IGamepad
 	 */
 	public double getAnalogStickValue(EAnalogStickAxis axis)
 	{
+		// switch (axis)
+		// {
+		// case LEFT_HORIZONTAL:
+		// if (Math.abs(joy.getRawAxis(1)) < TOLERANCE)
+		// {
+		// return 0.0;
+		// } else
+		// {
+		// return joy.getRawAxis(1);
+		// }
+		// case LEFT_VERTICAL:
+		// if (Math.abs(joy.getRawAxis(2)) < TOLERANCE)
+		// {
+		// return 0.0;
+		// } else
+		// {
+		// return joy.getRawAxis(2);
+		// }
+		// case RIGHT_HORIZONTAL:
+		// if (Math.abs(joy.getRawAxis(3)) < TOLERANCE)
+		// {
+		// return 0.0;
+		// } else
+		// {
+		// return joy.getRawAxis(3);
+		// }
+		// case RIGHT_VERTICAL:
+		// if (Math.abs(joy.getRawAxis(4)) < TOLERANCE)
+		// {
+		// return 0.0;
+		// } else
+		// {
+		// return joy.getRawAxis(4);
+		// }
+		//
+		// default:
+		// return 0.0;
+		// }
+
 		switch (axis)
 		{
 		case LEFT_HORIZONTAL:
-			if (Math.abs(joy.getRawAxis(1)) < TOLERANCE)
-			{
-				return 0.0;
-			} else
-			{
-				return joy.getRawAxis(1);
-			}
+			return joy.getRawAxis(1);
+
 		case LEFT_VERTICAL:
-			if (Math.abs(joy.getRawAxis(2)) < TOLERANCE)
-			{
-				return 0.0;
-			} else
-			{
-				return joy.getRawAxis(2);
-			}
+			return joy.getRawAxis(2);
+
 		case RIGHT_HORIZONTAL:
-			if (Math.abs(joy.getRawAxis(3)) < TOLERANCE)
-			{
-				return 0.0;
-			} else
-			{
-				return joy.getRawAxis(3);
-			}
+
+			return joy.getRawAxis(3);
+
 		case RIGHT_VERTICAL:
-			if (Math.abs(joy.getRawAxis(4)) < TOLERANCE)
-			{
-				return 0.0;
-			} else
-			{
-				return joy.getRawAxis(4);
-			}
+
+			return joy.getRawAxis(4);
 
 		default:
 			return 0.0;

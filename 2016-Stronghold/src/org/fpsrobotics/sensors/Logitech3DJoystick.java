@@ -22,50 +22,74 @@ public class Logitech3DJoystick implements IJoystick
 	@Override
 	public double getX()
 	{
-		if (Math.abs(joy.getRawAxis(HORIZONTAL_AXIS)) < TOLERANCE)
-		{
-			return 0.0;
-		} else
-		{
-			return joy.getRawAxis(HORIZONTAL_AXIS);
-		}
+		return joy.getRawAxis(HORIZONTAL_AXIS);
 	}
 
 	@Override
 	public double getY()
 	{
-		if (Math.abs(joy.getRawAxis(VERTICAL_AXIS)) < TOLERANCE)
-		{
-			return 0.0;
-		} else
-		{
-			return joy.getRawAxis(VERTICAL_AXIS);
-		}
+		return joy.getRawAxis(VERTICAL_AXIS);
 	}
 
 	@Override
 	public double getTwist()
 	{
-		if (Math.abs(joy.getRawAxis(TWIST_AXIS)) < TOLERANCE)
-		{
-			return 0.0;
-		} else
-		{
-			return joy.getRawAxis(TWIST_AXIS);
-		}
+		return joy.getRawAxis(TWIST_AXIS);
 	}
 
 	@Override
 	public double getSwitch()
 	{
-		if (Math.abs(joy.getRawAxis(SWITCH_AXIS)) < TOLERANCE)
-		{
-			return 0.0;
-		} else
-		{
-			return joy.getRawAxis(SWITCH_AXIS);
-		}
+		return joy.getRawAxis(SWITCH_AXIS);
 	}
+
+	// @Override
+	// public double getX()
+	// {
+	// if (Math.abs(joy.getRawAxis(HORIZONTAL_AXIS)) < TOLERANCE)
+	// {
+	// return 0.0;
+	// } else
+	// {
+	// return joy.getRawAxis(HORIZONTAL_AXIS);
+	// }
+	// }
+	//
+	// @Override
+	// public double getY()
+	// {
+	// if (Math.abs(joy.getRawAxis(VERTICAL_AXIS)) < TOLERANCE)
+	// {
+	// return 0.0;
+	// } else
+	// {
+	// return joy.getRawAxis(VERTICAL_AXIS);
+	// }
+	// }
+	//
+	// @Override
+	// public double getTwist()
+	// {
+	// if (Math.abs(joy.getRawAxis(TWIST_AXIS)) < TOLERANCE)
+	// {
+	// return 0.0;
+	// } else
+	// {
+	// return joy.getRawAxis(TWIST_AXIS);
+	// }
+	// }
+	//
+	// @Override
+	// public double getSwitch()
+	// {
+	// if (Math.abs(joy.getRawAxis(SWITCH_AXIS)) < TOLERANCE)
+	// {
+	// return 0.0;
+	// } else
+	// {
+	// return joy.getRawAxis(SWITCH_AXIS);
+	// }
+	// }
 
 	@Override
 	public boolean getButtonValue(EJoystickButtons value)

@@ -10,15 +10,10 @@ public class DigitalLimitSwitch implements ILimitSwitch
 	private DigitalInput limitSwitch;
 	private boolean reversed;
 
-	public DigitalLimitSwitch(int channel, boolean reversed)
+	public DigitalLimitSwitch(DigitalInput limitSwitch, boolean reversed)
 	{
-		limitSwitch = new DigitalInput(channel);
+		this.limitSwitch = limitSwitch;
 		this.reversed = reversed;
-	}
-
-	public DigitalLimitSwitch(int channel)
-	{
-		limitSwitch = new DigitalInput(channel);
 	}
 
 	@Override

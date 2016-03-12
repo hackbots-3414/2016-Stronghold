@@ -45,7 +45,10 @@ public class QuadEncoder implements IPIDFeedbackDevice
 	@Override
 	public void resetCount()
 	{
-		encoder.reset();
+		if (isEnabled)
+		{
+			encoder.reset();
+		}
 	}
 
 	@Override
@@ -64,7 +67,13 @@ public class QuadEncoder implements IPIDFeedbackDevice
 	@Override
 	public double getRate()
 	{
-		return encoder.getRate();
+		if (isEnabled)
+		{
+			return encoder.getRate();
+		} else
+		{
+			return 0.0;
+		}
 	}
 
 }
