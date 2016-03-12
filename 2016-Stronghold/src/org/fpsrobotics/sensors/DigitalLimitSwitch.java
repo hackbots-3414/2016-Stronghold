@@ -24,12 +24,12 @@ public class DigitalLimitSwitch implements ILimitSwitch
 	@Override
 	public boolean isHit()
 	{
-		if (!reversed)
-		{
-			return limitSwitch.get();
-		} else
+		if (reversed)
 		{
 			return !limitSwitch.get();
+		} else
+		{
+			return limitSwitch.get();
 		}
 	}
 

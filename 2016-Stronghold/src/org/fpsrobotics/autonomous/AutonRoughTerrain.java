@@ -55,7 +55,7 @@ public class AutonRoughTerrain implements IAutonomousControl
 				break;
 
 			// Shoot
-			ActuatorConfig.getInstance().getLauncher().shootSequence();
+			ActuatorConfig.getInstance().getLauncher().shootSequenceHigh();
 
 			break;
 		}

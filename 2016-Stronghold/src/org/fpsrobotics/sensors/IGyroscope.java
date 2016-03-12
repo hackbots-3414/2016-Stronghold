@@ -13,4 +13,6 @@ public interface IGyroscope
 	public void disable();
 
 	public void resetCount();
+	
+	public double getAttitude();
 }

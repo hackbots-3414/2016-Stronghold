@@ -14,14 +14,14 @@ import edu.wpi.first.wpilibj.PWM;
 public class BoschHallEffectMotor implements IMotor
 {
 	private CANTalon motor;
-	private int invert;
 	private boolean invertDirection;
 	private PWM hallEffect;
 
 	public BoschHallEffectMotor(CANTalon motor, PWM hallEffect, boolean invertDirection)
 	{
 		this.motor = motor;
-		this.motor.setInverted(invertDirection);
+//		this.motor.setInverted(invertDirection);
+		this.invertDirection = invertDirection;
 	}
 
 	@Override
@@ -36,7 +36,13 @@ public class BoschHallEffectMotor implements IMotor
 	@Override
 	public void setSpeed(double speed)
 	{
-		motor.set(speed);
+		if (invertDirection)
+		{
+			motor.set(-speed);
+		} else
+		{
+			motor.set(speed);
+		}
 	}
 
 	@Override

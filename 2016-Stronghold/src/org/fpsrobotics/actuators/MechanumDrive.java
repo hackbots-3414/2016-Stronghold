@@ -213,3 +213,150 @@
 //	}
 //
 //}
+
+package org.fpsrobotics.actuators;
+
+import org.fpsrobotics.sensors.IAccelerometer;
+import org.fpsrobotics.sensors.IGyroscope;
+
+import edu.wpi.first.wpilibj.RobotDrive;
+
+public class MechanumDrive
+{
+	private double currentVelocity, currentAngle, currentRotation;
+	private RobotDrive drive;
+	private IGyroscope gyro;
+	private IAccelerometer accel;
+	// private double devAngle;
+	private static final double ROTATE_CONSTANT = 0.5;
+	private double ROTATE_SECONDS_PER_DEGREE; // TODO: Rotate seconds per degree
+												// based on 0.3 power
+	private double ROTATE_POWER_INTO_MOTORS = 0.3;
+
+	double Kp = 1.0;
+
+	public MechanumDrive(RobotDrive drive, IGyroscope gyro, IAccelerometer accel)
+	{
+		this.drive = drive;
+		this.gyro = gyro;
+		gyro.resetCount();
+		this.accel = accel;
+	}
+
+	public void rotateDegreesGyroBased(double degrees, boolean clockWise)
+	{
+		double currentAngle = gyro.getCount();
+
+		if (clockWise)
+		{
+			drive.mecanumDrive_Polar(0, 0, ROTATE_POWER_INTO_MOTORS);
+			while (gyro.getCount() < (currentAngle + degrees))
+				;
+		} else
+		{
+			drive.mecanumDrive_Polar(0, 0, -ROTATE_POWER_INTO_MOTORS);
+			while (gyro.getCount() > (currentAngle - degrees))
+				;
+		}
+		stop();
+
+	}
+
+	public void rotateDegreesTimeBased(double degrees, boolean clockWise)
+	{
+		long timeToRotate = System.currentTimeMillis() + (long) (degrees * ROTATE_SECONDS_PER_DEGREE);
+		if (clockWise)
+		{
+			movePolar(0.0, 0.0, ROTATE_POWER_INTO_MOTORS);
+			while (System.currentTimeMillis() < timeToRotate)
+				;
+		} else
+		{
+			movePolar(0.0, 0.0, -ROTATE_POWER_INTO_MOTORS);
+			while (System.currentTimeMillis() < timeToRotate)
+				;
+		}
+		stop();
+	}
+
+	public void movePolar(double magnitude, double angle, double rotation)
+	{
+		this.currentVelocity = magnitude;
+		this.currentAngle = angle;
+		this.currentRotation = rotation;
+
+		drive.mecanumDrive_Polar(magnitude, angle, rotation);
+
+	}
+
+	/**
+	 * Relative to Face Forward
+	 * 
+	 * @param speed
+	 * @param direction
+	 */
+	public void moveConstantVelocity(double speed, double direction)
+	{
+		movePolar(speed, direction, 0);
+	}
+
+	public void rotateConstantVelocity(boolean clockWise)
+	{
+		if (clockWise)
+		{
+			movePolar(0.0, 0.0, ROTATE_CONSTANT);
+		} else
+		{
+			movePolar(0.0, 0.0, -ROTATE_CONSTANT);
+		}
+
+	}
+
+	public void stop()
+	{
+		drive.mecanumDrive_Polar(0.0, 0, 0);
+	}
+	//
+	// int UPPER_BOUND_ACCEL = 5;
+	// int LOWER_BOUND_ANGLE = 2;
+	//
+	// double accelY;
+	// double accelX;
+	//
+	// @Override
+	// public void timeEvent(TimeEventArgs timeEvent)
+	// {
+	// if (timeEvent.getTimeEventID() == eventID)
+	// {
+	// if (gyro != null)
+	// {
+	// drive.mecanumDrive_Polar(currentVelocity, currentAngle -
+	// gyro.getChangeInDegreesPerSecond() * Kp,
+	// currentRotation);
+	// }
+	//
+	// if (accel != null)
+	// {
+	// accelY = accel.getAccelY();
+	// accelX = accel.getAccelZ();
+	//
+	// if ((accelY < UPPER_BOUND_ACCEL && accelY > -UPPER_BOUND_ACCEL)
+	// && (accelX < UPPER_BOUND_ACCEL && accelX > -UPPER_BOUND_ACCEL))
+	// {
+	// devAngle = (Math.toDegrees(Math.atan(accelY / accelX)));
+	// if (devAngle > LOWER_BOUND_ANGLE)
+	// {
+	// drive.mecanumDrive_Polar(currentVelocity, currentAngle - devAngle,
+	// currentRotation);
+	// }
+	// if (devAngle < -LOWER_BOUND_ANGLE)
+	// {
+	// drive.mecanumDrive_Polar(currentVelocity, currentAngle - devAngle,
+	// currentRotation);
+	// }
+	// }
+	// }
+	// }
+	//
+	// }
+}

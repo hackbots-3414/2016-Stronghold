@@ -1,14 +1,9 @@
 package org.fpsrobotics.actuators;
 
-import java.util.concurrent.ExecutorService;
-
 import org.fpsrobotics.PID.IPIDFeedbackDevice;
 import org.fpsrobotics.sensors.ILimitSwitch;
 import org.fpsrobotics.sensors.SensorConfig;
 import org.usfirst.frc.team3414.robot.RobotStatus;
-
-import java.io.BufferedReader;
-import java.io.FileReader;
 
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -26,12 +21,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Launcher implements ILauncher
 {
 	// Lifter Functions
-	private final double LINEAR_ACTUATOR_SPEED = 0.5;
+	private final double LINEAR_ACTUATOR_SPEED = 0.7; // Used to be 0.5
 
 	// Shooter Functions
 	private final double INTAKE_SPEED = -0.4;
-	private double SHOOT_SPEED = 0.90;
-	//TODO: GOT RID OF SMARTDASHBOARD INPUT SHOT - redo that
+	private double SHOOT_SPEED_HIGH = 0.85; // 0.95?
+	private double SHOOT_SPEED_LOW = 0.4;
 
 	// Auger Functions
 	private final double INTAKE_AUGER_SPEED = -0.8;
@@ -51,14 +46,14 @@ public class Launcher implements ILauncher
 
 	private boolean isAugerCalibrated;
 
-	private ICANMotor leftShooterMotor, rightShooterMotor, augerIntakeMotor, shooterLifterMotor;
+	private ICANMotor leftShooterMotor, rightShooterMotor;
+	// private ICANMotor shooterMotors;
+	private ICANMotor augerIntakeMotor, shooterLifterMotor;
 	private ICANMotor augerLifterMotor;
 	private ILimitSwitch bottomLimitShooter, topLimitShooter, bottomLimitAuger, topLimitAuger;
 	private IPIDFeedbackDevice shooterPot, augerPot;
 
 	private ISolenoid shooterActuator;
-
-	private boolean isAlpha;
 
 	/**
 	 * 
@@ -74,12 +69,20 @@ public class Launcher implements ILauncher
 	 * @param topLimitAuger
 	 * @param augerPot
 	 */
-	public Launcher(ICANMotor leftShooterMotor, ICANMotor rightShooterMotor, ICANMotor shooterLifterMotor, ISolenoid shooterActuator,
-			ILimitSwitch shooterBottomLimit, ILimitSwitch shooterTopLimit, IPIDFeedbackDevice shooterPot,
-			ICANMotor augerIntakeMotor, ICANMotor augerLifterMotor, ILimitSwitch bottomLimitAuger,
-			ILimitSwitch topLimitAuger, IPIDFeedbackDevice augerPot, boolean isAlpha)
+	public Launcher(ICANMotor leftShooterMotor, ICANMotor rightShooterMotor, ICANMotor shooterLifterMotor,
+			ISolenoid shooterActuator, ILimitSwitch shooterBottomLimit, ILimitSwitch shooterTopLimit,
+			IPIDFeedbackDevice shooterPot, ICANMotor augerIntakeMotor, ICANMotor augerLifterMotor,
+			ILimitSwitch bottomLimitAuger, ILimitSwitch topLimitAuger, IPIDFeedbackDevice augerPot, boolean isAlpha)
+	// public Launcher(IMotor shooterMotors, ICANMotor shooterLifterMotor,
+	// ISolenoid shooterActuator,
+	// ILimitSwitch shooterBottomLimit, ILimitSwitch shooterTopLimit,
+	// IPIDFeedbackDevice shooterPot,
+	// ICANMotor augerIntakeMotor, ICANMotor augerLifterMotor, ILimitSwitch
+	// bottomLimitAuger,
+	// ILimitSwitch topLimitAuger, IPIDFeedbackDevice augerPot, boolean isAlpha)
 	{
 		// Shooter
+		// this.shooterMotors = shooterMotors;
 		this.leftShooterMotor = leftShooterMotor;
 		this.rightShooterMotor = rightShooterMotor;
 		this.shooterLifterMotor = shooterLifterMotor;
@@ -93,7 +96,6 @@ public class Launcher implements ILauncher
 		this.bottomLimitAuger = bottomLimitAuger;
 		this.topLimitAuger = topLimitAuger;
 		this.augerPot = augerPot;
-		this.isAlpha = isAlpha;
 
 		// calibrate();
 
@@ -168,6 +170,7 @@ public class Launcher implements ILauncher
 		isAugerCalibrated = true;
 	}
 
+	// JOSH'S VERSION
 	@Override
 	public boolean isAugerCalibrated()
 	{
@@ -175,6 +178,7 @@ public class Launcher implements ILauncher
 	}
 
 	// Lifter Functions
+	//TODO: IS THIS RIGHT??
 	private void lowerShooterToBottomLimit()
 	{
 		while (!isShooterAtBottomLimit())
@@ -182,6 +186,10 @@ public class Launcher implements ILauncher
 			lowerShooter();
 		}
 		stopShooterLifter();
+//		if (!isShooterAtBottomLimit())
+//		{
+//			lowerShooter();
+//		}
 	}
 
 	private void raiseShooterToTopLimit()
@@ -191,6 +199,10 @@ public class Launcher implements ILauncher
 			raiseShooter();
 		}
 		stopShooterLifter();
+//		if (!isShooterAtTopLimit())
+//		{
+//			raiseShooter();
+//		}
 	}
 
 	@Override
@@ -223,7 +235,6 @@ public class Launcher implements ILauncher
 		shooterLifterMotor.stop();
 	}
 
-	// TODO: Check +/- for Top and Bottom Pot Values
 	private boolean isShooterAtTopLimit()
 	{
 		if ((shooterPot.getCount() <= TOP_LIMIT_POT_VALUE_SHOOTER) || topLimitShooter.isHit())
@@ -254,10 +265,11 @@ public class Launcher implements ILauncher
 			// If the shooter is higher than the desired position
 			if (shooterPot.getCount() < desiredPosition)
 			{
-				raiseShooter();
+				lowerShooter();
 
-				// while this is so or we reach the top limit of travel
-				while (!isShooterAtTopLimit() && (shooterPot.getCount() < desiredPosition) && (RobotStatus.isRunning()))
+				// while this is so or we reach the bottom limit of travel
+				while (!isShooterAtBottomLimit() && (shooterPot.getCount() < desiredPosition)
+						&& (RobotStatus.isRunning()))
 				{
 				}
 				// If the shooter is lower than the deisred position
@@ -265,9 +277,8 @@ public class Launcher implements ILauncher
 			{
 				lowerShooter();
 
-				// while this is so or we reach the bottom limit of our travel
-				while (!isShooterAtBottomLimit() && (desiredPosition < shooterPot.getCount())
-						&& (RobotStatus.isRunning()))
+				// while this is so or we reach the top limit of our travel
+				while (!isShooterAtTopLimit() && (desiredPosition > shooterPot.getCount()) && (RobotStatus.isRunning()))
 				{
 				}
 			}
@@ -284,6 +295,7 @@ public class Launcher implements ILauncher
 
 		rightShooterMotor.setSpeed(INTAKE_SPEED);
 		leftShooterMotor.setSpeed(INTAKE_SPEED);
+		// shooterMotors.setSpeed(INTAKE_SPEED);
 	}
 
 	@Override
@@ -308,15 +320,22 @@ public class Launcher implements ILauncher
 	}
 
 	@Override
-	public void spinShooterWheels()
+	public void spinShooterWheelsHigh()
 	{
-		spinShooterWheels(SHOOT_SPEED);
+		spinShooterWheels(SHOOT_SPEED_HIGH);
+	}
+	
+	@Override
+	public void spinShooterWheelsLow()
+	{
+		spinShooterWheels(SHOOT_SPEED_LOW);
 	}
 
 	private void spinShooterWheels(double speed)
 	{
 		leftShooterMotor.setSpeed(speed);
 		rightShooterMotor.setSpeed(speed);
+		// shooterMotors.setSpeed(speed);
 	}
 
 	private void jostle()
@@ -324,6 +343,7 @@ public class Launcher implements ILauncher
 		stopShooterWheels();
 		leftShooterMotor.setSpeed(0.4);
 		rightShooterMotor.setSpeed(0.4);
+		// shooterMotors.setSpeed(0.4);
 		SensorConfig.getInstance().getTimer().waitTimeInMillis(400);
 		stopShooterWheels();
 	}
@@ -332,8 +352,8 @@ public class Launcher implements ILauncher
 	public void stopShooterWheels()
 	{
 		rightShooterMotor.stop();
-		
 		leftShooterMotor.stop();
+		// shooterMotors.stop();
 	}
 
 	// Auger Functions
@@ -348,7 +368,6 @@ public class Launcher implements ILauncher
 	{
 		if (!isAugerAtTopLimit())
 		{
-
 			if (augerPot.getCount() > (TOP_POT_LIMIT_AUGER + 600))
 			{
 				augerLifterMotor.setSpeed(Math.abs(speed));
@@ -419,13 +438,14 @@ public class Launcher implements ILauncher
 	// TODO: What's up with this up-and-down reverse stuff?
 	private boolean isAugerAtBottomLimit()
 	{
-		if (bottomLimitAuger.isHit() || (isAugerCalibrated && (augerPot.getCount() > BOTTOM_POT_LIMIT_AUGER)))
+//		if (bottomLimitAuger.isHit() || (isAugerCalibrated && (augerPot.getCount() > BOTTOM_POT_LIMIT_AUGER)))
+		if (bottomLimitAuger.isHit() || (augerPot.getCount() > BOTTOM_POT_LIMIT_AUGER))
 		{
-			if (!isAugerCalibrated)
-			{
-				isAugerCalibrated = true;
-				augerPot.resetCount();
-			}
+//			if (!isAugerCalibrated)
+//			{
+//				isAugerCalibrated = true;
+//				augerPot.resetCount();
+//			}
 			return true;
 		} else
 		{
@@ -436,7 +456,8 @@ public class Launcher implements ILauncher
 	private boolean isAugerAtTopLimit()
 	{
 
-		if (topLimitAuger.isHit() || (isAugerCalibrated && (augerPot.getCount() < TOP_POT_LIMIT_AUGER)))
+//		if (topLimitAuger.isHit() || (isAugerCalibrated && (augerPot.getCount() < TOP_POT_LIMIT_AUGER)))
+			if (topLimitAuger.isHit() || (augerPot.getCount() < TOP_POT_LIMIT_AUGER))
 		{
 			return true;
 		} else
@@ -449,9 +470,9 @@ public class Launcher implements ILauncher
 	@Override
 	public void moveAugerToPosition(int desiredPosition)
 	{
-
-		if (isAugerCalibrated
-				&& ((augerPot.getCount() < (desiredPosition - 50)) || (augerPot.getCount() > (desiredPosition + 50))))
+//		if (isAugerCalibrated
+//				&& ((augerPot.getCount() < (desiredPosition - 50)) || (augerPot.getCount() > (desiredPosition + 50))))
+		if ((augerPot.getCount() < (desiredPosition - 50)) || (augerPot.getCount() > (desiredPosition + 50)))
 		{
 			// if the auger is higher than the position
 			if (desiredPosition > augerPot.getCount())
@@ -532,28 +553,37 @@ public class Launcher implements ILauncher
 	}
 
 	@Override
-	public void shootSequence()
+	public void shootSequenceHigh()
 	{
-		shootSequence(SHOOT_SPEED);
+		shootSequence(SHOOT_SPEED_HIGH);
+	}
+	
+	@Override
+	public void shootSequenceLow()
+	{
+		shootSequence(SHOOT_SPEED_LOW);
 	}
 
 	@Override
 	public void shootSequence(double speed)
 	{
-//		augerLifterMotor.disablePID();
+		//TODO: uncomment when auger is connected
+		// augerLifterMotor.disablePID();
 
 		SensorConfig.getInstance().getTimer().waitTimeInMillis(400);
 
 		// lowerAugerToBottomLimit();
 
-		jostle(); // TODO: WHY DO WE NEED JOSTLE TO SHOOT?
+		jostle();
 		SensorConfig.getInstance().getTimer().waitTimeInMillis(400);
 		spinShooterWheels(speed);
 		SensorConfig.getInstance().getTimer().waitTimeInMillis(1300);
 		launchBoulder();
 
-//		augerLifterMotor.enablePID();
-//		augerLifterMotor.setControlMode(TalonControlMode.Speed);
+		// augerLifterMotor.enablePID();
+		// augerLifterMotor.setControlMode(TalonControlMode.Speed);
 	}
+
+	// PIDTESTING VERSION
 
 }

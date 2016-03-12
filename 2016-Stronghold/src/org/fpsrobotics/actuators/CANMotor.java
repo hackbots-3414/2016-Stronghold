@@ -6,24 +6,23 @@ import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 
 /**
- * Controls motors connected to Talon SRX Motor Controllers that interface
- * with the CAN Bus on the RoboRIO.
+ * Controls motors connected to Talon SRX Motor Controllers that interface with
+ * the CAN Bus on the RoboRIO.
  */
 public class CANMotor implements ICANMotor
 {
-	// private boolean invertDirection;
+	private boolean invertDirection;
 	private CANTalon canMotor;
 	private IPIDFeedbackDevice device;
 
-	
 	public CANMotor(CANTalon motor, boolean invertDirection)
 	{
 		// Changes the motor controller to accept percentages expressed in
 		// decimals of the voltage of the system.
 		motor.changeControlMode(TalonControlMode.PercentVbus);
-		motor.setInverted(invertDirection);
+		// motor.setInverted(invertDirection);
 		this.canMotor = motor;
-		// this.invertDirection = invertDirection;
+		this.invertDirection = invertDirection;
 	}
 
 	/**
@@ -70,9 +69,10 @@ public class CANMotor implements ICANMotor
 	@Override
 	public void enablePID()
 	{
-		canMotor.setFeedbackDevice(device.whatPIDDevice());
+//		canMotor.setFeedbackDevice(device.whatPIDDevice());	//I had this in Josh's Version
 		canMotor.reset();
 		canMotor.enable();
+		// TODO: implement later?
 	}
 
 	@Override
@@ -107,10 +107,22 @@ public class CANMotor implements ICANMotor
 	{
 		if (device != null)
 		{
-			canMotor.setSetpoint(speed);
+			if (invertDirection)
+			{
+				canMotor.setSetpoint(-speed);
+			} else
+			{
+				canMotor.setSetpoint(speed);
+			}
 		} else
 		{
-			canMotor.set(speed);
+			if (invertDirection)
+			{
+				canMotor.set(-speed);
+			} else
+			{
+				canMotor.set(speed);
+			}
 		}
 	}
 

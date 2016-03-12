@@ -51,5 +51,10 @@ public class Gyroscope implements IGyroscope
 	{
 		gyro.reset();
 	}
+	
+	public double getAttitude()
+	{
+		return 0.0;
+	}
 
 }

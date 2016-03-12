@@ -58,4 +58,16 @@ public class DriveTrainAssist
 		 */
 		driveTrain.stop();
 	}
+	
+	public boolean shouldShooterBeRaised()
+	{
+		if (gyro.getAttitude() < 100)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 }

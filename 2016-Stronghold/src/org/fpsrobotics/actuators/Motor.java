@@ -13,15 +13,16 @@ import edu.wpi.first.wpilibj.Talon;
  */
 public class Motor implements IMotor
 {
-//	private double p, i, d;
+	// private double p, i, d;
 	private IPIDFeedbackDevice device;
-
 	private SpeedController motor;
+	private boolean isInverted;
 
 	public Motor(SpeedController motor, boolean invertDirection)
 	{
 		this.motor = motor;
-		this.motor.setInverted(invertDirection);
+		// this.motor.setInverted(invertDirection);
+		this.isInverted = invertDirection;
 	}
 
 	public Motor(SpeedController motor, boolean invertDirection, IPIDFeedbackDevice device)
@@ -52,7 +53,13 @@ public class Motor implements IMotor
 	{
 		if (device == null)
 		{
-			motor.set(speed);
+			if (isInverted)
+			{
+				motor.set(-speed);
+			} else
+			{
+				motor.set(speed);
+			}
 		} else
 		{
 			// implement later

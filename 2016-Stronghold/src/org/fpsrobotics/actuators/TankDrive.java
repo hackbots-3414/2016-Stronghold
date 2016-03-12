@@ -40,7 +40,7 @@ public class TankDrive implements IDriveTrain
 		motorLeft.setSpeed(leftSpeed);
 		motorRight.setSpeed(rightSpeed);
 	}
-	
+
 	@Override
 	public void setSpeed(double speed)
 	{
@@ -175,12 +175,12 @@ public class TankDrive implements IDriveTrain
 	{
 		if (gyro != null)
 		{
-			gyro.resetCount();
+			double initialGyro = gyro.getCount();
 			disablePID();
 
-			if (-degrees < gyro.getCount())
+			if ((initialGyro - degrees) < gyro.getCount())
 			{
-				while ((-degrees < gyro.getCount()) && RobotStatus.isRunning())
+				while (((initialGyro - degrees) < gyro.getCount()) && RobotStatus.isRunning())
 				{
 					setSpeed(speed, -speed);
 				}
@@ -201,12 +201,12 @@ public class TankDrive implements IDriveTrain
 	{
 		if (gyro != null)
 		{
-			gyro.resetCount();
+			double initialGyro = gyro.getCount();
 			disablePID();
 
-			if (degrees > gyro.getCount())
+			if ((initialGyro + degrees) > gyro.getCount())
 			{
-				while (degrees > gyro.getCount() && RobotStatus.isRunning())
+				while ((initialGyro + degrees) > gyro.getCount() && RobotStatus.isRunning())
 				{
 					setSpeed(-speed, speed);
 				}
@@ -248,8 +248,6 @@ public class TankDrive implements IDriveTrain
 
 			setSpeed(0, 0);
 
-			gyro.resetCount();
-
 			if (!PIDOverride.getInstance().isTeleopDisablePID())
 			{
 				enablePID();
@@ -264,7 +262,6 @@ public class TankDrive implements IDriveTrain
 				e.printStackTrace();
 			}
 		}
-
 	}
 
 	@Override

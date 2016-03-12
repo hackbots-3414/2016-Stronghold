@@ -29,7 +29,9 @@ public interface ILauncher
 	
 	public void launchBoulder();
 	
-	public void spinShooterWheels();
+	public void spinShooterWheelsHigh();
+	
+	public void spinShooterWheelsLow();
 	
 	public void stopShooterWheels();
 	
@@ -57,9 +59,13 @@ public interface ILauncher
 	
 	public void moveAugerToPreset(EAugerPresets preset);
 
-	public void shootSequence();
+	public void shootSequenceHigh();
 
+	public void shootSequenceLow();
+	
 	public void shootSequence(double speed);
+
+	
 
 	
 

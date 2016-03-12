@@ -17,14 +17,14 @@ public class Servo implements IServo
 	{
 		this.servo = servo;
 	}
-	
+
 	public Servo(edu.wpi.first.wpilibj.Servo servo, double servo_latched, double servo_unlatched)
 	{
 		this(servo);
 		SERVO_LATCHED = servo_latched;
 		SERVO_UNLATCHED = servo_unlatched;
 	}
-	
+
 	@Override
 	public void engage()
 	{
@@ -40,7 +40,10 @@ public class Servo implements IServo
 	@Override
 	public void set(double value)
 	{
-		servo.set(value);
+		if ((SERVO_LATCHED < value && value < SERVO_UNLATCHED) || (SERVO_UNLATCHED < value && value < SERVO_LATCHED))
+		{
+			servo.set(value);
+		}
 	}
 
 	@Override

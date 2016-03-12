@@ -54,7 +54,7 @@ public class AutonLowBar implements IAutonomousControl
 			if (!RobotStatus.isAuto())
 				break;
 			
-			ActuatorConfig.getInstance().getLauncher().shootSequence();
+			ActuatorConfig.getInstance().getLauncher().shootSequenceHigh();
 
 			break;
 		}
