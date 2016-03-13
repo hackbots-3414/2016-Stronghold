@@ -117,54 +117,8 @@ public class MullenatorTeleop implements ITeleopControl
 					}
 
 				}
-				/*
-				 * System.out.println("rate: " +
-				 * ActuatorConfig.getInstance().getRightEncoder().getRate() +
-				 * " " +
-				 * ActuatorConfig.getInstance().getLeftEncoder().getRate());
-				 * System.out.println("error: " +
-				 * ActuatorConfig.getInstance().getRightEncoder().getError() +
-				 * " " +
-				 * ActuatorConfig.getInstance().getLeftEncoder().getError());
-				 */
-				System.out.println("error: " + ActuatorConfig.getInstance().getRightEncoder().getError() + " " + ActuatorConfig.getInstance().getLeftEncoder().getError());
-				System.out.println("rate  " + ActuatorConfig.getInstance().getRightEncoder().getCount() + " " + ActuatorConfig.getInstance().getLeftEncoder().getCount());
-				//System.out.println("Potentiometer " + SensorConfig.getInstance().getShooterPot().getCount());
-				SmartDashboard.putNumber("Angle", SensorConfig.getInstance().getGyro().getCount());
-
-
-				//System.out.println("Potentiometer " + SensorConfig.getInstance().getShooterPot().getCount());
-
-				//System.out.println("Auger Encoder " + ActuatorConfig.getInstance().getAugerEncoder().getCount());
-				//System.out.println("Auger Encoder Rate " + ActuatorConfig.getInstance().getAugerEncoder().getRate());
-				//System.out.println("Auger Encoder Error " + ActuatorConfig.getInstance().getAugerEncoder().getError());
-				//System.out.println("Auger Limits " + SensorConfig.getInstance().getAugerBottomLimitSwitch().getValue() + SensorConfig.getInstance().getAugerTopLimitSwitch().getValue());
-				//System.out.println("Shooter Limits " + SensorConfig.getInstance().getBottomLimitSwitch().getValue() + " " + SensorConfig.getInstance().getTopLimitSwitch().getValue());
-//				if (SensorConfig.getInstance().getRightJoystick().getButtonValue(ButtonJoystick.TEN))
-//				{
-//					ActuatorConfig.getInstance().getDriveTrain().disablePID();
-//					ActuatorConfig.getInstance().getDriveTrain().turnRight(0.1);
-//					while (SensorConfig.getInstance().getRightJoystick().getButtonValue(ButtonJoystick.TEN)); {}
-//
-//					ActuatorConfig.getInstance().getDriveTrain().goStraight(0);
-//					ActuatorConfig.getInstance().getDriveTrain().enablePID();
-//				}
-//				
-//				if (SensorConfig.getInstance().getRightJoystick().getButtonValue(ButtonJoystick.NINE))
-//				{
-//					
-//					ActuatorConfig.getInstance().getDriveTrain().disablePID();
-//					ActuatorConfig.getInstance().getDriveTrain().turnLeft(0.1);
-//					while (SensorConfig.getInstance().getRightJoystick().getButtonValue(ButtonJoystick.NINE));
-//					{
-//						
-//					}
-//
-//					ActuatorConfig.getInstance().getDriveTrain().goStraight(0);
-//					ActuatorConfig.getInstance().getDriveTrain().enablePID();
-//				}
 				
-				SmartDashboard.putNumber("Shooter Pot", SensorConfig.getInstance().getShooterPot().getCount());
+				//System.out.println(SensorConfig.getInstance().getShooterPot().getCount());
 				
 				SensorConfig.getInstance().getTimer().waitTimeInMillis(100);
 			}
@@ -317,6 +271,13 @@ public class MullenatorTeleop implements ITeleopControl
 				{
 					SmartDashboard.putBoolean("Pressure", false);
 				}
+				
+				/*
+				if(ActuatorConfig.getInstance().getDriveTrainAssist().shouldShooterBeRaised())
+				{
+					ActuatorConfig.getInstance().getLauncher().moveShooterToPosition(1100);
+				}
+				*/
 				
 				SensorConfig.getInstance().getTimer().waitTimeInMillis(100);
 			}

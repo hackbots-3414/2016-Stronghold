@@ -10,4 +10,5 @@ public interface IGyroscope
 	void enable();
 	void disable();
 	void resetCount();
+	double getAttitude();
 }

@@ -10,8 +10,9 @@ import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
- * Creates a drive train that has two double motors on either side with encoders on each gearbox. 
- * It also has an optional gyroscope attached in order for straight movement.
+ * Creates a drive train that has two double motors on either side with encoders
+ * on each gearbox. It also has an optional gyroscope attached in order for
+ * straight movement.
  *
  */
 public class TankDrive implements IDriveTrain
@@ -146,43 +147,44 @@ public class TankDrive implements IDriveTrain
 	@Override
 	public void turnLeft(double speed, double degrees)
 	{
-		gyro.resetCount();
+		double initialGyro = gyro.getCount();
+
 		disablePID();
-		
-		if(-degrees < gyro.getCount())
+
+		if ((initialGyro - degrees) < gyro.getCount())
 		{
-			while(-degrees < gyro.getCount() && RobotStatus.isRunning())
+			while ((initialGyro - degrees) < gyro.getCount() && RobotStatus.isRunning())
 			{
 				setSpeed(speed, -speed);
 			}
 		}
-		
+
 		setSpeed(0, 0);
-		
+
 		SensorConfig.getInstance().getTimer().waitTimeInMillis(200);
-		
-		//enablePID();
+
+		// enablePID();
 	}
 
 	@Override
 	public void turnRight(double speed, double degrees)
 	{
-		gyro.resetCount();
+		double initialGyro = gyro.getCount();
 		disablePID();
-		
-		if(degrees > gyro.getCount())
+
+		if ((initialGyro + degrees) > gyro.getCount())
 		{
-			while(degrees > gyro.getCount() && RobotStatus.isRunning())
+			while ((initialGyro + degrees) > gyro.getCount() && RobotStatus.isRunning())
 			{
 				setSpeed(-speed, speed);
 			}
 		}
-		
+
 		setSpeed(0, 0);
-		
+
 		SensorConfig.getInstance().getTimer().waitTimeInMillis(200);
-		
-		//enablePID();
+
+		// enablePID();
 	}
 
 	final double Kp = 0.01;
@@ -192,28 +194,29 @@ public class TankDrive implements IDriveTrain
 	{
 		double initialCountRight = motorRight.getCANMotorOne().getPIDFeedbackDevice().getCount();
 		double initialCountLeft = motorLeft.getCANMotorOne().getPIDFeedbackDevice().getCount();
-		
+
 		if (gyro != null)
 		{
 			disablePID();
-			
+
 			gyro.resetCount();
-			
+
 			SensorConfig.getInstance().getTimer().waitTimeInMillis(300);
-			
-			while(RobotStatus.isRunning() && 
-			((motorLeft.getCANMotorOne().getPIDFeedbackDevice().getCount()-initialCountLeft) >= -distance)
-		    && ((motorRight.getCANMotorOne().getPIDFeedbackDevice().getCount()-initialCountRight) >= -distance))
+
+			while (RobotStatus.isRunning()
+					&& ((motorLeft.getCANMotorOne().getPIDFeedbackDevice().getCount() - initialCountLeft) >= -distance)
+					&& ((motorRight.getCANMotorOne().getPIDFeedbackDevice().getCount()
+							- initialCountRight) >= -distance))
 			{
 				drive(-speed, -gyro.getCount() * Kp);
 			}
-			
+
 			enablePID();
-			
-			setSpeed(0,0);
-			
-			gyro.resetCount();
-			
+
+			setSpeed(0, 0);
+
+			// gyro.resetCount();
+
 		} else
 		{
 			try
@@ -265,7 +268,7 @@ public class TankDrive implements IDriveTrain
 			leftOutput = outputMagnitude;
 			rightOutput = outputMagnitude;
 		}
-		
+
 		setSpeed(leftOutput, rightOutput);
 	}
 

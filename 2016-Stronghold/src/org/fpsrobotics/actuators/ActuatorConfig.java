@@ -7,8 +7,6 @@ import java.io.FileReader;
 import org.fpsrobotics.PID.IPIDFeedbackDevice;
 import org.fpsrobotics.autonomous.DriveTrainAssist;
 import org.fpsrobotics.sensors.BuiltInCANTalonEncoder;
-import org.fpsrobotics.sensors.Gyroscope;
-import org.fpsrobotics.sensors.ILimitSwitch;
 import org.fpsrobotics.sensors.SensorConfig;
 
 import edu.wpi.first.wpilibj.CANTalon;
@@ -92,10 +90,9 @@ public class ActuatorConfig
 		FileReader fileReader = null;
 		try
 		{
-			fileReader = new FileReader("/AlphaOrBeta.txt"); // make sure file exists at this exact path
+			fileReader = new FileReader("/home/lvuser/AlphaOrBeta.txt"); // make sure file exists at this exact path
 		} catch (FileNotFoundException e1)
 		{
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		
@@ -103,10 +100,11 @@ public class ActuatorConfig
 		{
 			BufferedReader textReader = new BufferedReader(fileReader);
 			
-			if(textReader.readLine().equals("alpha"))
+			String alphaOrBeta = textReader.readLine();
+			if(alphaOrBeta.equals("alpha"))
 			{
 				isAlpha = true;
-			} else if(textReader.readLine().equals("beta"))
+			} else if(alphaOrBeta.equals("beta"))
 			{
 				isAlpha = false;
 			} else

@@ -50,4 +50,11 @@ public class Gyroscope implements IGyroscope
 		gyro.reset();
 	}
 
+	@Override
+	public double getAttitude()
+	{
+		return 0.0;
+		
+	}
+
 }
