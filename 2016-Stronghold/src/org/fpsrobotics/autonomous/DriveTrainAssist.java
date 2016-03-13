@@ -19,28 +19,12 @@ public class DriveTrainAssist
 
 	public void centerDriveTrain(double speed)
 	{
-		driveTrain.disablePID();
-
-		if (gyro.getCount() > 0)
-		{
-			while ((gyro.getCount() > 0) && RobotStatus.isRunning())
-			{
-				driveTrain.setSpeed(speed, -speed);
-			}
-		} else if (gyro.getCount() < 0)
-		{
-			while ((gyro.getCount() < 0) && RobotStatus.isRunning())
-			{
-				driveTrain.setSpeed(-speed, speed);
-			}
-		}
-
-		driveTrain.stop();
+		turnToAngle(0, speed);
 	}
 	
 	public boolean shouldShooterBeRaised()
 	{
-		SmartDashboard.putNumber("pitch", gyro.getPitch());
+		SmartDashboard.putNumber("Pitch", gyro.getPitch());
 		
 		if(gyro.getPitch() > 2)
 		{
@@ -51,26 +35,28 @@ public class DriveTrainAssist
 		}
 	}
 	
-	//TODO
-	public void turnToDegrees(double desiredDgrees, double speed)
+	public void turnToAngle(double desiredDegrees, double speed)
 	{
-		/*
-		driveTrain.disablePID();
+		if ((-180 <= desiredDegrees) && (desiredDegrees <= 180))
+		{
+			driveTrain.disablePID();
 
-		if (gyro.getCount() > desiredDgrees)
-		{
-			while ((gyro.getCount() > desiredDgrees) && RobotStatus.isRunning())
+			if (gyro.getCount() > desiredDegrees)
 			{
-				driveTrain.setSpeed(speed, -speed);
-			}
-		} else if (gyro.getCount() < desiredDgrees)
-		{
-			while ((gyro.getCount() < desiredDgrees) && RobotStatus.isRunning())
+				while (gyro.getCount() > desiredDegrees)
+				{
+
+					driveTrain.setSpeed(speed, -speed);
+				}
+			} else if (gyro.getCount() < desiredDegrees)
 			{
-				driveTrain.setSpeed(-speed, speed);
+				while (gyro.getCount() < desiredDegrees)
+				{
+					driveTrain.setSpeed(-speed, speed);
+				}
 			}
+
+			driveTrain.stop();
 		}
-		 */
-		driveTrain.stop();
 	}
 }

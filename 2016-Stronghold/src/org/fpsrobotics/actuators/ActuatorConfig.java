@@ -102,12 +102,12 @@ public class ActuatorConfig
 		// {
 		// BufferedReader textReader = new BufferedReader(fileReader);
 		//
-		// String text = textReader.readLine();
+		// String alphaOrBeta = textReader.readLine();
 		//
-		// if (text.equals("alpha"))
+		// if (alphaOrBeta.equals("alpha"))
 		// {
 		// isAlpha = true;
-		// } else if (text.equals("beta"))
+		// } else if (alphaOrBeta.equals("beta"))
 		// {
 		// isAlpha = false;
 		// } else

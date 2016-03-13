@@ -260,10 +260,10 @@ public class MullenatorTeleop implements ITeleopControl
 				if (gamepad.getButtonValue(EJoystickButtons.THREE))
 				{
 					launcher.intakeBoulder();
-					
+
 					while (gamepad.getButtonValue(EJoystickButtons.THREE))
 						;
-					
+
 					movedShooterWheels = true;
 				}
 
@@ -287,10 +287,21 @@ public class MullenatorTeleop implements ITeleopControl
 				SmartDashboard.putBoolean("Should shooter be raised?",
 						ActuatorConfig.getInstance().getDriveTrainAssist().shouldShooterBeRaised());
 
-				if (ActuatorConfig.getInstance().getDriveTrainAssist().shouldShooterBeRaised())
+				// TODO
+				// if
+				// (ActuatorConfig.getInstance().getDriveTrainAssist().shouldShooterBeRaised())
+				// {
+				// ActuatorConfig.getInstance().getLauncher().moveShooterToPosition(900);
+				// }
+				
+				try
 				{
-					ActuatorConfig.getInstance().getLauncher().moveShooterToPosition(900);
+					Thread.sleep(100);
+				} catch (Exception e)
+				{
+					e.printStackTrace();
 				}
+
 			}
 		});
 
@@ -328,7 +339,7 @@ public class MullenatorTeleop implements ITeleopControl
 		// }
 		// }
 		// });
-//
+		//
 		// // AUGER
 		// executor.submit(() ->
 		// {
@@ -360,7 +371,7 @@ public class MullenatorTeleop implements ITeleopControl
 		// });
 		// TODO: Include auger to max, auger to min, auger to pull up, auger
 		// pull up, auger to pick up ball, auger to shoot,
-//
+		//
 		// // LAUNCHER
 		// executor.submit(() ->
 		// {
@@ -513,7 +524,7 @@ public class MullenatorTeleop implements ITeleopControl
 		// SmartDashboard.putBoolean("Launch Ready B", launchReadyB);
 		// }
 		// });
-//
+		//
 		// executor.submit(() ->
 		// {
 		// while (RobotStatus.isRunning())
