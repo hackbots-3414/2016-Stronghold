@@ -12,84 +12,84 @@ public class Logitech3DJoystick implements IJoystick
 	private static final int VERTICAL_AXIS = 1;
 	private static final int TWIST_AXIS = 2;
 	private static final int SWITCH_AXIS = 3;
-	private final static double TOLERANCE = 0.2;
+	private final static double TOLERANCE = 0.1;
 
 	public Logitech3DJoystick(Joystick joy)
 	{
 		this.joy = joy;
 	}
 
-	@Override
-	public double getX()
-	{
-		return joy.getRawAxis(HORIZONTAL_AXIS);
-	}
-
-	@Override
-	public double getY()
-	{
-		return joy.getRawAxis(VERTICAL_AXIS);
-	}
-
-	@Override
-	public double getTwist()
-	{
-		return joy.getRawAxis(TWIST_AXIS);
-	}
-
-	@Override
-	public double getSwitch()
-	{
-		return joy.getRawAxis(SWITCH_AXIS);
-	}
-
-	// @Override
+//	@Override
 	// public double getX()
 	// {
-	// if (Math.abs(joy.getRawAxis(HORIZONTAL_AXIS)) < TOLERANCE)
-	// {
-	// return 0.0;
-	// } else
-	// {
 	// return joy.getRawAxis(HORIZONTAL_AXIS);
-	// }
 	// }
 	//
 	// @Override
 	// public double getY()
 	// {
-	// if (Math.abs(joy.getRawAxis(VERTICAL_AXIS)) < TOLERANCE)
-	// {
-	// return 0.0;
-	// } else
-	// {
 	// return joy.getRawAxis(VERTICAL_AXIS);
-	// }
 	// }
 	//
 	// @Override
 	// public double getTwist()
 	// {
-	// if (Math.abs(joy.getRawAxis(TWIST_AXIS)) < TOLERANCE)
-	// {
-	// return 0.0;
-	// } else
-	// {
 	// return joy.getRawAxis(TWIST_AXIS);
-	// }
 	// }
 	//
 	// @Override
 	// public double getSwitch()
 	// {
-	// if (Math.abs(joy.getRawAxis(SWITCH_AXIS)) < TOLERANCE)
-	// {
-	// return 0.0;
-	// } else
-	// {
 	// return joy.getRawAxis(SWITCH_AXIS);
 	// }
-	// }
+
+	@Override
+	public double getX()
+	{
+		if (Math.abs(joy.getRawAxis(HORIZONTAL_AXIS)) < TOLERANCE)
+		{
+			return 0.0;
+		} else
+		{
+			return joy.getRawAxis(HORIZONTAL_AXIS);
+		}
+	}
+
+	@Override
+	public double getY()
+	{
+		if (Math.abs(joy.getRawAxis(VERTICAL_AXIS)) < TOLERANCE)
+		{
+			return 0.0;
+		} else
+		{
+			return joy.getRawAxis(VERTICAL_AXIS);
+		}
+	}
+
+	@Override
+	public double getTwist()
+	{
+		if (Math.abs(joy.getRawAxis(TWIST_AXIS)) < TOLERANCE)
+		{
+			return 0.0;
+		} else
+		{
+			return joy.getRawAxis(TWIST_AXIS);
+		}
+	}
+
+	@Override
+	public double getSwitch()
+	{
+		if (Math.abs(joy.getRawAxis(SWITCH_AXIS)) < TOLERANCE)
+		{
+			return 0.0;
+		} else
+		{
+			return joy.getRawAxis(SWITCH_AXIS);
+		}
+	}
 
 	@Override
 	public boolean getButtonValue(EJoystickButtons value)
