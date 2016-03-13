@@ -24,7 +24,7 @@ public class Launcher implements ILauncher
 	private final double LINEAR_ACTUATOR_SPEED = 0.7; // Used to be 0.5
 
 	// Shooter Functions
-	private final double INTAKE_SPEED = -0.4;
+	private final double INTAKE_SPEED = -0.7;
 	private double SHOOT_SPEED_HIGH = 0.85; // 0.95?
 	private double SHOOT_SPEED_LOW = 0.4;
 
@@ -178,7 +178,7 @@ public class Launcher implements ILauncher
 	}
 
 	// Lifter Functions
-	//TODO: IS THIS RIGHT??
+	// TODO: IS THIS RIGHT??
 	private void lowerShooterToBottomLimit()
 	{
 		while (!isShooterAtBottomLimit())
@@ -186,10 +186,10 @@ public class Launcher implements ILauncher
 			lowerShooter();
 		}
 		stopShooterLifter();
-//		if (!isShooterAtBottomLimit())
-//		{
-//			lowerShooter();
-//		}
+		// if (!isShooterAtBottomLimit())
+		// {
+		// lowerShooter();
+		// }
 	}
 
 	private void raiseShooterToTopLimit()
@@ -199,10 +199,10 @@ public class Launcher implements ILauncher
 			raiseShooter();
 		}
 		stopShooterLifter();
-//		if (!isShooterAtTopLimit())
-//		{
-//			raiseShooter();
-//		}
+		// if (!isShooterAtTopLimit())
+		// {
+		// raiseShooter();
+		// }
 	}
 
 	@Override
@@ -262,32 +262,29 @@ public class Launcher implements ILauncher
 	{
 		if ((shooterPot.getCount() < (desiredPosition - 50)) || (shooterPot.getCount() > (desiredPosition + 50)))
 		{
-			// If the shooter is higher than the desired position
-			if (shooterPot.getCount() < desiredPosition)
+			// If the shooter is less than the desired position
+			if (shooterPot.getCount() > desiredPosition)
 			{
-				lowerShooter();
+				raiseShooter();
 
-				// while this is so or we reach the bottom limit of travel
-				while (!isShooterAtBottomLimit() && (shooterPot.getCount() < desiredPosition)
-						&& (RobotStatus.isRunning()))
-				{
-				}
-				// If the shooter is lower than the deisred position
+				// while this is so or we reach the top limit of travel
+				while (!isShooterAtTopLimit() && (shooterPot.getCount() > desiredPosition) && (RobotStatus.isRunning()))
+					;
+				// If the shooter is greater than the desired position
 			} else
 			{
 				lowerShooter();
 
-				// while this is so or we reach the top limit of our travel
-				while (!isShooterAtTopLimit() && (desiredPosition > shooterPot.getCount()) && (RobotStatus.isRunning()))
-				{
-				}
+				// while this is so or we reach the bottom limit of our travel
+				while (!isShooterAtBottomLimit() && (shooterPot.getCount() < desiredPosition)
+						&& (RobotStatus.isRunning()))
+					;
 			}
 		}
 		stopShooterLifter();
 	}
 
 	// Shooter Functions
-
 	@Override
 	public void intakeBoulder()
 	{
@@ -324,7 +321,7 @@ public class Launcher implements ILauncher
 	{
 		spinShooterWheels(SHOOT_SPEED_HIGH);
 	}
-	
+
 	@Override
 	public void spinShooterWheelsLow()
 	{
@@ -438,14 +435,15 @@ public class Launcher implements ILauncher
 	// TODO: What's up with this up-and-down reverse stuff?
 	private boolean isAugerAtBottomLimit()
 	{
-//		if (bottomLimitAuger.isHit() || (isAugerCalibrated && (augerPot.getCount() > BOTTOM_POT_LIMIT_AUGER)))
+		// if (bottomLimitAuger.isHit() || (isAugerCalibrated &&
+		// (augerPot.getCount() > BOTTOM_POT_LIMIT_AUGER)))
 		if (bottomLimitAuger.isHit() || (augerPot.getCount() > BOTTOM_POT_LIMIT_AUGER))
 		{
-//			if (!isAugerCalibrated)
-//			{
-//				isAugerCalibrated = true;
-//				augerPot.resetCount();
-//			}
+			// if (!isAugerCalibrated)
+			// {
+			// isAugerCalibrated = true;
+			// augerPot.resetCount();
+			// }
 			return true;
 		} else
 		{
@@ -456,8 +454,9 @@ public class Launcher implements ILauncher
 	private boolean isAugerAtTopLimit()
 	{
 
-//		if (topLimitAuger.isHit() || (isAugerCalibrated && (augerPot.getCount() < TOP_POT_LIMIT_AUGER)))
-			if (topLimitAuger.isHit() || (augerPot.getCount() < TOP_POT_LIMIT_AUGER))
+		// if (topLimitAuger.isHit() || (isAugerCalibrated &&
+		// (augerPot.getCount() < TOP_POT_LIMIT_AUGER)))
+		if (topLimitAuger.isHit() || (augerPot.getCount() < TOP_POT_LIMIT_AUGER))
 		{
 			return true;
 		} else
@@ -470,8 +469,9 @@ public class Launcher implements ILauncher
 	@Override
 	public void moveAugerToPosition(int desiredPosition)
 	{
-//		if (isAugerCalibrated
-//				&& ((augerPot.getCount() < (desiredPosition - 50)) || (augerPot.getCount() > (desiredPosition + 50))))
+		// if (isAugerCalibrated
+		// && ((augerPot.getCount() < (desiredPosition - 50)) ||
+		// (augerPot.getCount() > (desiredPosition + 50))))
 		if ((augerPot.getCount() < (desiredPosition - 50)) || (augerPot.getCount() > (desiredPosition + 50)))
 		{
 			// if the auger is higher than the position
@@ -557,7 +557,7 @@ public class Launcher implements ILauncher
 	{
 		shootSequence(SHOOT_SPEED_HIGH);
 	}
-	
+
 	@Override
 	public void shootSequenceLow()
 	{
@@ -567,7 +567,7 @@ public class Launcher implements ILauncher
 	@Override
 	public void shootSequence(double speed)
 	{
-		//TODO: uncomment when auger is connected
+		// TODO: uncomment when auger is connected
 		// augerLifterMotor.disablePID();
 
 		SensorConfig.getInstance().getTimer().waitTimeInMillis(400);

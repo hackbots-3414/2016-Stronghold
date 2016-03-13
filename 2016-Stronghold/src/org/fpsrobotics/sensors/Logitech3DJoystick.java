@@ -12,7 +12,7 @@ public class Logitech3DJoystick implements IJoystick
 	private static final int VERTICAL_AXIS = 1;
 	private static final int TWIST_AXIS = 2;
 	private static final int SWITCH_AXIS = 3;
-	private final static double TOLERANCE = 0.1;
+	private final static double TOLERANCE = 0.05;
 
 	public Logitech3DJoystick(Joystick joy)
 	{

@@ -14,5 +14,5 @@ public interface IGyroscope
 
 	public void resetCount();
 	
-	public double getAttitude();
+	public double getPitch();
 }

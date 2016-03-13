@@ -14,6 +14,8 @@ public class GyroscopeNavX implements IGyroscope
 	public GyroscopeNavX(AHRS ahrs)
 	{
 		this.ahrs = ahrs;
+
+		ahrs.reset();
 	}
 
 	@Override
@@ -50,8 +52,8 @@ public class GyroscopeNavX implements IGyroscope
 	}
 
 	@Override
-	public double getAttitude()
+	public double getPitch()
 	{
-		return ahrs.getPitch();
+		return ahrs.getRoll();
 	}
 }

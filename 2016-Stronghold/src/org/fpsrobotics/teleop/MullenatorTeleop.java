@@ -44,7 +44,7 @@ public class MullenatorTeleop implements ITeleopControl
 			boolean pidOn = true;
 			boolean deadZoned = false;
 
-			double notPIDspeedMultiplyer = 1.0;
+			double notPIDspeedMultiplier = 1.0;
 			boolean lockA = false;
 			boolean lockB = false;
 
@@ -129,30 +129,32 @@ public class MullenatorTeleop implements ITeleopControl
 
 					if (SensorConfig.getInstance().getLeftJoystick().getButtonValue(EJoystickButtons.ONE))
 					{
-						notPIDspeedMultiplyer = 0.5;
+						notPIDspeedMultiplier = 0.5;
 						SmartDashboard.putBoolean("DRIVE BY HALF", true);
 					} else
 					{
-						notPIDspeedMultiplyer = 1.0;
+						notPIDspeedMultiplier = 1.0;
 						SmartDashboard.putBoolean("DRIVE BY HALF", false);
 					}
 
 					if (SensorConfig.getInstance().getRightJoystick().getButtonValue(EJoystickButtons.ONE))
 					{
 						ActuatorConfig.getInstance().getDriveTrain()
-								.setSpeed(SensorConfig.getInstance().getRightJoystick().getY() * notPIDspeedMultiplyer);
+								.setSpeed(SensorConfig.getInstance().getRightJoystick().getY() * notPIDspeedMultiplier);
 						SmartDashboard.putBoolean("DRIVE TOGETHER", true);
 					} else
 					{
 						ActuatorConfig.getInstance().getDriveTrain().setSpeed(
-								SensorConfig.getInstance().getLeftJoystick().getY() * notPIDspeedMultiplyer,
-								SensorConfig.getInstance().getRightJoystick().getY() * notPIDspeedMultiplyer);
+								SensorConfig.getInstance().getLeftJoystick().getY() * notPIDspeedMultiplier,
+								SensorConfig.getInstance().getRightJoystick().getY() * notPIDspeedMultiplier);
 						SmartDashboard.putBoolean("DRIVE TOGETHER", false);
 					}
 					SmartDashboard.putNumber("Left R * SpeedMultiplyer",
-							SensorConfig.getInstance().getRightJoystick().getY() * notPIDspeedMultiplyer);
+							SensorConfig.getInstance().getRightJoystick().getY() * notPIDspeedMultiplier);
 
 				}
+
+				SmartDashboard.putNumber("Shooter Pot", SensorConfig.getInstance().getShooterPot().getCount());
 
 				try
 				{
@@ -180,7 +182,6 @@ public class MullenatorTeleop implements ITeleopControl
 
 			while (RobotStatus.isRunning())
 			{
-				SmartDashboard.putNumber("Shooter Pot", SensorConfig.getInstance().getShooterPot().getCount());
 
 				// Shooter movement controls
 				if (gamepad.getButtonValue(EJoystickButtons.TWO))
@@ -193,7 +194,6 @@ public class MullenatorTeleop implements ITeleopControl
 
 				if (gamepad.getButtonValue(EJoystickButtons.FOUR))
 				{
-
 					launcher.raiseShooter();
 					while (gamepad.getButtonValue(EJoystickButtons.FOUR))
 						;
@@ -204,18 +204,6 @@ public class MullenatorTeleop implements ITeleopControl
 					launcher.stopShooterLifter();
 					movedShooter = false;
 				}
-
-				// while (gamepad.getButtonValue(EJoystickButtons.FIVE))
-				// {
-				//
-				// launcher.moveShooterToPosition(SmartDashboard.getNumber("Preset",
-				// 477));
-				//
-				// launcher.moveShooterToBottomLimit();
-				// launcher.augerGoToPosition(1000);
-				//
-				// movedShooter = true;
-				// }
 
 				// // Auger movement controls
 				// while (gamepad.getButtonValue(EJoystickButtons.ONE))
@@ -269,10 +257,13 @@ public class MullenatorTeleop implements ITeleopControl
 					movedShooterWheels = true;
 				}
 
-				while (gamepad.getButtonValue(EJoystickButtons.THREE))
+				if (gamepad.getButtonValue(EJoystickButtons.THREE))
 				{
 					launcher.intakeBoulder();
-
+					
+					while (gamepad.getButtonValue(EJoystickButtons.THREE))
+						;
+					
 					movedShooterWheels = true;
 				}
 
@@ -281,19 +272,6 @@ public class MullenatorTeleop implements ITeleopControl
 					launcher.stopShooterWheels();
 					movedShooterWheels = false;
 				}
-
-//				// Manual Launching
-//				while (gamepad.getButtonValue(EJoystickButtons.ONE))
-//				{
-//					launcher.spinShooterWheelsHigh();
-//					if (gamepad.getButtonValue(EJoystickButtons.SIX))
-//					{
-//						launcher.launchBoulder();
-//						while (gamepad.getButtonValue(EJoystickButtons.SIX)
-//								|| gamepad.getButtonValue(EJoystickButtons.ONE))
-//							;
-//					}
-//				}
 
 				// Pressure sensor feedback
 				if (SensorConfig.getInstance().getPressureSwitch().isHit())
@@ -305,6 +283,14 @@ public class MullenatorTeleop implements ITeleopControl
 				}
 
 				SensorConfig.getInstance().getTimer().waitTimeInMillis(100);
+
+				SmartDashboard.putBoolean("Should shooter be raised?",
+						ActuatorConfig.getInstance().getDriveTrainAssist().shouldShooterBeRaised());
+
+				if (ActuatorConfig.getInstance().getDriveTrainAssist().shouldShooterBeRaised())
+				{
+					ActuatorConfig.getInstance().getLauncher().moveShooterToPosition(900);
+				}
 			}
 		});
 
@@ -342,7 +328,7 @@ public class MullenatorTeleop implements ITeleopControl
 		// }
 		// }
 		// });
-
+//
 		// // AUGER
 		// executor.submit(() ->
 		// {
@@ -374,7 +360,7 @@ public class MullenatorTeleop implements ITeleopControl
 		// });
 		// TODO: Include auger to max, auger to min, auger to pull up, auger
 		// pull up, auger to pick up ball, auger to shoot,
-
+//
 		// // LAUNCHER
 		// executor.submit(() ->
 		// {
@@ -527,7 +513,7 @@ public class MullenatorTeleop implements ITeleopControl
 		// SmartDashboard.putBoolean("Launch Ready B", launchReadyB);
 		// }
 		// });
-
+//
 		// executor.submit(() ->
 		// {
 		// while (RobotStatus.isRunning())

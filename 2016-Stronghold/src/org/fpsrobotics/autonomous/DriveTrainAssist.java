@@ -4,6 +4,8 @@ import org.fpsrobotics.actuators.IDriveTrain;
 import org.fpsrobotics.sensors.IGyroscope;
 import org.usfirst.frc.team3414.robot.RobotStatus;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 public class DriveTrainAssist
 {
 	private IDriveTrain driveTrain;
@@ -36,6 +38,19 @@ public class DriveTrainAssist
 		driveTrain.stop();
 	}
 	
+	public boolean shouldShooterBeRaised()
+	{
+		SmartDashboard.putNumber("pitch", gyro.getPitch());
+		
+		if(gyro.getPitch() > 2)
+		{
+			return true;
+		} else
+		{
+			return false;
+		}
+	}
+	
 	//TODO
 	public void turnToDegrees(double desiredDgrees, double speed)
 	{
@@ -57,17 +72,5 @@ public class DriveTrainAssist
 		}
 		 */
 		driveTrain.stop();
-	}
-	
-	public boolean shouldShooterBeRaised()
-	{
-		if (gyro.getAttitude() < 100)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
 	}
 }

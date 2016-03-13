@@ -57,4 +57,11 @@ public class Gyroscope implements IGyroscope
 		return 0.0;
 	}
 
+	@Override
+	public double getPitch()
+	{
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }
