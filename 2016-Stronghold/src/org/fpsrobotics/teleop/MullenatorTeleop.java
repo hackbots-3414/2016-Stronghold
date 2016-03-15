@@ -7,6 +7,7 @@ import org.fpsrobotics.actuators.ActuatorConfig;
 import org.fpsrobotics.actuators.EAugerPresets;
 import org.fpsrobotics.actuators.EShooterPresets;
 import org.fpsrobotics.actuators.ILauncher;
+import org.fpsrobotics.sensors.DashboardLogger;
 import org.fpsrobotics.sensors.EAnalogStickAxis;
 import org.fpsrobotics.sensors.EJoystickButtons;
 import org.fpsrobotics.sensors.IGamepad;
@@ -14,7 +15,6 @@ import org.fpsrobotics.sensors.SensorConfig;
 import org.usfirst.frc.team3414.robot.RobotStatus;
 
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class MullenatorTeleop implements ITeleopControl
 {
@@ -40,11 +40,11 @@ public class MullenatorTeleop implements ITeleopControl
 			ActuatorConfig.getInstance().getDriveTrain().enablePID();
 			ActuatorConfig.getInstance().getDriveTrain().setControlMode(TalonControlMode.Speed);
 
-			double correctedYOne, correctedYTwo, yOne, yTwo;
+			double correctedYLeft, correctedYRight, yLeft, yRight;
 			boolean pidOn = true;
 			boolean deadZoned = false;
 
-			double notPIDspeedMultiplier = 1.0;
+			double speedMultiplier = 1.0;
 			boolean lockA = false;
 			boolean lockB = false;
 
@@ -86,13 +86,13 @@ public class MullenatorTeleop implements ITeleopControl
 					// DO 4 - On Release
 				}
 
-				SmartDashboard.putBoolean("PID", pidOn);
+				DashboardLogger.getInstance().putBoolean("PID", pidOn);
 
 				// With PID
 				if (pidOn)
 				{
-					yOne = SensorConfig.getInstance().getLeftJoystick().getY();
-					yTwo = SensorConfig.getInstance().getRightJoystick().getY();
+					yLeft = SensorConfig.getInstance().getLeftJoystick().getY();
+					yRight = SensorConfig.getInstance().getRightJoystick().getY();
 
 					/*
 					 * Linear Drive Control correctedYOne = yOne * 400;
@@ -100,21 +100,33 @@ public class MullenatorTeleop implements ITeleopControl
 					 */
 
 					/* Inverse Tangent Drive Control */
-					correctedYOne = Math.atan(yOne) * (4 / Math.PI) * 400;
-					correctedYTwo = Math.atan(yTwo) * (4 / Math.PI) * 400;
+					correctedYLeft = Math.atan(yLeft) * (4 / Math.PI) * 400;
+					correctedYRight = Math.atan(yRight) * (4 / Math.PI) * 400;
 
-					if (correctedYOne > 25 || correctedYOne < -25 || correctedYTwo > 25 || correctedYTwo < -25)
+					if (correctedYLeft > 25 || correctedYLeft < -25 || correctedYRight > 25 || correctedYRight < -25)
 					{
-						SmartDashboard.putNumber("Left Drive", correctedYOne);
-						SmartDashboard.putNumber("Right Drive", correctedYTwo);
-						ActuatorConfig.getInstance().getDriveTrain().setSpeed(correctedYOne, correctedYTwo);
+						
+						if (SensorConfig.getInstance().getRightJoystick().getButtonValue(EJoystickButtons.ONE))
+						{
+							ActuatorConfig.getInstance().getDriveTrain().setSpeed(correctedYRight);
+							DashboardLogger.getInstance().putBoolean("DRIVE TOGETHER", true);
+						} else
+						{
+							ActuatorConfig.getInstance().getDriveTrain().setSpeed(correctedYLeft, correctedYRight);
+							DashboardLogger.getInstance().putBoolean("DRIVE TOGETHER", false);
+						}
+						
+						
+//						SmartDashboard.putNumber("Left Drive", correctedYLeft);
+//						SmartDashboard.putNumber("Right Drive", correctedYRight);
+						
 						deadZoned = false;
 					} else
 					{
 						if (!deadZoned)
 						{
-							SmartDashboard.putNumber("Left Drive", 0.0);
-							SmartDashboard.putNumber("Right Drive", 0.0);
+							DashboardLogger.getInstance().putNumber("Left Drive", 0.0);
+							DashboardLogger.getInstance().putNumber("Right Drive", 0.0);
 							ActuatorConfig.getInstance().getDriveTrain().setSpeed(0, 0);
 							deadZoned = true;
 						} else
@@ -127,35 +139,39 @@ public class MullenatorTeleop implements ITeleopControl
 				} else
 				{
 
-					if (SensorConfig.getInstance().getLeftJoystick().getButtonValue(EJoystickButtons.ONE))
-					{
-						notPIDspeedMultiplier = 0.5;
-						SmartDashboard.putBoolean("DRIVE BY HALF", true);
-					} else
-					{
-						notPIDspeedMultiplier = 1.0;
-						SmartDashboard.putBoolean("DRIVE BY HALF", false);
-					}
+					
 
 					if (SensorConfig.getInstance().getRightJoystick().getButtonValue(EJoystickButtons.ONE))
 					{
 						ActuatorConfig.getInstance().getDriveTrain()
-								.setSpeed(SensorConfig.getInstance().getRightJoystick().getY() * notPIDspeedMultiplier);
-						SmartDashboard.putBoolean("DRIVE TOGETHER", true);
+								.setSpeed(SensorConfig.getInstance().getRightJoystick().getY() * speedMultiplier);
+						DashboardLogger.getInstance().putBoolean("DRIVE TOGETHER", true);
 					} else
 					{
 						ActuatorConfig.getInstance().getDriveTrain().setSpeed(
-								SensorConfig.getInstance().getLeftJoystick().getY() * notPIDspeedMultiplier,
-								SensorConfig.getInstance().getRightJoystick().getY() * notPIDspeedMultiplier);
-						SmartDashboard.putBoolean("DRIVE TOGETHER", false);
+								SensorConfig.getInstance().getLeftJoystick().getY() * speedMultiplier,
+								SensorConfig.getInstance().getRightJoystick().getY() * speedMultiplier);
+						DashboardLogger.getInstance().putBoolean("DRIVE TOGETHER", false);
 					}
-					SmartDashboard.putNumber("Left R * SpeedMultiplyer",
-							SensorConfig.getInstance().getRightJoystick().getY() * notPIDspeedMultiplier);
+//					SmartDashboard.putNumber("Left Drive", SensorConfig.getInstance().getLeftJoystick().getY() * speedMultiplier);
+//					SmartDashboard.putNumber("Right Drive", SensorConfig.getInstance().getRightJoystick().getY() * speedMultiplier);
 
 				}
+				
+				if (SensorConfig.getInstance().getLeftJoystick().getButtonValue(EJoystickButtons.ONE))
+				{
+					speedMultiplier = 0.5;
+					DashboardLogger.getInstance().putBoolean("DRIVE BY HALF", true);
+				} else
+				{
+					speedMultiplier = 1.0;
+					DashboardLogger.getInstance().putBoolean("DRIVE BY HALF", false);
+				}
 
-				SmartDashboard.putNumber("Shooter Pot", SensorConfig.getInstance().getShooterPot().getCount());
+				DashboardLogger.getInstance().putNumber("Shooter Pot", SensorConfig.getInstance().getShooterPot().getCount());
+				DashboardLogger.getInstance().putNumber("Auger Pot", ActuatorConfig.getInstance().getAugerPotentiometer().getCount());
 
+				DashboardLogger.getInstance().reportInformation(EOutputDevice.SMARTDASHBAORD);
 				try
 				{
 					Thread.sleep(100);
@@ -239,32 +255,39 @@ public class MullenatorTeleop implements ITeleopControl
 				// Shooter launching controls
 				if (gamepad.getButtonValue(EJoystickButtons.SEVEN))
 				{
+
+					DashboardLogger.getInstance().putBoolean("Is Shooting High", true);
 					launcher.shootSequenceHigh();
 
 					while (gamepad.getButtonValue(EJoystickButtons.SEVEN))
 						;
 
 					movedShooterWheels = true;
+					DashboardLogger.getInstance().putBoolean("Is Shooting High", false);
 				}
 
 				if (gamepad.getButtonValue(EJoystickButtons.EIGHT))
 				{
+					DashboardLogger.getInstance().putBoolean("Is Shooting Low", true);
 					launcher.shootSequenceLow();
 
 					while (gamepad.getButtonValue(EJoystickButtons.EIGHT))
 						;
 
 					movedShooterWheels = true;
+					DashboardLogger.getInstance().putBoolean("Is Shooting Low", false);
 				}
 
 				if (gamepad.getButtonValue(EJoystickButtons.THREE))
 				{
+					DashboardLogger.getInstance().putBoolean("Is Intake Boulder", true);
 					launcher.intakeBoulder();
 
 					while (gamepad.getButtonValue(EJoystickButtons.THREE))
 						;
 
 					movedShooterWheels = true;
+					DashboardLogger.getInstance().putBoolean("Is Intake Boulder", false);
 				}
 
 				if (movedShooterWheels)
@@ -276,15 +299,15 @@ public class MullenatorTeleop implements ITeleopControl
 				// Pressure sensor feedback
 				if (SensorConfig.getInstance().getPressureSwitch().isHit())
 				{
-					SmartDashboard.putBoolean("Pressure", true);
+					DashboardLogger.getInstance().putBoolean("Pressure", true);
 				} else
 				{
-					SmartDashboard.putBoolean("Pressure", false);
+					DashboardLogger.getInstance().putBoolean("Pressure", false);
 				}
 
 				SensorConfig.getInstance().getTimer().waitTimeInMillis(100);
 
-				SmartDashboard.putBoolean("Should shooter be raised?",
+				DashboardLogger.getInstance().putBoolean("Should shooter be raised?",
 						ActuatorConfig.getInstance().getDriveTrainAssist().shouldShooterBeRaised());
 
 				// TODO

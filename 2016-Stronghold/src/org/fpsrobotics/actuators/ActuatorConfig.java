@@ -85,7 +85,7 @@ public class ActuatorConfig
 
 	private ActuatorConfig()
 	{
-		boolean isAlpha = SmartDashboard.getBoolean("IsAlpha", true);
+		boolean isAlpha = DashboardLogger.getBoolean("IsAlpha", true);
 		// boolean isAlpha = true;
 		// // distinguish alpha and beta
 		// FileReader fileReader = null;
@@ -292,7 +292,7 @@ public class ActuatorConfig
 		return driveAssist;
 	}
 
-	public IPIDFeedbackDevice getAugerEncoder()
+	public IPIDFeedbackDevice getAugerPotentiometer()
 	{
 		return augerPotentiometer;
 	}

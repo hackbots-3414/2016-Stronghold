@@ -50,7 +50,7 @@ public class Robot extends SampleRobot
 		autoChooser.addObject("Rock Wall", new AutonRockWall());
 		autoChooser.addObject("Rough Terrain", new AutonRoughTerrain());
 
-		SmartDashboard.putData("Autonomous Chooser", autoChooser);
+		SmartDashbord.putData("Autonomous Chooser", autoChooser);
 	}
 
 	public void autonomous()
