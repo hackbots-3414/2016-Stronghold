@@ -25,7 +25,7 @@ public class Launcher implements ILauncher
 
 	// Shooter Functions
 	private final double INTAKE_SPEED = -0.7;
-	private double SHOOT_SPEED_HIGH = 0.85; // 0.95?
+	private double SHOOT_SPEED_HIGH = 0.95;
 	private double SHOOT_SPEED_LOW = 0.4;
 
 	// Auger Functions
@@ -112,6 +112,9 @@ public class Launcher implements ILauncher
 			TOP_POT_LIMIT_AUGER = 0; // fix when auger is added
 			BOTTOM_POT_LIMIT_AUGER = 3000; // fix when auger is added
 		}
+		
+		SmartDashboard.putNumber("Top Pot Limit Auger", 0);
+		SmartDashboard.putNumber("Bottom Pot Limit Auger", 3000);
 	}
 
 	/**
@@ -178,18 +181,14 @@ public class Launcher implements ILauncher
 	}
 
 	// Lifter Functions
-	// TODO: IS THIS RIGHT??
 	private void lowerShooterToBottomLimit()
 	{
 		while (!isShooterAtBottomLimit())
 		{
 			lowerShooter();
 		}
+		
 		stopShooterLifter();
-		// if (!isShooterAtBottomLimit())
-		// {
-		// lowerShooter();
-		// }
 	}
 
 	private void raiseShooterToTopLimit()
@@ -198,11 +197,8 @@ public class Launcher implements ILauncher
 		{
 			raiseShooter();
 		}
+		
 		stopShooterLifter();
-		// if (!isShooterAtTopLimit())
-		// {
-		// raiseShooter();
-		// }
 	}
 
 	@Override
@@ -210,7 +206,7 @@ public class Launcher implements ILauncher
 	{
 		if (!isShooterAtTopLimit())
 		{
-			shooterLifterMotor.setSpeed(LINEAR_ACTUATOR_SPEED);
+			shooterLifterMotor.setSpeed(Math.abs(LINEAR_ACTUATOR_SPEED));
 		} else
 		{
 			stopShooterLifter();
@@ -222,7 +218,7 @@ public class Launcher implements ILauncher
 	{
 		if (!isShooterAtBottomLimit())
 		{
-			shooterLifterMotor.setSpeed(-LINEAR_ACTUATOR_SPEED);
+			shooterLifterMotor.setSpeed(-Math.abs(LINEAR_ACTUATOR_SPEED));
 		} else
 		{
 			stopShooterLifter();
@@ -292,7 +288,6 @@ public class Launcher implements ILauncher
 
 		rightShooterMotor.setSpeed(INTAKE_SPEED);
 		leftShooterMotor.setSpeed(INTAKE_SPEED);
-		// shooterMotors.setSpeed(INTAKE_SPEED);
 	}
 
 	@Override
@@ -332,15 +327,15 @@ public class Launcher implements ILauncher
 	{
 		leftShooterMotor.setSpeed(speed);
 		rightShooterMotor.setSpeed(speed);
-		// shooterMotors.setSpeed(speed);
 	}
 
 	private void jostle()
 	{
 		stopShooterWheels();
+		
 		leftShooterMotor.setSpeed(0.4);
 		rightShooterMotor.setSpeed(0.4);
-		// shooterMotors.setSpeed(0.4);
+		
 		SensorConfig.getInstance().getTimer().waitTimeInMillis(400);
 		stopShooterWheels();
 	}
@@ -365,6 +360,8 @@ public class Launcher implements ILauncher
 	{
 		if (!isAugerAtTopLimit())
 		{
+			TOP_POT_LIMIT_AUGER = SmartDashboard.getNumber("Top Pot Limit Auger");
+			System.out.println("Moving Up");
 			/*
 			 * if (augerPot.getCount() > (TOP_POT_LIMIT_AUGER + 600)) {
 			 * augerLifterMotor.setSpeed(Math.abs(speed)); } else {
@@ -387,7 +384,11 @@ public class Launcher implements ILauncher
 	private void lowerAuger(double speed)
 	{
 		if (!isAugerAtBottomLimit())
-		{/*
+		{
+			BOTTOM_POT_LIMIT_AUGER = SmartDashboard.getNumber("Bottom Pot Limit Auger");
+			System.out.println("Moving down");
+			
+			/*
 			 * if (augerPot.getCount() < (BOTTOM_POT_LIMIT_AUGER - 600)) {
 			 * augerLifterMotor.setSpeed(-Math.abs(speed));
 			 * 
@@ -571,9 +572,6 @@ public class Launcher implements ILauncher
 	@Override
 	public void shootSequence(double speed)
 	{
-		// TODO: uncomment when auger is connected
-		// augerLifterMotor.disablePID();
-
 		SensorConfig.getInstance().getTimer().waitTimeInMillis(400);
 
 		// lowerAugerToBottomLimit();
@@ -581,11 +579,8 @@ public class Launcher implements ILauncher
 		jostle();
 		SensorConfig.getInstance().getTimer().waitTimeInMillis(400);
 		spinShooterWheels(speed);
-		SensorConfig.getInstance().getTimer().waitTimeInMillis(1300);
+		SensorConfig.getInstance().getTimer().waitTimeInMillis(1500);
 		launchBoulder();
-
-		// augerLifterMotor.enablePID();
-		// augerLifterMotor.setControlMode(TalonControlMode.Speed);
 	}
 
 	// PIDTESTING VERSION
