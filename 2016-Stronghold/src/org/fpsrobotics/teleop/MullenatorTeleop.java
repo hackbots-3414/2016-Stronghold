@@ -199,21 +199,35 @@ public class MullenatorTeleop implements ITeleopControl
 			{			
 				
 				// Shooter movement controls
-				if (gamepad.getButtonValue(EJoystickButtons.TWO))
+				
+				while (gamepad.getButtonValue(EJoystickButtons.TWO))
 				{
 					launcher.lowerShooter();
-					while (gamepad.getButtonValue(EJoystickButtons.TWO))
-						;
 					movedShooter = true;
 				}
 
-				if (gamepad.getButtonValue(EJoystickButtons.FOUR))
+				while (gamepad.getButtonValue(EJoystickButtons.FOUR))
 				{
 					launcher.raiseShooter();
-					while (gamepad.getButtonValue(EJoystickButtons.FOUR))
-						;
 					movedShooter = true;
 				}
+				
+				//TODO
+//				if (gamepad.getButtonValue(EJoystickButtons.TWO))
+//				{
+//					launcher.lowerShooter();
+//					while (gamepad.getButtonValue(EJoystickButtons.TWO))
+//						;
+//					movedShooter = true;
+//				}
+//
+//				if (gamepad.getButtonValue(EJoystickButtons.FOUR))
+//				{
+//					launcher.raiseShooter();
+//					while (gamepad.getButtonValue(EJoystickButtons.FOUR))
+//						;
+//					movedShooter = true;
+//				}
 
 				if (movedShooter)
 				{
@@ -222,26 +236,53 @@ public class MullenatorTeleop implements ITeleopControl
 				}
 
 				// Auger movement controls
-				if (gamepad.getButtonValue(EJoystickButtons.FIVE))
+				
+				while (gamepad.getButtonValue(EJoystickButtons.ONE))
 				{
 					launcher.lowerAuger();
-					while (gamepad.getButtonValue(EJoystickButtons.FIVE))
-						;
 					movedAuger = true;
 				}
-				if (gamepad.getButtonValue(EJoystickButtons.SIX))
+				while (gamepad.getButtonValue(EJoystickButtons.SIX))
 				{
 					launcher.raiseAuger();
-					while (gamepad.getButtonValue(EJoystickButtons.SIX))
-						;
 					movedAuger = true;
 				}
+				
+				//TODO
+//				if (gamepad.getButtonValue(EJoystickButtons.FIVE))
+//				{
+//					launcher.lowerAuger();
+//					while (gamepad.getButtonValue(EJoystickButtons.FIVE))
+//						;
+//					movedAuger = true;
+//				}
+//				if (gamepad.getButtonValue(EJoystickButtons.SIX))
+//				{
+//					launcher.raiseAuger();
+//					while (gamepad.getButtonValue(EJoystickButtons.SIX))
+//						;
+//					movedAuger = true;
+//				}
 
 				if (movedAuger)
 				{
 					launcher.stopAugerLifter();
 					movedAuger = false;
 				}
+				
+				// // Auger wheel controls
+				// while (gamepad.getButtonValue(EJoystickButtons.NINE))
+				// {
+				// launcher.spinAugerWheels();
+				//
+				// movedAugerWheels = true;
+				// }
+				//
+				// if (movedAugerWheels)
+				// {
+				// launcher.stopAugerWheels();
+				// movedAugerWheels = false;
+				// }
 
 				// Shooter launching controls
 				if (gamepad.getButtonValue(EJoystickButtons.SEVEN))
