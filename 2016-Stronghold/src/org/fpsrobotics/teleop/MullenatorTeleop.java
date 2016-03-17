@@ -169,6 +169,12 @@ public class MullenatorTeleop implements ITeleopControl
 
 				SmartDashboard.putNumber("Shooter Pot", SensorConfig.getInstance().getShooterPot().getCount());
 				SmartDashboard.putNumber("Auger Pot", ActuatorConfig.getInstance().getAugerPotentiometer().getCount());
+				SmartDashboard.putBoolean("Bottom Limit Shooter",
+						SensorConfig.getInstance().getShooterBottomLimitSwitch().isHit());
+				SmartDashboard.putBoolean("Top Limit Shooter",
+						SensorConfig.getInstance().getShooterTopLimitSwitch().isHit());
+				SmartDashboard.putNumber("Auger Potentiometer",
+						ActuatorConfig.getInstance().getAugerPotentiometer().getCount());
 
 				try
 				{
@@ -190,72 +196,53 @@ public class MullenatorTeleop implements ITeleopControl
 			boolean movedAugerWheels = true;
 
 			while (RobotStatus.isRunning())
-			{
-
+			{			
+				
 				// Shooter movement controls
-				while (gamepad.getButtonValue(EJoystickButtons.TWO))
+				if (gamepad.getButtonValue(EJoystickButtons.TWO))
 				{
 					launcher.lowerShooter();
-					
+					while (gamepad.getButtonValue(EJoystickButtons.TWO))
+						;
 					movedShooter = true;
 				}
 
-				while (gamepad.getButtonValue(EJoystickButtons.FOUR))
+				if (gamepad.getButtonValue(EJoystickButtons.FOUR))
 				{
 					launcher.raiseShooter();
-					
+					while (gamepad.getButtonValue(EJoystickButtons.FOUR))
+						;
 					movedShooter = true;
 				}
-				
+
 				if (movedShooter)
 				{
 					launcher.stopShooterLifter();
-					
 					movedShooter = false;
 				}
-				
-				
+
 				// Auger movement controls
-				while (gamepad.getButtonValue(EJoystickButtons.ONE))
+				if (gamepad.getButtonValue(EJoystickButtons.FIVE))
 				{
 					launcher.lowerAuger();
-					
+					while (gamepad.getButtonValue(EJoystickButtons.FIVE))
+						;
 					movedAuger = true;
 				}
-				while (gamepad.getButtonValue(EJoystickButtons.SIX))
+				if (gamepad.getButtonValue(EJoystickButtons.SIX))
 				{
 					launcher.raiseAuger();
-					
+					while (gamepad.getButtonValue(EJoystickButtons.SIX))
+						;
 					movedAuger = true;
 				}
-				
+
 				if (movedAuger)
 				{
 					launcher.stopAugerLifter();
 					movedAuger = false;
 				}
-				
-				
 
-				//
-				// // Auger wheel controls
-				// while (gamepad.getButtonValue(EJoystickButtons.NINE))
-				// {
-				// launcher.spinAugerWheels();
-				//
-				// movedAugerWheels = true;
-				// }
-				//
-				// if (movedAugerWheels)
-				// {
-				// launcher.stopAugerWheels();
-				// movedAugerWheels = false;
-				// }
-
-				SmartDashboard.putBoolean("Bottom Limit Shooter", SensorConfig.getInstance().getShooterBottomLimitSwitch().isHit());
-				SmartDashboard.putBoolean("Top Limit Shooter", SensorConfig.getInstance().getShooterTopLimitSwitch().isHit());
-				SmartDashboard.putNumber("Auger Potentiometer", ActuatorConfig.getInstance().getAugerPotentiometer().getCount());
-				
 				// Shooter launching controls
 				if (gamepad.getButtonValue(EJoystickButtons.SEVEN))
 				{
@@ -286,7 +273,8 @@ public class MullenatorTeleop implements ITeleopControl
 				{
 					SmartDashboard.putBoolean("Is Intake Boulder", true);
 					launcher.intakeBoulder();
-
+//					launcher.spinAugerWheels();
+//					movedAugerWheels = true;
 					while (gamepad.getButtonValue(EJoystickButtons.THREE))
 						;
 
@@ -296,8 +284,10 @@ public class MullenatorTeleop implements ITeleopControl
 
 				if (movedShooterWheels)
 				{
+//					launcher.stopAugerWheels();
 					launcher.stopShooterWheels();
 					movedShooterWheels = false;
+//					movedAugerWheels = false;
 				}
 
 				// Pressure sensor feedback
@@ -330,9 +320,7 @@ public class MullenatorTeleop implements ITeleopControl
 				{
 					ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.TOP_LIMIT);
 				}
-				
-				
-				
+
 				try
 				{
 					Thread.sleep(100);
