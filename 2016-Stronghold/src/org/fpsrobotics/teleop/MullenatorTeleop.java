@@ -192,6 +192,8 @@ public class MullenatorTeleop implements ITeleopControl
 			boolean movedShooter = true;
 			boolean movedIntakeWheels = true;
 
+			ActuatorConfig.getInstance().getLifter().retract();
+			
 			while (RobotStatus.isRunning())
 			{
 				// Shooter movement controls
@@ -282,6 +284,18 @@ public class MullenatorTeleop implements ITeleopControl
 				{
 					ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.TOP_LIMIT);
 					ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.SHOOT);
+				}
+				
+				// Lift Robot
+				if(SensorConfig.getInstance().getLeftJoystick().getButtonValue(EJoystickButtons.TEN))
+				{
+					ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.TOP_LIMIT);
+					ActuatorConfig.getInstance().getLifter().lift();
+				}
+				
+				if(SensorConfig.getInstance().getLeftJoystick().getButtonValue(EJoystickButtons.ELEVEN))
+				{
+					ActuatorConfig.getInstance().getLifter().retract();
 				}
 
 		
