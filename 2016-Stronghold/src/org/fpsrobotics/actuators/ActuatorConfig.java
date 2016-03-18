@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 /**
  * Singleton class that creates and distributes all of the actuators (motors,
@@ -293,6 +294,11 @@ public class ActuatorConfig
 	public IPIDFeedbackDevice getAugerPotentiometer()
 	{
 		return augerPotentiometer;
+	}
+	
+	public Lifter getLifter()
+	{
+		return lift;
 	}
 
 }
