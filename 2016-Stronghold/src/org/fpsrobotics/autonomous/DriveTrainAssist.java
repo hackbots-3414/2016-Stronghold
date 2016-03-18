@@ -21,20 +21,27 @@ public class DriveTrainAssist
 	{
 		turnToAngle(0, speed);
 	}
-	
+
 	public boolean shouldShooterBeRaised()
 	{
 		SmartDashboard.putNumber("Pitch", gyro.getPitch());
-		
-		if(gyro.getPitch() > 2)
+		SmartDashboard.putNumber("Yaw", gyro.getRate());
+
+		if (gyro.getRate() < 10)
 		{
-			return true;
+			if (gyro.getPitch() > 2)
+			{
+				return true;
+			} else
+			{
+				return false;
+			}
 		} else
 		{
 			return false;
 		}
 	}
-	
+
 	public void turnToAngle(double desiredDegrees, double speed)
 	{
 		if ((-180 <= desiredDegrees) && (desiredDegrees <= 180))

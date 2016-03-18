@@ -1,6 +1,7 @@
 package org.fpsrobotics.autonomous;
 
 import org.fpsrobotics.actuators.ActuatorConfig;
+import org.fpsrobotics.actuators.EShooterPresets;
 import org.fpsrobotics.sensors.SensorConfig;
 import org.usfirst.frc.team3414.robot.RobotStatus;
 
@@ -17,16 +18,13 @@ public class AutonTurnAndShoot implements IAutonomousControl
 		while (RobotStatus.isAuto())
 		{
 
-			ActuatorConfig.getInstance().getLauncher().moveShooterToPosition(1400);
+			// Move shooter to something
+			ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.TOP_LIMIT);
 
 			if (!RobotStatus.isAuto())
 				break;
 
-			SensorConfig.getInstance().getTimer().waitTimeInMillis(10);
-
-			if (!RobotStatus.isAuto())
-				break;
-
+			// Go over something
 			ActuatorConfig.getInstance().getDriveTrain().goStraight(0.5, 100000);
 
 			if (!RobotStatus.isAuto())
@@ -37,36 +35,39 @@ public class AutonTurnAndShoot implements IAutonomousControl
 			if (!RobotStatus.isAuto())
 				break;
 
+			// Straighten drive train
 			ActuatorConfig.getInstance().getDriveTrainAssist().centerDriveTrain(0.1);
 
 			if (!RobotStatus.isAuto())
 				break;
 
+			SensorConfig.getInstance().getTimer().waitTimeInMillis(300);
+
+			if (!RobotStatus.isAuto())
+				break;
+
+			// Drive forward to wall
 			ActuatorConfig.getInstance().getDriveTrain().goStraight(0.5, 500_000);
 
 			if (!RobotStatus.isAuto())
 				break;
 
-			ActuatorConfig.getInstance().getDriveTrainAssist().centerDriveTrain(0.1);
+			// Angle drive train toward goal
+			if (!RobotStatus.isAuto())
+				break;
+
+			ActuatorConfig.getInstance().getDriveTrainAssist().turnToAngle(90, 0.1);
 
 			if (!RobotStatus.isAuto())
 				break;
 
-			//ActuatorConfig.getInstance().getDriveTrainAssist().goToAngle(0.5, 90);
+			// Shooter to Shoot Position
+			ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.SHOOT);
 
 			if (!RobotStatus.isAuto())
 				break;
 
-			ActuatorConfig.getInstance().getLauncher().moveShooterToPosition(400);
-
-			if (!RobotStatus.isAuto())
-				break;
-
-			SensorConfig.getInstance().getTimer().waitTimeInMillis(10);
-
-			if (!RobotStatus.isAuto())
-				break;
-
+			// Shoot high
 			ActuatorConfig.getInstance().getLauncher().shootSequenceHigh();
 
 			break;

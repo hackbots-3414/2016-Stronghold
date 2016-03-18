@@ -56,4 +56,10 @@ public class GyroscopeNavX implements IGyroscope
 	{
 		return ahrs.getRoll();
 	}
+
+	@Override
+	public double getRate()
+	{
+		return ahrs.getRate();
+	}
 }

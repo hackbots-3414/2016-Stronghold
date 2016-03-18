@@ -8,6 +8,7 @@ import org.fpsrobotics.autonomous.AutonDoNothing;
 import org.fpsrobotics.autonomous.AutonLowBar;
 import org.fpsrobotics.autonomous.AutonRockWall;
 import org.fpsrobotics.autonomous.AutonRoughTerrain;
+import org.fpsrobotics.autonomous.AutonTurnAndShoot;
 import org.fpsrobotics.autonomous.IAutonomousControl;
 import org.fpsrobotics.autonomous.MullenatorAutonomous;
 import org.fpsrobotics.sensors.IVision;
@@ -49,8 +50,9 @@ public class Robot extends SampleRobot
 		autoChooser.addObject("Low Bar", new AutonLowBar());
 		autoChooser.addObject("Rock Wall", new AutonRockWall());
 		autoChooser.addObject("Rough Terrain", new AutonRoughTerrain());
+		autoChooser.addObject("Turn and Shoot", new AutonTurnAndShoot());
 
-		SmartDashbord.putData("Autonomous Chooser", autoChooser);
+		SmartDashboard.putData("Autonomous Chooser", autoChooser);
 	}
 
 	public void autonomous()

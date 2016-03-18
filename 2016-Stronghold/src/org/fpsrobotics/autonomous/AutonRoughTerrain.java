@@ -15,19 +15,14 @@ public class AutonRoughTerrain implements IAutonomousControl
 		while (RobotStatus.isAuto())
 		{
 
-			ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.POSITION1150);
-
-			if (!RobotStatus.isAuto())
-				break;
-
-			// Move shooter to top limit
+			// Move shooter to rough terrain
 			ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.TOP_LIMIT);
 
 			if (!RobotStatus.isAuto())
 				break;
 
-			// Go over rock wall
-			ActuatorConfig.getInstance().getDriveTrain().goStraight(0.7, 80000);
+			// Go over rough terrain
+			ActuatorConfig.getInstance().getDriveTrain().goStraight(0.5, 80000);
 
 			if (!RobotStatus.isAuto())
 				break;
@@ -40,21 +35,22 @@ public class AutonRoughTerrain implements IAutonomousControl
 			// Straighten drive train
 			ActuatorConfig.getInstance().getDriveTrainAssist().centerDriveTrain(0.1);
 
+			// Angle drive train toward goal
 			if (!RobotStatus.isAuto())
 				break;
 
-			// Angle toward goal
-			// TODO: Implement This Auto
-
-			if (!RobotStatus.isAuto())
-				break;
-
-			ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.POSITION400);
+			ActuatorConfig.getInstance().getDriveTrainAssist().turnToAngle(90, 0.1);
 
 			if (!RobotStatus.isAuto())
 				break;
 
-			// Shoot
+			// Shooter to Shoot Position
+			ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.SHOOT);
+
+			if (!RobotStatus.isAuto())
+				break;
+
+			// Shoot high
 			ActuatorConfig.getInstance().getLauncher().shootSequenceHigh();
 
 			break;

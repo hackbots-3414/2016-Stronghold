@@ -31,8 +31,8 @@ public class Launcher implements ILauncher
 	// Auger Functions
 	private final double INTAKE_AUGER_SPEED = -0.8;
 
-	private final double AUGER_LIFTER_MIDDLE_TRAVEL_SPEED = 0.8;
-	private final double AUGER_LIFTER_SPEED = 0.5;
+	private final double AUGER_LIFTER_MIDDLE_TRAVEL_SPEED = 0.1;
+	private final double AUGER_LIFTER_SPEED = 0.1;
 
 	private double TOP_LIMIT_POT_VALUE_SHOOTER;
 	private double BOTTOM_LIMIT_POT_VALUE_SHOOTER;
@@ -107,10 +107,10 @@ public class Launcher implements ILauncher
 			BOTTOM_POT_LIMIT_AUGER = 1500; // fix when auger is added
 		} else
 		{
-			TOP_LIMIT_POT_VALUE_SHOOTER = 130;
-			BOTTOM_LIMIT_POT_VALUE_SHOOTER = 1500;
+			TOP_LIMIT_POT_VALUE_SHOOTER = 190;
+			BOTTOM_LIMIT_POT_VALUE_SHOOTER = 1400;
 			TOP_POT_LIMIT_AUGER = 0; // fix when auger is added
-			BOTTOM_POT_LIMIT_AUGER = 1500; // fix when auger is added
+			BOTTOM_POT_LIMIT_AUGER = 3000; // fix when auger is added
 		}
 	}
 
@@ -365,13 +365,16 @@ public class Launcher implements ILauncher
 	{
 		if (!isAugerAtTopLimit())
 		{
-			if (augerPot.getCount() > (TOP_POT_LIMIT_AUGER + 600))
-			{
-				augerLifterMotor.setSpeed(Math.abs(speed));
-			} else
-			{
-				augerLifterMotor.setSpeed(AUGER_LIFTER_MIDDLE_TRAVEL_SPEED);
-			}
+			/*
+			 * if (augerPot.getCount() > (TOP_POT_LIMIT_AUGER + 600)) {
+			 * augerLifterMotor.setSpeed(Math.abs(speed)); } else {
+			 * augerLifterMotor.setSpeed(AUGER_LIFTER_MIDDLE_TRAVEL_SPEED); }
+			 */
+
+			augerLifterMotor.setSpeed(Math.abs(speed));
+		} else
+		{
+			stopAugerLifter();
 		}
 	}
 
@@ -384,15 +387,16 @@ public class Launcher implements ILauncher
 	private void lowerAuger(double speed)
 	{
 		if (!isAugerAtBottomLimit())
-		{
-			if (augerPot.getCount() < (BOTTOM_POT_LIMIT_AUGER - 600))
-			{
-				augerLifterMotor.setSpeed(-Math.abs(speed));
+		{/*
+			 * if (augerPot.getCount() < (BOTTOM_POT_LIMIT_AUGER - 600)) {
+			 * augerLifterMotor.setSpeed(-Math.abs(speed));
+			 * 
+			 * } else {
+			 * augerLifterMotor.setSpeed(-AUGER_LIFTER_MIDDLE_TRAVEL_SPEED); }
+			 */
 
-			} else
-			{
-				augerLifterMotor.setSpeed(-AUGER_LIFTER_MIDDLE_TRAVEL_SPEED);
-			}
+			augerLifterMotor.setSpeed(-Math.abs(speed));
+
 		} else
 		{
 			stopAugerLifter();
@@ -437,7 +441,7 @@ public class Launcher implements ILauncher
 	{
 		// if (bottomLimitAuger.isHit() || (isAugerCalibrated &&
 		// (augerPot.getCount() > BOTTOM_POT_LIMIT_AUGER)))
-		if (bottomLimitAuger.isHit() || (augerPot.getCount() > BOTTOM_POT_LIMIT_AUGER))
+		if (augerPot.getCount() > BOTTOM_POT_LIMIT_AUGER)
 		{
 			// if (!isAugerCalibrated)
 			// {
@@ -456,7 +460,7 @@ public class Launcher implements ILauncher
 
 		// if (topLimitAuger.isHit() || (isAugerCalibrated &&
 		// (augerPot.getCount() < TOP_POT_LIMIT_AUGER)))
-		if (topLimitAuger.isHit() || (augerPot.getCount() < TOP_POT_LIMIT_AUGER))
+		if (augerPot.getCount() < TOP_POT_LIMIT_AUGER)
 		{
 			return true;
 		} else
@@ -503,11 +507,11 @@ public class Launcher implements ILauncher
 	{
 		switch (preset)
 		{
-		case POSITION400:
-			moveShooterToPosition(400);
+		case NORMAL_DEFENSES:
+			moveShooterToPosition(1400);
 			break;
 		case LOW_BAR:
-			moveShooterToPosition(1400);
+			moveShooterToPosition(400);
 			break;
 		case LOAD_BOULDER:
 			lowerShooterToBottomLimit();

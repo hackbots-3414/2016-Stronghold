@@ -7,8 +7,10 @@ import java.io.FileReader;
 import org.fpsrobotics.PID.IPIDFeedbackDevice;
 import org.fpsrobotics.autonomous.DriveTrainAssist;
 import org.fpsrobotics.sensors.BuiltInCANTalonEncoder;
+import org.fpsrobotics.sensors.Potentiometer;
 import org.fpsrobotics.sensors.SensorConfig;
 
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -21,6 +23,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class ActuatorConfig
 {
 	private static ActuatorConfig singleton = null;
+
+	// Set PID in the silverlight dashboard on the RoboRIO
 
 	// Port definitions
 	private final int MOTOR_LEFT_FRONT = 3;
@@ -85,46 +89,43 @@ public class ActuatorConfig
 
 	private ActuatorConfig()
 	{
-		boolean isAlpha = DashboardLogger.getBoolean("IsAlpha", true);
-		// boolean isAlpha = true;
-		// // distinguish alpha and beta
-		// FileReader fileReader = null;
-		// try
-		// {
-		// fileReader = new FileReader("/home/lvuser/AlphaOrBeta.txt"); // make
-		// // sure file exists at this exact path
-		// } catch (FileNotFoundException e1)
-		// {
-		// e1.printStackTrace();
-		// }
-		//
-		// try
-		// {
-		// BufferedReader textReader = new BufferedReader(fileReader);
-		//
-		// String alphaOrBeta = textReader.readLine();
-		//
-		// if (alphaOrBeta.equals("alpha"))
-		// {
-		// isAlpha = true;
-		// } else if (alphaOrBeta.equals("beta"))
-		// {
-		// isAlpha = false;
-		// } else
-		// {
-		// System.err.println(
-		// "File is openable but doesn't specify alpha or beta on the first
-		// line, assuming alpha.");
-		// }
-		// SmartDashboard.putBoolean("isAlpha", isAlpha);
-		// textReader.close();
-		//
-		// } catch (Exception e)
-		// {
-		// System.err.println("Cannot determine if alpha or beta, assuming
-		// alpha");
-		// isAlpha = true;
-		// }
+		boolean isAlpha = true;
+		// distinguish alpha and beta
+		FileReader fileReader = null;
+		try
+		{
+			fileReader = new FileReader("/home/lvuser/AlphaOrBeta.txt"); // make
+			// sure file exists at this exact path
+		} catch (FileNotFoundException e1)
+		{
+			e1.printStackTrace();
+		}
+
+		try
+		{
+			BufferedReader textReader = new BufferedReader(fileReader);
+
+			String alphaOrBeta = textReader.readLine();
+
+			if (alphaOrBeta.equals("alpha"))
+			{
+				isAlpha = true;
+			} else if (alphaOrBeta.equals("beta"))
+			{
+				isAlpha = false;
+			} else
+			{
+				System.err.println(
+						"File is openable but doesn't specify alpha or beta on the first line, assuming alpha.");
+			}
+			SmartDashboard.putBoolean("isAlpha", isAlpha);
+			textReader.close();
+
+		} catch (Exception e)
+		{
+			System.err.println("Cannot determine if alpha or beta, assuming alpha");
+			isAlpha = true;
+		}
 
 		try
 		{
@@ -199,15 +200,8 @@ public class ActuatorConfig
 			System.err.println("Auger motors failed to initalize");
 		}
 
-		try
-		{
-			// Instantiate auger encoder
-			augerPotentiometer = new BuiltInCANTalonEncoder(augerLifterMotor);
-		} catch (Exception e)
-		{
-			System.err.println("Auger encoder failed to initialize");
-		}
-
+		augerPotentiometer = new Potentiometer(new AnalogInput(1));
+		
 		try
 		{
 			// Instantiate solenoid
@@ -216,8 +210,6 @@ public class ActuatorConfig
 		{
 			System.err.println("Shooter Solenoid failed to initialize");
 		}
-
-		augerPotentiometer.resetCount();
 
 		// Instantiate the launcher itself
 		launcher = new Launcher(new CANMotor(leftShooterMotor, true), new CANMotor(rightShooterMotor, false),

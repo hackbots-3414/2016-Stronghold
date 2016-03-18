@@ -15,43 +15,42 @@ public class AutonRockWall implements IAutonomousControl
 		while (RobotStatus.isAuto())
 		{
 
-			ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.POSITION1150);
-			
-			if (!RobotStatus.isAuto())
-				break;
-
-			// Move shooter to top limit
+			// Move shooter to rock wall
 			ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.TOP_LIMIT);
 
 			if (!RobotStatus.isAuto())
 				break;
-			
+
 			// Go over rock wall
-			ActuatorConfig.getInstance().getDriveTrain().goStraight(0.7, 80000);
+			ActuatorConfig.getInstance().getDriveTrain().goStraight(0.5, 80000);
 
 			if (!RobotStatus.isAuto())
 				break;
 
 			SensorConfig.getInstance().getTimer().waitTimeInMillis(300);
+
 			if (!RobotStatus.isAuto())
 				break;
 
 			// Straighten drive train
 			ActuatorConfig.getInstance().getDriveTrainAssist().centerDriveTrain(0.1);
 
-			// Angle toward goal
-			// TODO: Implement This Auto
+			// Angle drive train toward goal
+			if (!RobotStatus.isAuto())
+				break;
+
+			ActuatorConfig.getInstance().getDriveTrainAssist().turnToAngle(90, 0.1);
 
 			if (!RobotStatus.isAuto())
 				break;
 
-			//TODO: What did this do?
-			ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.POSITION400);
+			// Shooter to Shoot Position
+			ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.SHOOT);
 
 			if (!RobotStatus.isAuto())
 				break;
-			
-			// Shoot
+
+			// Shoot high
 			ActuatorConfig.getInstance().getLauncher().shootSequenceHigh();
 
 			break;

@@ -141,6 +141,7 @@ public class DoubleMotor implements ICANMotor
 	{
 		if (CANMotorOne != null)
 		{
+			//only enable one because we are in follower mode.
 			CANMotorOne.enablePID();
 		} else
 		{
