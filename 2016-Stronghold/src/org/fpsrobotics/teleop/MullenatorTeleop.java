@@ -190,14 +190,10 @@ public class MullenatorTeleop implements ITeleopControl
 		executor.submit(() ->
 		{
 			boolean movedShooter = true;
-			boolean movedAuger = true;
-			boolean movedShooterWheels = true;
-			boolean movedAugerWheels = true;
-			boolean autoRaise = true;
+			boolean movedIntakeWheels = true;
 
 			while (RobotStatus.isRunning())
 			{
-
 				// Shooter movement controls
 				while (gamepad.getButtonValue(EJoystickButtons.TWO))
 				{
@@ -217,8 +213,109 @@ public class MullenatorTeleop implements ITeleopControl
 					movedShooter = false;
 				}
 
-				// Auger movement controls
+				// Shooter launching controls
+				if (gamepad.getButtonValue(EJoystickButtons.SEVEN))
+				{
 
+					SmartDashboard.putBoolean("Is Shooting High", true);
+					launcher.shootSequenceHigh();
+
+					while (gamepad.getButtonValue(EJoystickButtons.SEVEN));
+
+					movedIntakeWheels = true;
+					SmartDashboard.putBoolean("Is Shooting High", false);
+				}
+
+				if (gamepad.getButtonValue(EJoystickButtons.EIGHT))
+				{
+					SmartDashboard.putBoolean("Is Shooting Low", true);
+					launcher.shootSequenceLow();
+					
+					while (gamepad.getButtonValue(EJoystickButtons.EIGHT));
+
+					movedIntakeWheels = true;
+					SmartDashboard.putBoolean("Is Shooting Low", false);
+				}
+
+				if (gamepad.getButtonValue(EJoystickButtons.THREE))
+				{
+					launcher.intakeBoulder();
+					while (gamepad.getButtonValue(EJoystickButtons.THREE));
+					movedIntakeWheels = true;
+				}
+
+				if (movedIntakeWheels)
+				{
+					launcher.stopAugerWheels();
+					launcher.stopShooterWheels();
+
+					movedIntakeWheels = false;
+				}
+
+				// Pressure sensor feedback
+				if (SensorConfig.getInstance().getPressureSwitch().isHit())
+				{
+					SmartDashboard.putBoolean("Pressure", true);
+				} else
+				{
+					SmartDashboard.putBoolean("Pressure", false);
+				}
+
+				SmartDashboard.putBoolean("Should shooter be raised?", ActuatorConfig.getInstance().getDriveTrainAssist().shouldShooterBeRaised());
+
+				// Low bar
+				if (SensorConfig.getInstance().getLeftJoystick().getButtonValue(EJoystickButtons.SEVEN))
+				{
+					ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.BOTTOM_LIMIT);
+					ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.LOW_BAR);
+				}
+
+				// Any normal defense
+				if (SensorConfig.getInstance().getLeftJoystick().getButtonValue(EJoystickButtons.SIX))
+				{
+					ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.TOP_LIMIT);
+					ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.TOP_LIMIT);
+				}
+				
+				// Shoot position
+				if(SensorConfig.getInstance().getLeftJoystick().getButtonValue(EJoystickButtons.NINE))
+				{
+					ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.TOP_LIMIT);
+					ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.SHOOT);
+				}
+
+		
+//				  // TODO
+//				  - Auger to shoot position (When gamepad-button 7 or 8) AUTO
+//				  - Auger to load ball/ suck in position (Gamepad-Button 3) AUTO
+//				  - Auger and shooter to normal defense: Left-Button 8 AUTO
+//				  - Auger and Shooter to lift other non-normal defenses. AUTO
+//				  - Raise auger and shooter at same time MANUAL
+//				  - Fix Camera Image
+//				  - Shooter doesn't go so low
+//				  - autoRaise boolean: don't need unless in separate threads
+//				  - Use autoRaise OR Defense Buttons
+//				  - Gamepad button 9 and 10 for lifter
+//				  - Should manual raise/lower shooter/auger override AUTO functions?
+
+				try
+				{
+					Thread.sleep(100);
+				} catch (Exception e)
+				{
+					e.printStackTrace();
+				}
+
+			}
+		});
+
+		// Auger movement controls
+		executor.submit(() ->
+		{
+			boolean movedAuger = true;
+			
+			while (RobotStatus.isRunning())
+			{	
 				while (gamepad.getButtonValue(EJoystickButtons.FIVE))
 				{
 					launcher.lowerAuger();
@@ -236,122 +333,7 @@ public class MullenatorTeleop implements ITeleopControl
 					launcher.stopAugerLifter();
 					movedAuger = false;
 				}
-
-				// Auger wheel controls
-				while (gamepad.getButtonValue(EJoystickButtons.NINE))
-				{
-					launcher.spinAugerWheels();
-					movedAugerWheels = true;
-				}
-
-				if (movedAugerWheels)
-				{
-					launcher.stopAugerWheels();
-					movedAugerWheels = false;
-				}
-
-				// Shooter launching controls
-				if (gamepad.getButtonValue(EJoystickButtons.SEVEN))
-				{
-
-					SmartDashboard.putBoolean("Is Shooting High", true);
-					launcher.shootSequenceHigh();
-
-					while (gamepad.getButtonValue(EJoystickButtons.SEVEN))
-						;
-
-					movedShooterWheels = true;
-					SmartDashboard.putBoolean("Is Shooting High", false);
-				}
-
-				if (gamepad.getButtonValue(EJoystickButtons.EIGHT))
-				{
-					SmartDashboard.putBoolean("Is Shooting Low", true);
-					launcher.shootSequenceLow();
-
-					while (gamepad.getButtonValue(EJoystickButtons.EIGHT))
-						;
-
-					movedShooterWheels = true;
-					SmartDashboard.putBoolean("Is Shooting Low", false);
-				}
-
-				if (gamepad.getButtonValue(EJoystickButtons.THREE))
-				{
-					SmartDashboard.putBoolean("Is Intake Boulder", true);
-					launcher.intakeBoulder();
-
-					while (gamepad.getButtonValue(EJoystickButtons.THREE))
-						;
-
-					movedAugerWheels = true;
-					movedShooterWheels = true;
-
-					SmartDashboard.putBoolean("Is Intake Boulder", false);
-				}
-
-				if (movedShooterWheels)
-				{
-					launcher.stopAugerWheels();
-					launcher.stopShooterWheels();
-
-					movedShooterWheels = false;
-					movedAugerWheels = false;
-				}
-
-				// Pressure sensor feedback
-				if (SensorConfig.getInstance().getPressureSwitch().isHit())
-				{
-					SmartDashboard.putBoolean("Pressure", true);
-				} else
-				{
-					SmartDashboard.putBoolean("Pressure", false);
-				}
-
-				SensorConfig.getInstance().getTimer().waitTimeInMillis(100);
-
-				SmartDashboard.putBoolean("Should shooter be raised?",
-						ActuatorConfig.getInstance().getDriveTrainAssist().shouldShooterBeRaised());
-
-				// if
-				// (ActuatorConfig.getInstance().getDriveTrainAssist().shouldShooterBeRaised()
-				// && autoRaise)
-				// {
-				// ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.TOP_LIMIT);
-				// }
-
-				// Low bar
-				if (SensorConfig.getInstance().getLeftJoystick().getButtonValue(EJoystickButtons.SEVEN))
-				{
-					ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.LOW_BAR);
-					ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.BOTTOM_LIMIT);
-					autoRaise = false;
-				}
-
-				// any normal defense
-				if (SensorConfig.getInstance().getLeftJoystick().getButtonValue(EJoystickButtons.SIX))
-				{
-					ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.TOP_LIMIT);
-					ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.TOP_LIMIT);
-					autoRaise = false;
-				}
-
-//				
-//				  // TODO
-//				  - Auger to shoot position (When gamepad-button 7 or 8) AUTO
-//				  - Auger to load ball/ suck in position (Gamepad-Button 3) AUTO
-//				  - Auger and shooter to normal defense: Left-Button 8 AUTO
-//				  - Auger and Shooter to lift other non-normal defenses. AUTO
-//				  - Raise auger and shooter at same time MANUAL
-//				  - Fix Camera Image
-//				  - Second Camera?
-//				  - Shooter doesn't go so low
-//				  - autoRaise boolean: don't need unless in separate threads
-//				  - Use autoRaise OR Defense Buttons
-//				  - Gamepad button 9 and 10 for lifter
-//				  - Should manual raise/lower shooter/auger override AUTO functions?
-//				 
-
+				
 				try
 				{
 					Thread.sleep(100);
@@ -359,13 +341,7 @@ public class MullenatorTeleop implements ITeleopControl
 				{
 					e.printStackTrace();
 				}
-
 			}
-		});
-
-		executor.submit(() ->
-		{
-			//Use this for auger functions
 		});
 	}
 }

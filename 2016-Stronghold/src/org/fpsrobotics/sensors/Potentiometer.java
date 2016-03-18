@@ -14,7 +14,7 @@ public class Potentiometer implements IPIDFeedbackDevice
 {
 	private AnalogInput pot;
 	private boolean isEnabled;
-
+	
 	public Potentiometer(AnalogInput pot)
 	{
 		this.pot = pot;
@@ -67,7 +67,6 @@ public class Potentiometer implements IPIDFeedbackDevice
 	@Override
 	public double getRate()
 	{
-		// TODO: make it return rate of rotation
 		return 0;
 	}
 

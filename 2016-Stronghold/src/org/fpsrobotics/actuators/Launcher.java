@@ -31,7 +31,6 @@ public class Launcher implements ILauncher
 	// Auger Functions
 	private final double INTAKE_AUGER_SPEED = 0.8;
 
-	private final double AUGER_LIFTER_MIDDLE_TRAVEL_SPEED = 0.1;
 	private final double AUGER_LIFTER_SPEED_RAISE = 0.3;
 	private final double AUGER_LIFTER_SPEED_LOWER = 0.2;
 
@@ -113,7 +112,7 @@ public class Launcher implements ILauncher
 		} else
 		{
 			TOP_LIMIT_POT_VALUE_SHOOTER = 190;
-			BOTTOM_LIMIT_POT_VALUE_SHOOTER = 1400;
+			BOTTOM_LIMIT_POT_VALUE_SHOOTER = 1300;
 			TOP_POT_LIMIT_AUGER = 2900;
 			BOTTOM_POT_LIMIT_AUGER = 1600;
 
@@ -488,6 +487,8 @@ public class Launcher implements ILauncher
 	@Override
 	public void moveAugerToPosition(int desiredPosition)
 	{
+		double augerPrevValue = 1;
+		
 		// if (isAugerCalibrated
 		// && ((augerPot.getCount() < (desiredPosition - 50)) ||
 		// (augerPot.getCount() > (desiredPosition + 50))))
@@ -498,9 +499,23 @@ public class Launcher implements ILauncher
 			{
 				lowerAuger();
 
-				while (!isAugerAtBottomLimit() && (desiredPosition < augerPot.getCount() && (RobotStatus.isRunning())))
+				while (!isAugerAtBottomLimit() && (desiredPosition < augerPot.getCount()) && (RobotStatus.isRunning()))
 				{
-
+					if(augerPot.getCount() >= (augerPrevValue - 5)) // if it gets stalled then stop
+					{
+						System.out.println("Stalled");
+						stopAugerLifter();
+						return;
+					}
+					
+					augerPrevValue = augerPot.getCount();
+					
+					try {
+						Thread.sleep(50);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			} else
 			{
@@ -508,10 +523,25 @@ public class Launcher implements ILauncher
 
 				while (!isAugerAtTopLimit() && (augerPot.getCount() < desiredPosition) && (RobotStatus.isRunning()))
 				{
-
+					if(augerPot.getCount() <= (augerPrevValue + 5)) // if it gets stalled then stop
+					{
+						System.out.println("Stalled");
+						stopAugerLifter();
+						return;
+					}
+					
+					augerPrevValue = augerPot.getCount();
+					
+					try {
+						Thread.sleep(50);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			}
 		}
+		
 		stopAugerLifter();
 	}
 
