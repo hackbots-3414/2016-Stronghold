@@ -132,7 +132,7 @@ public class Launcher implements ILauncher
 		// calibrates shooter
 		shooterLifterMotor.setSpeed(-CALIBRATION_SPEED);
 
-		while (!bottomLimitShooter.isHit())
+		while (!bottomLimitShooter.isHit() && RobotStatus.isRunning())
 		{
 
 		}
@@ -143,7 +143,7 @@ public class Launcher implements ILauncher
 
 		shooterLifterMotor.setSpeed(CALIBRATION_SPEED);
 
-		while (!topLimitShooter.isHit())
+		while (!topLimitShooter.isHit() && RobotStatus.isRunning())
 		{
 
 		}
@@ -155,7 +155,7 @@ public class Launcher implements ILauncher
 		// calibrates auger
 		augerLifterMotor.setSpeed(-CALIBRATION_SPEED);
 
-		while (!bottomLimitAuger.isHit())
+		while (!bottomLimitAuger.isHit() && RobotStatus.isRunning())
 		{
 
 		}
@@ -168,7 +168,7 @@ public class Launcher implements ILauncher
 
 		augerLifterMotor.setSpeed(CALIBRATION_SPEED);
 
-		while (!topLimitAuger.isHit())
+		while (!topLimitAuger.isHit() && RobotStatus.isRunning())
 		{
 
 		}
@@ -189,7 +189,7 @@ public class Launcher implements ILauncher
 	// Lifter Functions
 	private void lowerShooterToBottomLimit()
 	{
-		while (!isShooterAtBottomLimit())
+		while (!isShooterAtBottomLimit() && RobotStatus.isRunning())
 		{
 			lowerShooter();
 		}
@@ -199,7 +199,7 @@ public class Launcher implements ILauncher
 
 	private void raiseShooterToTopLimit()
 	{
-		while (!isShooterAtTopLimit())
+		while (!isShooterAtTopLimit() && RobotStatus.isRunning())
 		{
 			raiseShooter();
 		}
@@ -435,7 +435,7 @@ public class Launcher implements ILauncher
 
 	private void raiseAugerToTopLimit()
 	{
-		while (!isAugerAtTopLimit())
+		while (!isAugerAtTopLimit() && RobotStatus.isRunning())
 		{
 			raiseAuger();
 		}
@@ -444,7 +444,7 @@ public class Launcher implements ILauncher
 
 	private void lowerAugerToBottomLimit()
 	{
-		while (!isAugerAtBottomLimit())
+		while (!isAugerAtBottomLimit() && RobotStatus.isRunning())
 		{
 			lowerAuger();
 		}
@@ -618,7 +618,7 @@ public class Launcher implements ILauncher
 	{
 		SensorConfig.getInstance().getTimer().waitTimeInMillis(400);
 
-		// lowerAugerToBottomLimit();
+//		moveAugerToPreset(EAugerPresets.BOTTOM_LIMIT);
 
 		jostle();
 		SensorConfig.getInstance().getTimer().waitTimeInMillis(400);
@@ -626,7 +626,5 @@ public class Launcher implements ILauncher
 		SensorConfig.getInstance().getTimer().waitTimeInMillis(1500);
 		launchBoulder();
 	}
-
-	// PIDTESTING VERSION
 
 }
