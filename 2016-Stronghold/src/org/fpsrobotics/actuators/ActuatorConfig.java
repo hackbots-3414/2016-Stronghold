@@ -88,7 +88,7 @@ public class ActuatorConfig
 	// Launcher
 	private ILauncher launcher;
 
-	private Lifter lift;
+	private ILifter lift;
 	
 	private ActuatorConfig()
 	{
@@ -296,7 +296,7 @@ public class ActuatorConfig
 		return augerPotentiometer;
 	}
 	
-	public Lifter getLifter()
+	public ILifter getLifter()
 	{
 		return lift;
 	}
