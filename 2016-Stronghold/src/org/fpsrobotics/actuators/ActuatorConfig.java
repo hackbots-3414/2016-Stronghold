@@ -87,6 +87,8 @@ public class ActuatorConfig
 	// Launcher
 	private ILauncher launcher;
 
+	private Lifter lift;
+	
 	private ActuatorConfig()
 	{
 		boolean isAlpha = true;
@@ -219,7 +221,11 @@ public class ActuatorConfig
 				new CANMotor(augerIntakeMotor, false), new CANMotor(augerLifterMotor, false),
 				SensorConfig.getInstance().getAugerBottomLimitSwitch(),
 				SensorConfig.getInstance().getAugerTopLimitSwitch(), augerPotentiometer, isAlpha);
-
+				
+		// Instantiate the lifter
+		lift = new Lifter(new DoubleSolenoid lifterOne(new edu.wpi.first.wpilibj.DoubleSolenoid(2)), 
+				  new DoubleSolenoid lifterTwo(new edu.wpi.first.wpilibj.DoubleSolenoid(3)));
+		
 		// launcher = new Launcher(
 		// new DoubleMotor(new CANMotor(leftShooterMotor, true), new
 		// CANMotor(rightShooterMotor, true)),
