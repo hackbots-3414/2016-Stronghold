@@ -40,24 +40,6 @@ public class Robot extends SampleRobot
 	public void robotInit()
 	{
 		makeAutoChooser();
-		
-		//Left Joystick Buttons
-		SmartDashboard.putString("Left Joystick Button 1", "Drive By Half");
-		SmartDashboard.putString("Left Joystick Button 5", "Toggle PID");
-		SmartDashboard.putString("Left Joystick Button 7", "Shooter to Low Bar");
-		SmartDashboard.putString("Left Joystick Button 6", "Shooter to Top Limit");
-		//Right Joystick Buttons
-		SmartDashboard.putString("Right Joystick Button 1", "Drive Together");
-		//Gamepad Buttons
-		SmartDashboard.putString("Gamepad Button 2", "Lower Shooter");
-		SmartDashboard.putString("Gamepad Button 3", "Intake Boulder");
-		SmartDashboard.putString("Gamepad Button 4", "Raise Shooter");
-		SmartDashboard.putString("Gamepad Button 5", "Lower Auger");
-		SmartDashboard.putString("Gamepad Button 6", "Raise Auger");
-		SmartDashboard.putString("Gamepad Button 7", "Shoot Sequence High");
-		SmartDashboard.putString("Gamepad Button 8", "Shoot Sequence Low");
-		SmartDashboard.putString("Gamepad Button 9", "Auger to Lift Robot");
-		SmartDashboard.putString("Gamepad Button 10", "AUGER LIFT ROBOT");
 	}
 
 	private void makeAutoChooser()

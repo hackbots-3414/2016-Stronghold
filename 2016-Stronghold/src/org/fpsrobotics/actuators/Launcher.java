@@ -29,16 +29,19 @@ public class Launcher implements ILauncher
 	private double SHOOT_SPEED_LOW = 0.4;
 
 	// Auger Functions
-	private final double INTAKE_AUGER_SPEED = -0.8;
+	private final double INTAKE_AUGER_SPEED = 0.8;
 
 	private final double AUGER_LIFTER_MIDDLE_TRAVEL_SPEED = 0.1;
-	private final double AUGER_LIFTER_SPEED = 0.1;
+	private final double AUGER_LIFTER_SPEED_RAISE = 0.3;
+	private final double AUGER_LIFTER_SPEED_LOWER = 0.2;
 
 	private double TOP_LIMIT_POT_VALUE_SHOOTER;
 	private double BOTTOM_LIMIT_POT_VALUE_SHOOTER;
 
 	private double TOP_POT_LIMIT_AUGER;
 	private double BOTTOM_POT_LIMIT_AUGER;
+	private double HIGH_VALUE_AUGER;
+	private double HIGH_VALUE_AUGER_SPEED = 0.5;
 
 	// Calibrate Functions
 
@@ -105,16 +108,20 @@ public class Launcher implements ILauncher
 			BOTTOM_LIMIT_POT_VALUE_SHOOTER = 1863;
 			TOP_POT_LIMIT_AUGER = 0; // fix when auger is added
 			BOTTOM_POT_LIMIT_AUGER = 1500; // fix when auger is added
+
+			HIGH_VALUE_AUGER = 0;
 		} else
 		{
 			TOP_LIMIT_POT_VALUE_SHOOTER = 190;
 			BOTTOM_LIMIT_POT_VALUE_SHOOTER = 1400;
-			TOP_POT_LIMIT_AUGER = 0; // fix when auger is added
-			BOTTOM_POT_LIMIT_AUGER = 3000; // fix when auger is added
+			TOP_POT_LIMIT_AUGER = 2900;
+			BOTTOM_POT_LIMIT_AUGER = 1600;
+
+			HIGH_VALUE_AUGER = 2300;
 		}
-		
-		SmartDashboard.putNumber("Top Pot Limit Auger", 0);
-		SmartDashboard.putNumber("Bottom Pot Limit Auger", 3000);
+
+		SmartDashboard.putNumber("Top Pot Limit Auger", TOP_POT_LIMIT_AUGER);
+		SmartDashboard.putNumber("Bottom Pot Limit Auger", BOTTOM_POT_LIMIT_AUGER);
 	}
 
 	/**
@@ -187,7 +194,7 @@ public class Launcher implements ILauncher
 		{
 			lowerShooter();
 		}
-		
+
 		stopShooterLifter();
 	}
 
@@ -197,7 +204,7 @@ public class Launcher implements ILauncher
 		{
 			raiseShooter();
 		}
-		
+
 		stopShooterLifter();
 	}
 
@@ -332,10 +339,10 @@ public class Launcher implements ILauncher
 	private void jostle()
 	{
 		stopShooterWheels();
-		
+
 		leftShooterMotor.setSpeed(0.4);
 		rightShooterMotor.setSpeed(0.4);
-		
+
 		SensorConfig.getInstance().getTimer().waitTimeInMillis(400);
 		stopShooterWheels();
 	}
@@ -353,7 +360,7 @@ public class Launcher implements ILauncher
 	@Override
 	public void raiseAuger()
 	{
-		raiseAuger(AUGER_LIFTER_SPEED);
+		raiseAuger(AUGER_LIFTER_SPEED_RAISE);
 	}
 
 	private void raiseAuger(double speed)
@@ -361,14 +368,20 @@ public class Launcher implements ILauncher
 		if (!isAugerAtTopLimit())
 		{
 			TOP_POT_LIMIT_AUGER = SmartDashboard.getNumber("Top Pot Limit Auger");
-			System.out.println("Moving Up");
+//			System.out.println("Moving Up");
 			/*
 			 * if (augerPot.getCount() > (TOP_POT_LIMIT_AUGER + 600)) {
 			 * augerLifterMotor.setSpeed(Math.abs(speed)); } else {
 			 * augerLifterMotor.setSpeed(AUGER_LIFTER_MIDDLE_TRAVEL_SPEED); }
 			 */
 
-			augerLifterMotor.setSpeed(Math.abs(speed));
+			if (augerPot.getCount() > (HIGH_VALUE_AUGER))
+			{
+				augerLifterMotor.setSpeed(Math.abs(HIGH_VALUE_AUGER_SPEED));
+			} else
+			{
+				augerLifterMotor.setSpeed(Math.abs(speed));
+			}
 		} else
 		{
 			stopAugerLifter();
@@ -378,16 +391,16 @@ public class Launcher implements ILauncher
 	@Override
 	public void lowerAuger()
 	{
-		lowerAuger(AUGER_LIFTER_SPEED);
+		lowerAuger(AUGER_LIFTER_SPEED_LOWER);
 	}
 
 	private void lowerAuger(double speed)
 	{
 		if (!isAugerAtBottomLimit())
 		{
-			BOTTOM_POT_LIMIT_AUGER = SmartDashboard.getNumber("Bottom Pot Limit Auger");
-			System.out.println("Moving down");
-			
+//			BOTTOM_POT_LIMIT_AUGER = SmartDashboard.getNumber("Bottom Pot Limit Auger");
+//			System.out.println("Moving down");
+
 			/*
 			 * if (augerPot.getCount() < (BOTTOM_POT_LIMIT_AUGER - 600)) {
 			 * augerLifterMotor.setSpeed(-Math.abs(speed));
@@ -427,6 +440,7 @@ public class Launcher implements ILauncher
 		{
 			raiseAuger();
 		}
+		stopAugerLifter();
 	}
 
 	private void lowerAugerToBottomLimit()
@@ -435,14 +449,14 @@ public class Launcher implements ILauncher
 		{
 			lowerAuger();
 		}
+		stopAugerLifter();
 	}
 
-	// TODO: What's up with this up-and-down reverse stuff?
 	private boolean isAugerAtBottomLimit()
 	{
 		// if (bottomLimitAuger.isHit() || (isAugerCalibrated &&
 		// (augerPot.getCount() > BOTTOM_POT_LIMIT_AUGER)))
-		if (augerPot.getCount() > BOTTOM_POT_LIMIT_AUGER)
+		if (augerPot.getCount() < BOTTOM_POT_LIMIT_AUGER)
 		{
 			// if (!isAugerCalibrated)
 			// {
@@ -461,7 +475,7 @@ public class Launcher implements ILauncher
 
 		// if (topLimitAuger.isHit() || (isAugerCalibrated &&
 		// (augerPot.getCount() < TOP_POT_LIMIT_AUGER)))
-		if (augerPot.getCount() < TOP_POT_LIMIT_AUGER)
+		if (augerPot.getCount() > TOP_POT_LIMIT_AUGER)
 		{
 			return true;
 		} else
@@ -477,14 +491,14 @@ public class Launcher implements ILauncher
 		// if (isAugerCalibrated
 		// && ((augerPot.getCount() < (desiredPosition - 50)) ||
 		// (augerPot.getCount() > (desiredPosition + 50))))
-		if ((augerPot.getCount() < (desiredPosition - 50)) || (augerPot.getCount() > (desiredPosition + 50)))
+		if ((augerPot.getCount() < (desiredPosition + 50)) || (augerPot.getCount() > (desiredPosition - 50)))
 		{
 			// if the auger is higher than the position
-			if (desiredPosition > augerPot.getCount())
+			if (desiredPosition < augerPot.getCount())
 			{
 				lowerAuger();
 
-				while (!isAugerAtBottomLimit() && (desiredPosition > augerPot.getCount() && (RobotStatus.isRunning())))
+				while (!isAugerAtBottomLimit() && (desiredPosition < augerPot.getCount() && (RobotStatus.isRunning())))
 				{
 
 				}
@@ -492,7 +506,7 @@ public class Launcher implements ILauncher
 			{
 				raiseAuger();
 
-				while (!isAugerAtTopLimit() && (augerPot.getCount() > desiredPosition) && (RobotStatus.isRunning()))
+				while (!isAugerAtTopLimit() && (augerPot.getCount() < desiredPosition) && (RobotStatus.isRunning()))
 				{
 
 				}
@@ -512,7 +526,7 @@ public class Launcher implements ILauncher
 			moveShooterToPosition(1400);
 			break;
 		case LOW_BAR:
-			moveShooterToPosition(400);
+			moveShooterToPosition(1000);
 			break;
 		case LOAD_BOULDER:
 			lowerShooterToBottomLimit();
