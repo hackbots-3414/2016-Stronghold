@@ -254,6 +254,12 @@ public class MullenatorTeleop implements ITeleopControl
 
 					movedIntakeWheels = false;
 				}
+			
+				if(gamepad.getButtonValue(EJoystickButtons.ONE))
+				{
+					launcher.moveAugerToPreset(EAugerPresets.BOTTOM_LIMIT);
+					launcher.moveShooterToPreset(EShooterPresets.LOAD_BOULDER);
+				}
 
 
 				// Low bar
@@ -306,11 +312,9 @@ public class MullenatorTeleop implements ITeleopControl
 				
 				//Print SmartDashboard values
 				SmartDashboard.putNumber("Shooter Pot", SensorConfig.getInstance().getShooterPot().getCount());
+				
 				SmartDashboard.putBoolean("Bottom Limit Shooter", SensorConfig.getInstance().getShooterBottomLimitSwitch().isHit());
 				SmartDashboard.putBoolean("Top Limit Shooter", SensorConfig.getInstance().getShooterTopLimitSwitch().isHit());
-				
-				SmartDashboard.putBoolean("Should shooter be raised?", ActuatorConfig.getInstance().getDriveTrainAssist().shouldShooterBeRaised());
-
 
 				try
 				{
@@ -356,8 +360,17 @@ public class MullenatorTeleop implements ITeleopControl
 				{
 					SmartDashboard.putBoolean("Pressure", false);
 				}
+				
+				if(gamepad.getButtonValue(EJoystickButtons.TEN))
+				{
+					launcher.moveAugerToPreset(EAugerPresets.FOURTY_KAI);
+				}
+				
 				//Auger Pot Value
 				SmartDashboard.putNumber("Auger Pot", ActuatorConfig.getInstance().getAugerPotentiometer().getCount());
+				
+				//Should we raise value
+				SmartDashboard.putBoolean("Should we raise", ActuatorConfig.getInstance().getDriveTrainAssist().shouldShooterBeRaised());
 				
 				try
 				{
