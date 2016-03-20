@@ -62,4 +62,9 @@ public class GyroscopeNavX implements IGyroscope
 	{
 		return ahrs.getRate();
 	}
+	
+	public double getPitchRate()
+	{
+		return ahrs.getRawGyroY();
+	}
 }

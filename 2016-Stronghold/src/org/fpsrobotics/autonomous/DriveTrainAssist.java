@@ -2,6 +2,7 @@ package org.fpsrobotics.autonomous;
 
 import org.fpsrobotics.actuators.IDriveTrain;
 import org.fpsrobotics.sensors.IGyroscope;
+import org.fpsrobotics.sensors.SensorConfig;
 import org.usfirst.frc.team3414.robot.RobotStatus;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -66,4 +67,30 @@ public class DriveTrainAssist
 			driveTrain.stop();
 		}
 	}
+	
+	public boolean isTilt()
+	{
+		SmartDashboard.putNumber("Y Rate", SensorConfig.getInstance().getAccelerometer().getY());
+		
+		if(SensorConfig.getInstance().getAccelerometer().getY() > 6)
+		{
+			return true;
+		} else
+		{
+			return false;
+		}
+	}
+	
+	public boolean isTiltGyro()
+	{
+		if(SensorConfig.getInstance().getGyro().getPitchRate() > 25)
+		{
+			return true;
+		} else
+		{
+			return false;
+		}
+	}
+	
+
 }

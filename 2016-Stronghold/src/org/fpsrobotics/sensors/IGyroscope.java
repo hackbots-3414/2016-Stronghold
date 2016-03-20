@@ -17,5 +17,7 @@ public interface IGyroscope
 	public double getPitch();
 	
 	public double getRate();
+	
+	public double getPitchRate();
 }
 

@@ -8,6 +8,7 @@ import org.usfirst.frc.team3414.robot.RobotStatus;
 
 public class AutonLowBar implements IAutonomousControl
 {
+	private int SHOOT_ANGLE = 90;
 
 	@Override
 	public void doAuto()
@@ -37,18 +38,18 @@ public class AutonLowBar implements IAutonomousControl
 			// Angle drive train toward goal
 			if (!RobotStatus.isAuto())
 				break;
-			
-			ActuatorConfig.getInstance().getDriveTrainAssist().turnToAngle(90, 0.1);
+
+			ActuatorConfig.getInstance().getDriveTrainAssist().turnToAngle(SHOOT_ANGLE, 0.1);
 
 			if (!RobotStatus.isAuto())
 				break;
 
 			// Shooter to Shoot Position
 			ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.SHOOT);
-			
+
 			if (!RobotStatus.isAuto())
 				break;
-			
+
 			// Shoot high
 			ActuatorConfig.getInstance().getLauncher().shootSequenceHigh();
 

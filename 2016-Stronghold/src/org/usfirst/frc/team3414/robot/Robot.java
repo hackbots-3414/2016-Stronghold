@@ -4,6 +4,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.fpsrobotics.actuators.ActuatorConfig;
+import org.fpsrobotics.autonomous.AutonChevelDeFriz;
 import org.fpsrobotics.autonomous.AutonDoNothing;
 import org.fpsrobotics.autonomous.AutonLowBar;
 import org.fpsrobotics.autonomous.AutonRockWall;
@@ -50,6 +51,7 @@ public class Robot extends SampleRobot
 		autoChooser.addObject("Rock Wall", new AutonRockWall());
 		autoChooser.addObject("Rough Terrain", new AutonRoughTerrain());
 		autoChooser.addObject("Turn and Shoot", new AutonTurnAndShoot());
+		autoChooser.addDefault("Chevel De Friz", new AutonChevelDeFriz());
 
 		SmartDashboard.putData("Autonomous Chooser", autoChooser);
 	}

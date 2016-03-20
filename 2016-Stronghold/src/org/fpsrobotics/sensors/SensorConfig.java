@@ -39,6 +39,9 @@ public class SensorConfig
 	private IJoystick leftJoystick;
 	private IJoystick rightJoystick;
 	private IGamepad gamepad;
+	
+	private CompassNavX compassNavX;
+	private AccelerometerNavX accelNavX;
 
 	private ITimer timer;
 
@@ -110,9 +113,14 @@ public class SensorConfig
 			System.err.println("Auto Switches failed to initialize: Make sure to set SmartDashboard to not 0");
 		}
 
+		pdp = new PowerDistributionPanel();
+		
 		cameraOne = new MicrosoftLifeCam(CAMERA_USB_PORT);
 
 		cameraOne.enable();
+		
+		accelNavX = new AccelerometerNavX(ahrs);
+		compassNavX = new CompassNavX(ahrs);
 	}
 
 	public static synchronized SensorConfig getInstance()
@@ -198,6 +206,16 @@ public class SensorConfig
 	public ILimitSwitch getAutoSwitchFours()
 	{
 		return autoSwitchFours;
+	}
+	
+	public AccelerometerNavX getAccelerometer()
+	{
+		return accelNavX;
+	}
+	
+	public CompassNavX getCompass()
+	{
+		return compassNavX;
 	}
 
 	/*
