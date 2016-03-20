@@ -31,16 +31,16 @@ public class Launcher implements ILauncher
 	// Auger Functions
 	private final double INTAKE_AUGER_SPEED = 0.8;
 
-	private final double AUGER_LIFTER_SPEED_RAISE = 0.3;
-	private final double AUGER_LIFTER_SPEED_LOWER = 0.2;
-
+	private final double AUGER_LIFTER_SPEED_RAISE = 0.5;
+	private final double AUGER_LIFTER_SPEED_LOWER = 0.5;
+	private double HIGH_VALUE_AUGER_SPEED = 0.5;
+	
 	private double TOP_LIMIT_POT_VALUE_SHOOTER;
 	private double BOTTOM_LIMIT_POT_VALUE_SHOOTER;
 
 	private double TOP_POT_LIMIT_AUGER;
 	private double BOTTOM_POT_LIMIT_AUGER;
 	private double HIGH_VALUE_AUGER;
-	private double HIGH_VALUE_AUGER_SPEED = 0.5;
 
 	// Calibrate Functions
 
@@ -114,7 +114,7 @@ public class Launcher implements ILauncher
 			TOP_LIMIT_POT_VALUE_SHOOTER = 190;
 			BOTTOM_LIMIT_POT_VALUE_SHOOTER = 1300;
 			TOP_POT_LIMIT_AUGER = 2900;
-			BOTTOM_POT_LIMIT_AUGER = 1600;
+			BOTTOM_POT_LIMIT_AUGER = 1560;
 
 			HIGH_VALUE_AUGER = 2300;
 		}

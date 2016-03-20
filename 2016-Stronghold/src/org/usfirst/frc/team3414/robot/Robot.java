@@ -10,7 +10,6 @@ import org.fpsrobotics.autonomous.AutonRockWall;
 import org.fpsrobotics.autonomous.AutonRoughTerrain;
 import org.fpsrobotics.autonomous.AutonTurnAndShoot;
 import org.fpsrobotics.autonomous.IAutonomousControl;
-import org.fpsrobotics.autonomous.MullenatorAutonomous;
 import org.fpsrobotics.sensors.IVision;
 import org.fpsrobotics.sensors.SensorConfig;
 import org.fpsrobotics.sensors.VisionCenterTarget;

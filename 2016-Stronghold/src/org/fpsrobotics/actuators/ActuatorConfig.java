@@ -224,8 +224,7 @@ public class ActuatorConfig
 				SensorConfig.getInstance().getAugerTopLimitSwitch(), augerPotentiometer, isAlpha);
 				
 		// Instantiate the lifter
-		lift = new Lifter(new DoubleSolenoid lifterOne(new edu.wpi.first.wpilibj.DoubleSolenoid(2)), 
-				  new DoubleSolenoid lifterTwo(new edu.wpi.first.wpilibj.DoubleSolenoid(3)));
+		lift = new Lifter(new org.fpsrobotics.actuators.DoubleSolenoid(new edu.wpi.first.wpilibj.DoubleSolenoid(2,3)));
 		
 		// launcher = new Launcher(
 		// new DoubleMotor(new CANMotor(leftShooterMotor, true), new

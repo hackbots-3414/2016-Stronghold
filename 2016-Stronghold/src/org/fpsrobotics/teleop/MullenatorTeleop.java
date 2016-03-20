@@ -174,25 +174,10 @@ public class MullenatorTeleop implements ITeleopControl
 					SmartDashboard.putBoolean("DRIVE BY HALF", false);
 				}
 
-				//Print SmartDashboard values
-				SmartDashboard.putNumber("Shooter Pot", SensorConfig.getInstance().getShooterPot().getCount());
-				SmartDashboard.putNumber("Auger Pot", ActuatorConfig.getInstance().getAugerPotentiometer().getCount());
-				SmartDashboard.putBoolean("Bottom Limit Shooter", SensorConfig.getInstance().getShooterBottomLimitSwitch().isHit());
-				SmartDashboard.putBoolean("Top Limit Shooter", SensorConfig.getInstance().getShooterTopLimitSwitch().isHit());
-				// Pressure sensor feedback
-				if (SensorConfig.getInstance().getPressureSwitch().isHit())
-				{
-					SmartDashboard.putBoolean("Pressure", true);
-				} else
-				{
-					SmartDashboard.putBoolean("Pressure", false);
-				}
-
-				SmartDashboard.putBoolean("Should shooter be raised?", ActuatorConfig.getInstance().getDriveTrainAssist().shouldShooterBeRaised());
-
+				
 				try
 				{
-					Thread.sleep(100);
+					Thread.sleep(50);
 				} catch (Exception e)
 				{
 					e.printStackTrace();
@@ -318,6 +303,14 @@ public class MullenatorTeleop implements ITeleopControl
 				// - Gamepad button 9 and 10 for lifter
 				// - Should manual raise/lower shooter/auger override AUTO
 				// functions?
+				
+				//Print SmartDashboard values
+				SmartDashboard.putNumber("Shooter Pot", SensorConfig.getInstance().getShooterPot().getCount());
+				SmartDashboard.putBoolean("Bottom Limit Shooter", SensorConfig.getInstance().getShooterBottomLimitSwitch().isHit());
+				SmartDashboard.putBoolean("Top Limit Shooter", SensorConfig.getInstance().getShooterTopLimitSwitch().isHit());
+				
+				SmartDashboard.putBoolean("Should shooter be raised?", ActuatorConfig.getInstance().getDriveTrainAssist().shouldShooterBeRaised());
+
 
 				try
 				{
@@ -355,6 +348,17 @@ public class MullenatorTeleop implements ITeleopControl
 					movedAuger = false;
 				}
 
+				// Pressure sensor feedback
+				if (SensorConfig.getInstance().getPressureSwitch().isHit())
+				{
+					SmartDashboard.putBoolean("Pressure", true);   
+				} else
+				{
+					SmartDashboard.putBoolean("Pressure", false);
+				}
+				//Auger Pot Value
+				SmartDashboard.putNumber("Auger Pot", ActuatorConfig.getInstance().getAugerPotentiometer().getCount());
+				
 				try
 				{
 					Thread.sleep(100);
