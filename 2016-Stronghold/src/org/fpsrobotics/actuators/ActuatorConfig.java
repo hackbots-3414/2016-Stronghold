@@ -25,7 +25,7 @@ public class ActuatorConfig
 {
 	private static ActuatorConfig singleton = null;
 
-	// Set PID in the silverlight dashboard on the RoboRIO
+	//TODO: Set PID in the silverlight dashboard on the RoboRIO
 
 	// Port definitions
 	private final int MOTOR_LEFT_FRONT = 3;
@@ -39,6 +39,7 @@ public class ActuatorConfig
 	private final int LINEAR_ACTUATOR_MOTOR = 7;
 	private final int AUGER_INTAKE_MOTOR = 8;
 	private final int AUGER_LIFTER_MOTOR = 9;
+	private final int AUGER_POTENTIOMETER_CHANNEL = 1;
 
 	private final int SHOOTER_SOLENOID_PORT = 0;
 
@@ -88,17 +89,19 @@ public class ActuatorConfig
 	// Launcher
 	private ILauncher launcher;
 
+	//Lifter
 	private ILifter lift;
 	
 	private ActuatorConfig()
 	{
+
+		// To distinguish between alpha and beta
 		boolean isAlpha = true;
-		// distinguish alpha and beta
 		FileReader fileReader = null;
 		try
 		{
 			fileReader = new FileReader("/home/lvuser/AlphaOrBeta.txt"); // make
-			// sure file exists at this exact path
+			// TODO: Make sure file exists at this exact path
 		} catch (FileNotFoundException e1)
 		{
 			e1.printStackTrace();
@@ -203,7 +206,9 @@ public class ActuatorConfig
 			System.err.println("Auger motors failed to initalize");
 		}
 
-		augerPotentiometer = new Potentiometer(new AnalogInput(1));
+		
+		//Instantiate the auger potentiometer
+		augerPotentiometer = new Potentiometer(new AnalogInput(AUGER_POTENTIOMETER_CHANNEL));
 		
 		try
 		{
@@ -225,19 +230,6 @@ public class ActuatorConfig
 				
 		// Instantiate the lifter
 		lift = new Lifter(new org.fpsrobotics.actuators.DoubleSolenoid(new edu.wpi.first.wpilibj.DoubleSolenoid(2,3)));
-		
-		// launcher = new Launcher(
-		// new DoubleMotor(new CANMotor(leftShooterMotor, true), new
-		// CANMotor(rightShooterMotor, true)),
-		// new CANMotor(linearActuator, true), shooterSolenoid,
-		// SensorConfig.getInstance().getShooterBottomLimitSwitch(),
-		// SensorConfig.getInstance().getShooterTopLimitSwitch(),
-		// SensorConfig.getInstance().getShooterPot(),
-		// new CANMotor(augerIntakeMotor, false), new CANMotor(augerLifterMotor,
-		// false),
-		// SensorConfig.getInstance().getAugerBottomLimitSwitch(),
-		// SensorConfig.getInstance().getAugerTopLimitSwitch(),
-		// augerPotentiometer, isAlpha);
 	}
 
 	public static synchronized ActuatorConfig getInstance()

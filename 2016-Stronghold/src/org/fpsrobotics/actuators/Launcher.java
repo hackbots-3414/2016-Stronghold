@@ -77,13 +77,7 @@ public class Launcher implements ILauncher
 			ISolenoid shooterActuator, ILimitSwitch shooterBottomLimit, ILimitSwitch shooterTopLimit,
 			IPIDFeedbackDevice shooterPot, ICANMotor augerIntakeMotor, ICANMotor augerLifterMotor,
 			ILimitSwitch bottomLimitAuger, ILimitSwitch topLimitAuger, IPIDFeedbackDevice augerPot, boolean isAlpha)
-	// public Launcher(IMotor shooterMotors, ICANMotor shooterLifterMotor,
-	// ISolenoid shooterActuator,
-	// ILimitSwitch shooterBottomLimit, ILimitSwitch shooterTopLimit,
-	// IPIDFeedbackDevice shooterPot,
-	// ICANMotor augerIntakeMotor, ICANMotor augerLifterMotor, ILimitSwitch
-	// bottomLimitAuger,
-	// ILimitSwitch topLimitAuger, IPIDFeedbackDevice augerPot, boolean isAlpha)
+
 	{
 		// Shooter
 		// this.shooterMotors = shooterMotors;
@@ -264,6 +258,9 @@ public class Launcher implements ILauncher
 	@Override
 	public void moveShooterToPosition(double desiredPosition)
 	{
+		double shooterPrevValue = shooterPot.getCount();
+
+		
 		if ((shooterPot.getCount() < (desiredPosition - 50)) || (shooterPot.getCount() > (desiredPosition + 50)))
 		{
 			// If the shooter is less than the desired position
@@ -273,7 +270,26 @@ public class Launcher implements ILauncher
 
 				// while this is so or we reach the top limit of travel
 				while (!isShooterAtTopLimit() && (shooterPot.getCount() > desiredPosition) && (RobotStatus.isRunning()))
-					;
+				{
+//					try
+//					{
+//						Thread.sleep(50);
+//					} catch (InterruptedException e)
+//					{
+//						e.printStackTrace();
+//					}
+//
+//					if (shooterPot.getCount() >= (shooterPrevValue + 5))
+//					// if it gets stalled then stop
+//					{
+//						System.out.println("Stalled");
+//						stopShooterLifter();
+//						return;
+//					}
+//
+//					shooterPrevValue = shooterPot.getCount();
+
+				}
 				// If the shooter is greater than the desired position
 			} else
 			{
@@ -282,7 +298,25 @@ public class Launcher implements ILauncher
 				// while this is so or we reach the bottom limit of our travel
 				while (!isShooterAtBottomLimit() && (shooterPot.getCount() < desiredPosition)
 						&& (RobotStatus.isRunning()))
-					;
+				{
+//					try
+//					{
+//						Thread.sleep(50);
+//					} catch (InterruptedException e)
+//					{
+//						e.printStackTrace();
+//					}
+//
+//					if (shooterPot.getCount() >= (shooterPrevValue - 5))
+//					// if it gets stalled then stop
+//					{
+//						System.out.println("Stalled");
+//						stopShooterLifter();
+//						return;
+//					}
+//
+//					shooterPrevValue = shooterPot.getCount();
+				}
 			}
 		}
 		stopShooterLifter();
