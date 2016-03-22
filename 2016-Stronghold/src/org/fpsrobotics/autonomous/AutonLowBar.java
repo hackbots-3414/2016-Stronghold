@@ -17,6 +17,7 @@ public class AutonLowBar implements IAutonomousControl
 		{
 			// Move shooter to low bar
 			ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.LOW_BAR);
+			ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.BOTTOM_LIMIT);
 
 			if (!RobotStatus.isAuto())
 				break;
@@ -39,7 +40,7 @@ public class AutonLowBar implements IAutonomousControl
 			if (!RobotStatus.isAuto())
 				break;
 
-			ActuatorConfig.getInstance().getDriveTrainAssist().turnToAngle(SHOOT_ANGLE, 0.1);
+//			ActuatorConfig.getInstance().getDriveTrainAssist().turnToAngle(SHOOT_ANGLE, 0.1);
 
 			if (!RobotStatus.isAuto())
 				break;

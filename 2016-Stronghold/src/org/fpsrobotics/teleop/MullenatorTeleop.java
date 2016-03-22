@@ -234,8 +234,8 @@ public class MullenatorTeleop implements ITeleopControl
 				// Should we raise value
 				SmartDashboard.putBoolean("Should we raise", ActuatorConfig.getInstance().getDriveTrainAssist().shouldShooterBeRaised());
 
-				// should we auto raise auger
-				SmartDashboard.putBoolean("Auto Raise Auger", ActuatorConfig.getInstance().getDriveTrainAssist().isTilt());
+//				// should we auto raise auger
+//				SmartDashboard.putBoolean("Auto Raise Auger", ActuatorConfig.getInstance().getDriveTrainAssist().isTilt());
 
 				// gyro yaw
 				SmartDashboard.putNumber("Yaw", SensorConfig.getInstance().getGyro().getCount());
@@ -319,19 +319,19 @@ public class MullenatorTeleop implements ITeleopControl
 //					ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.TOP_LIMIT);
 //				}
 
-				// Lift Robot
-				if (gamepad.getButtonValue(EJoystickButtons.NINE) && !shootingLockOut)
-				{
-					shootingLockOut = true;
-					ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.TOP_LIMIT);
-					ActuatorConfig.getInstance().getLifter().lift();
-				}
-
-				if (gamepad.getButtonValue(EJoystickButtons.TEN) && !shootingLockOut)
-				{
-					shootingLockOut = true;
-					ActuatorConfig.getInstance().getLifter().retract();
-				}
+//				// Lift Robot
+//				if (gamepad.getButtonValue(EJoystickButtons.NINE) && !shootingLockOut)
+//				{
+//					shootingLockOut = true;
+//					ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.TOP_LIMIT);
+//					ActuatorConfig.getInstance().getLifter().lift();
+//				}
+//
+//				if (gamepad.getButtonValue(EJoystickButtons.TEN) && !shootingLockOut)
+//				{
+//					shootingLockOut = true;
+//					ActuatorConfig.getInstance().getLifter().retract();
+//				}
 
 				if (!gamepad.getButtonValue(EJoystickButtons.SEVEN) && !gamepad.getButtonValue(EJoystickButtons.EIGHT)
 						&& !gamepad.getButtonValue(EJoystickButtons.NINE) && !gamepad.getButtonValue(EJoystickButtons.TEN)

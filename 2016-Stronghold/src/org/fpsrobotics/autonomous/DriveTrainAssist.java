@@ -83,7 +83,7 @@ public class DriveTrainAssist
 	
 	public boolean isTiltGyro()
 	{
-		if(SensorConfig.getInstance().getGyro().getPitchRate() > 25)
+		if(SensorConfig.getInstance().getGyro().getPitchRate() > 20) // From 25
 		{
 			return true;
 		} else

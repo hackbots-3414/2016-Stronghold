@@ -20,7 +20,7 @@ public class GyroscopeNavX implements IGyroscope
 
 	@Override
 	/**
-	 * Returns values in between 0 and 0
+	 * Returns values in between -180 and 180
 	 */
 	public double getCount()
 	{
