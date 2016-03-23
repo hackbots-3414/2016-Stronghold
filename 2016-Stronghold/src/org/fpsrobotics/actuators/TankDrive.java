@@ -37,6 +37,7 @@ public class TankDrive implements IDriveTrain
 	@Override
 	public void setSpeed(double leftSpeed, double rightSpeed)
 	{
+		//Caution: May want to disable PID
 		motorLeft.setSpeed(leftSpeed);
 		motorRight.setSpeed(rightSpeed);
 	}
@@ -44,6 +45,7 @@ public class TankDrive implements IDriveTrain
 	@Override
 	public void setSpeed(double speed)
 	{
+		//Caution: May want to disable PID
 		motorLeft.setSpeed(speed);
 		motorRight.setSpeed(speed);
 	}
@@ -51,6 +53,7 @@ public class TankDrive implements IDriveTrain
 	@Override
 	public void stop()
 	{
+		//Caution: May want to disable PID
 		motorLeft.stop();
 		motorRight.stop();
 	}
@@ -58,6 +61,7 @@ public class TankDrive implements IDriveTrain
 	@Override
 	public void turnLeft(double speed)
 	{
+		//Caution: May want to disable PID
 		motorLeft.setSpeed(speed);
 		motorRight.setSpeed(-speed);
 	}
@@ -65,6 +69,7 @@ public class TankDrive implements IDriveTrain
 	@Override
 	public void turnRight(double speed)
 	{
+		//Caution: May want to disable PID
 		motorLeft.setSpeed(-speed);
 		motorRight.setSpeed(speed);
 	}
@@ -72,6 +77,7 @@ public class TankDrive implements IDriveTrain
 	@Override
 	public void goForward(double speed)
 	{
+		//Caution: May want to disable PID
 		motorLeft.setSpeed(Math.abs(speed));
 		motorRight.setSpeed(Math.abs(speed));
 	}
@@ -79,6 +85,7 @@ public class TankDrive implements IDriveTrain
 	@Override
 	public void goBackward(double speed)
 	{
+		//Caution: May want to disable PID
 		motorLeft.setSpeed(-Math.abs(speed));
 		motorRight.setSpeed(-Math.abs(speed));
 	}
@@ -246,7 +253,7 @@ public class TankDrive implements IDriveTrain
 				drive(-speed, -gyro.getCount() * Kp);
 			}
 
-			setSpeed(0, 0);
+			stop();
 
 			if (!PIDOverride.getInstance().isTeleopDisablePID())
 			{

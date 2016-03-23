@@ -17,6 +17,12 @@ public interface ILauncher
 
 	public void lowerShooter();
 
+	//Used for driver with Button 1
+	public void raiseShooterSlow();
+
+	//Used for driver with Button 1
+	public void lowerShooterSlow();
+	
 	public void stopShooterLifter();
 
 	public void moveShooterToPosition(double position);

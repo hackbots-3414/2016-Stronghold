@@ -6,14 +6,14 @@ import org.fpsrobotics.actuators.EShooterPresets;
 import org.fpsrobotics.sensors.SensorConfig;
 import org.usfirst.frc.team3414.robot.RobotStatus;
 
-public class AutonLowBar implements IAutonomousControl
+public class AutonBreachDefenses implements IAutonomousControl
 {
-	private boolean timeBased = false;
-	private double DRIVE_SPEED = 0.5;
-	private int DRIVE_TIME = 5000;
+	private boolean timeBased = true;
+	private int DRIVE_TIME = 2700;
 	private int DRIVE_DISTANCE = 90_000;
+	private double DRIVE_SPEED = 0.8;
 
-	public AutonLowBar()
+	public AutonBreachDefenses()
 	{
 
 	}
@@ -23,24 +23,29 @@ public class AutonLowBar implements IAutonomousControl
 	{
 		while (RobotStatus.isAuto())
 		{
-			// Move shooter to low bar
-			ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.LOW_BAR);
-			ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.BOTTOM_LIMIT);
+
+			// Move shooter to rock wall
+			ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.TOP_LIMIT);
+			ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.SHOOT);
 
 			if (!RobotStatus.isAuto())
 				break;
 
+			// Go over rock wall
 			if (timeBased)
 			{
+				//Time Based
 				ActuatorConfig.getInstance().getDriveTrain().disablePID();
 				ActuatorConfig.getInstance().getDriveTrain().setSpeed(-DRIVE_SPEED);
 
+				if (!RobotStatus.isAuto())
+					break;
+
 				SensorConfig.getInstance().getTimer().waitTimeInMillis(DRIVE_TIME);
 
-				ActuatorConfig.getInstance().getDriveTrain().stop();
 			} else
 			{
-				// Go under low bar
+				//Encoder based
 				ActuatorConfig.getInstance().getDriveTrain().goStraight(DRIVE_SPEED, DRIVE_DISTANCE);
 			}
 
@@ -50,5 +55,4 @@ public class AutonLowBar implements IAutonomousControl
 		}
 
 	}
-
 }

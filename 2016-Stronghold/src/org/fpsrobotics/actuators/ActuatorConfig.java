@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 /**
  * Singleton class that creates and distributes all of the actuators (motors,
@@ -100,7 +99,7 @@ public class ActuatorConfig
 		FileReader fileReader = null;
 		try
 		{
-			fileReader = new FileReader("/home/lvuser/AlphaOrBeta.txt"); // make
+			fileReader = new FileReader("/home/lvuser/AlphaOrBeta.txt");
 			// TODO: Make sure file exists at this exact path
 		} catch (FileNotFoundException e1)
 		{

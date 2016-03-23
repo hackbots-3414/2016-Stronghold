@@ -4,23 +4,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.fpsrobotics.actuators.ActuatorConfig;
-import org.fpsrobotics.autonomous.AutonChevelDeFriz;
-import org.fpsrobotics.autonomous.AutonDoNothing;
-import org.fpsrobotics.autonomous.AutonDriveStraight;
-import org.fpsrobotics.autonomous.AutonLowBar;
-import org.fpsrobotics.autonomous.AutonRockWall;
-import org.fpsrobotics.autonomous.AutonRoughTerrain;
-import org.fpsrobotics.autonomous.AutonTurnAndShoot;
-import org.fpsrobotics.autonomous.IAutonomousControl;
-import org.fpsrobotics.sensors.IVision;
+import org.fpsrobotics.autonomous.*;
 import org.fpsrobotics.sensors.SensorConfig;
-import org.fpsrobotics.sensors.VisionCenterTarget;
 import org.fpsrobotics.teleop.ITeleopControl;
 import org.fpsrobotics.teleop.MullenatorTeleop;
 
-import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
-import edu.wpi.first.wpilibj.CameraServer;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -28,19 +16,20 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends SampleRobot
 {
 	private ITeleopControl teleop;
-	private IAutonomousControl auto;
 	private ExecutorService executor;
 	private SendableChooser autoChooser;
 
 	public Robot()
 	{
 		teleop = new MullenatorTeleop();
-		executor = Executors.newFixedThreadPool(2);
+		executor = Executors.newFixedThreadPool(1);
 	}
 
 	public void robotInit()
 	{
 		makeAutoChooser();
+		SensorConfig.getInstance();
+		ActuatorConfig.getInstance();
 	}
 
 	private void makeAutoChooser()
@@ -48,12 +37,11 @@ public class Robot extends SampleRobot
 		autoChooser = new SendableChooser();
 
 		autoChooser.addDefault("Do Nothing", new AutonDoNothing());
-		autoChooser.addDefault("Drive Straight", new AutonDriveStraight());
-		autoChooser.addObject("Low Bar", new AutonLowBar());
-		autoChooser.addObject("Rock Wall", new AutonRockWall());
-//		autoChooser.addObject("Rough Terrain", new AutonRoughTerrain());
-//		autoChooser.addObject("Turn and Shoot", new AutonTurnAndShoot());
-//		autoChooser.addDefault("Chevel De Friz", new AutonChevelDeFriz());
+		autoChooser.addDefault("Reach Defenses", new AutonReachDefenses());
+		autoChooser.addObject("Breach Standard Defenses", new AutonBreachDefenses());
+		autoChooser.addDefault("Low Bar NO SHOOT", new AutonLowBar());
+		autoChooser.addObject("Low Bar and Shoot", new AutonLowBarAndShoot());
+//		autoChooser.addDefault("Chevel De Friz", new AutonChevelDeFriz());	//TODO: Untested
 
 		SmartDashboard.putData("Autonomous Chooser", autoChooser);
 	}
@@ -64,13 +52,14 @@ public class Robot extends SampleRobot
 		RobotStatus.setIsAuto(true);
 		RobotStatus.setIsTeleop(false);
 
+		SensorConfig.getInstance().getGyro().resetCount();
+		
 		executor.submit(() ->
 		{
 			System.out.println("Auto Running");
 
 			((IAutonomousControl) autoChooser.getSelected()).doAuto();
 		});
-//		MullenatorAutonomous.getInstance().doAuto();
 	}
 
 	public void operatorControl()

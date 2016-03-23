@@ -2,6 +2,10 @@ package org.fpsrobotics.autonomous;
 
 public class AutonDoNothing implements IAutonomousControl
 {
+	public AutonDoNothing()
+	{
+
+	}
 
 	@Override
 	public void doAuto()

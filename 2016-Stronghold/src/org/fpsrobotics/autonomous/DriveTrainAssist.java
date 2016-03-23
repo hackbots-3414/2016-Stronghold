@@ -81,6 +81,10 @@ public class DriveTrainAssist
 		}
 	}
 	
+	/**
+	 * Doesn't work too well
+	 * @return isTiltGyro
+	 */
 	public boolean isTiltGyro()
 	{
 		if(SensorConfig.getInstance().getGyro().getPitchRate() > 20) // From 25

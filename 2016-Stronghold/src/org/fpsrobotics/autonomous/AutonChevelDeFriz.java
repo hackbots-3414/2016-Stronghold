@@ -6,9 +6,13 @@ import org.fpsrobotics.actuators.EShooterPresets;
 import org.fpsrobotics.sensors.SensorConfig;
 import org.usfirst.frc.team3414.robot.RobotStatus;
 
+/**
+ * UNTESTED
+ */
 public class AutonChevelDeFriz implements IAutonomousControl
 {
-	
+	private boolean timeBased = false;
+	private double DRIVE_SPEED = 0.5;
 	private int SHOOT_ANGLE = 90;
 
 	public AutonChevelDeFriz()
@@ -22,70 +26,117 @@ public class AutonChevelDeFriz implements IAutonomousControl
 		{
 
 			// Move shooter to normal defense
-			ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.NORMAL_DEFENSES);
+			ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.SHOOT_HIGH);
+			ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.SHOOT);
 
 			if (!RobotStatus.isAuto())
 				break;
 
-			// drive to chevel
-			ActuatorConfig.getInstance().getDriveTrain().goStraight(0.5, 1000);
+			if (timeBased)
+			{
+				// TIME BASED
 
-			if (!RobotStatus.isAuto())
-				break;
+				// Drive to Cheval
+				ActuatorConfig.getInstance().getDriveTrain().disablePID();
+				ActuatorConfig.getInstance().getDriveTrain().setSpeed(DRIVE_SPEED);
 
-			ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.BOTTOM_LIMIT);
+				SensorConfig.getInstance().getTimer().waitTimeInMillis(5000);
 
+				ActuatorConfig.getInstance().getDriveTrain().stop();
 
-			if (!RobotStatus.isAuto())
-				break;
-			
-			SensorConfig.getInstance().getTimer().waitTimeInMillis(300);
-
-			if (!RobotStatus.isAuto())
+				if (!RobotStatus.isAuto())
 					break;
 
-			// Go over half of chevel
-			ActuatorConfig.getInstance().getDriveTrain().goStraight(0.5, 4000);
+				// Move Auger to Bottom Limit
+				ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.BOTTOM_LIMIT);
 
-			if (!RobotStatus.isAuto())
-				break;
+				if (!RobotStatus.isAuto())
+					break;
 
-			ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.FOURTY_KAI);
+				// Go over half of Cheval
+				ActuatorConfig.getInstance().getDriveTrain().setSpeed(DRIVE_SPEED);
 
-			if (!RobotStatus.isAuto())
-				break;
+				SensorConfig.getInstance().getTimer().waitTimeInMillis(1500);
 
-			// Keep Driving
-			ActuatorConfig.getInstance().getDriveTrain().goStraight(0.5, 4000);
+				ActuatorConfig.getInstance().getDriveTrain().stop();
 
-			if (!RobotStatus.isAuto())
-				break;
-			
-			SensorConfig.getInstance().getTimer().waitTimeInMillis(300);
-			
-			if (!RobotStatus.isAuto())
-				break;
+				if (!RobotStatus.isAuto())
+					break;
 
-			// Straighten drive train
-			ActuatorConfig.getInstance().getDriveTrainAssist().centerDriveTrain(0.1);
+				// Move Auger Up
+				ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.SHOOT);
 
-			// Angle drive train toward goal
-			if (!RobotStatus.isAuto())
-				break;
+				if (!RobotStatus.isAuto())
+					break;
 
-			ActuatorConfig.getInstance().getDriveTrainAssist().turnToAngle(SHOOT_ANGLE, 0.1);
+				// Keep Driving
+				ActuatorConfig.getInstance().getDriveTrain().setSpeed(DRIVE_SPEED);
 
-			if (!RobotStatus.isAuto())
-				break;
+				SensorConfig.getInstance().getTimer().waitTimeInMillis(1500);
 
-			// Shooter to Shoot Position
-			ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.SHOOT);
+				ActuatorConfig.getInstance().getDriveTrain().stop();
 
-			if (!RobotStatus.isAuto())
-				break;
+				if (!RobotStatus.isAuto())
+					break;
+				
+			} else
+			{
+				// ENCODER BASED
 
-			// Shoot high
-			ActuatorConfig.getInstance().getLauncher().shootSequenceHigh();
+				// Drive to Cheval
+				ActuatorConfig.getInstance().getDriveTrain().goStraight(DRIVE_SPEED, 1000);
+
+				if (!RobotStatus.isAuto())
+					break;
+				
+				// Move Auger to Bottom Limit
+				ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.BOTTOM_LIMIT);
+				
+				if (!RobotStatus.isAuto())
+					break;
+
+				// Go over half of chevel
+				ActuatorConfig.getInstance().getDriveTrain().goStraight(DRIVE_SPEED, 4000);
+				
+				if (!RobotStatus.isAuto())
+					break;
+
+				// Move Auger up
+				ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.FOURTY_KAI);
+				
+				if (!RobotStatus.isAuto())
+					break;
+
+				// Keep Driving
+				ActuatorConfig.getInstance().getDriveTrain().goStraight(DRIVE_SPEED, 4000);
+			}
+
+			ActuatorConfig.getInstance().getDriveTrain().stop();
+
+			// if (!RobotStatus.isAuto())
+			// break;
+			//
+			// // Straighten drive train
+			// ActuatorConfig.getInstance().getDriveTrainAssist().centerDriveTrain(0.1);
+			//
+			// // Angle drive train toward goal
+			// if (!RobotStatus.isAuto())
+			// break;
+			//
+			// ActuatorConfig.getInstance().getDriveTrainAssist().turnToAngle(SHOOT_ANGLE,
+			// 0.1);
+			//
+			// if (!RobotStatus.isAuto())
+			// break;
+			//
+			// // Shooter to Shoot Position
+			// ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.SHOOT_LOW);
+			//
+			// if (!RobotStatus.isAuto())
+			// break;
+			//
+			// // Shoot Low
+			// ActuatorConfig.getInstance().getLauncher().shootSequenceLow();
 
 			break;
 		}

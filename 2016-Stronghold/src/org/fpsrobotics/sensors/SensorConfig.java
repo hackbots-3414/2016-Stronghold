@@ -14,25 +14,31 @@ public class SensorConfig
 {
 	private static SensorConfig singleton = null;
 
+	//Shooter Limits
 	private final int SHOOTER_BOTTOM_LIMIT_CHANNEL = 0;
 	private final int SHOOTER_TOP_LIMIT_CHANNEL = 1;
 	private ILimitSwitch shooterBottomLimitSwitch;
 	private ILimitSwitch shooterTopLimitSwitch;
 
+	//Shooter Potentiometer
 	private final int POTENTIOMETER_CHANNEL = 0;
-	private IPIDFeedbackDevice pot;
+	private IPIDFeedbackDevice shooterPot;
 
+	//Auger Limits
 	private final int AUGER_BOTTOM_LIMIT_SWITCH = 2;
 	private final int AUGER_TOP_LIMIT_SWITCH = 3;
 	private ILimitSwitch augerBottomLimitSwitch;
 	private ILimitSwitch augerTopLimitSwitch;
 
+	//Camera
 	private final String CAMERA_USB_PORT = "cam0";
 	private ICamera cameraOne;
 
+	//Pressure Guage
 	private final int PRESSURE_SWITCH_CHANNEL = 9;
 	private ILimitSwitch pressureSwitch;
 
+	//Joysticks
 	private final int LEFT_JOY_CHANNEL = 0;
 	private final int RIGHT_JOY_CHANNEL = 1;
 	private final int GAMEPAD_CHANNEL = 2;
@@ -40,6 +46,7 @@ public class SensorConfig
 	private IJoystick rightJoystick;
 	private IGamepad gamepad;
 	
+	//Cool stuff
 	private CompassNavX compassNavX;
 	private AccelerometerNavX accelNavX;
 
@@ -48,14 +55,6 @@ public class SensorConfig
 	private IPowerBoard pdp;
 	private AHRS ahrs;
 	private IGyroscope gyro;
-
-	// TODO
-	private final int AUTO_SWITCH_ONE_CHANNEL = 0;
-	private final int AUTO_SWITCH_TWO_CHANNEL = 0;
-	private final int AUTO_SWITCH_FOUR_CHANNEL = 0;
-	private ILimitSwitch autoSwitchOnes;
-	private ILimitSwitch autoSwitchTwos;
-	private ILimitSwitch autoSwitchFours;
 
 	private SensorConfig()
 	{
@@ -73,7 +72,7 @@ public class SensorConfig
 
 		try
 		{
-			pot = new Potentiometer(new AnalogInput(POTENTIOMETER_CHANNEL));
+			shooterPot = new Potentiometer(new AnalogInput(POTENTIOMETER_CHANNEL));
 		} catch (Exception e)
 		{
 			System.err.println("Potentiometer failed to initialize");
@@ -97,21 +96,21 @@ public class SensorConfig
 		try
 		{
 			ahrs = new AHRS(SPI.Port.kMXP);
-			gyro = new GyroscopeNavX(ahrs);
+			gyro = new GyroscopeNavX(ahrs);	//Resets on start up
 		} catch (Exception e)
 		{
 			System.err.println("No NavX MXP board found, or plugged into the wrong spot");
 		}
 
-		try
-		{
-			autoSwitchOnes = new DigitalLimitSwitch(new DigitalInput(AUTO_SWITCH_ONE_CHANNEL), true);
-			autoSwitchTwos = new DigitalLimitSwitch(new DigitalInput(AUTO_SWITCH_TWO_CHANNEL), true);
-			autoSwitchFours = new DigitalLimitSwitch(new DigitalInput(AUTO_SWITCH_FOUR_CHANNEL), true);
-		} catch (Exception e)
-		{
-			System.err.println("Auto Switches failed to initialize: Make sure to set SmartDashboard to not 0");
-		}
+//		try
+//		{
+//			autoSwitchOnes = new DigitalLimitSwitch(new DigitalInput(AUTO_SWITCH_ONE_CHANNEL), true);
+//			autoSwitchTwos = new DigitalLimitSwitch(new DigitalInput(AUTO_SWITCH_TWO_CHANNEL), true);
+//			autoSwitchFours = new DigitalLimitSwitch(new DigitalInput(AUTO_SWITCH_FOUR_CHANNEL), true);
+//		} catch (Exception e)
+//		{
+//			System.err.println("Auto Switches failed to initialize: Make sure to set SmartDashboard to not 0");
+//		}
 
 		pdp = new PowerDistributionPanel();
 		
@@ -150,7 +149,7 @@ public class SensorConfig
 
 	public IPIDFeedbackDevice getShooterPot()
 	{
-		return pot;
+		return shooterPot;
 	}
 
 	public IGamepad getGamepad()
@@ -193,20 +192,20 @@ public class SensorConfig
 		return pressureSwitch;
 	}
 
-	public ILimitSwitch getAutoSwitchOnes()
-	{
-		return autoSwitchOnes;
-	}
-
-	public ILimitSwitch getAutoSwitchTwos()
-	{
-		return autoSwitchTwos;
-	}
-
-	public ILimitSwitch getAutoSwitchFours()
-	{
-		return autoSwitchFours;
-	}
+//	public ILimitSwitch getAutoSwitchOnes()
+//	{
+//		return autoSwitchOnes;
+//	}
+//
+//	public ILimitSwitch getAutoSwitchTwos()
+//	{
+//		return autoSwitchTwos;
+//	}
+//
+//	public ILimitSwitch getAutoSwitchFours()
+//	{
+//		return autoSwitchFours;
+//	}
 	
 	public AccelerometerNavX getAccelerometer()
 	{
