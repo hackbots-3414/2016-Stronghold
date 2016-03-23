@@ -36,7 +36,7 @@ public class MullenatorTeleop implements ITeleopControl
 		 * 2 Shooter Down; 3 Suck Ball In; 4 Shooter Up; 5 Auger Down; 6 Auger
 		 * Up 7 Shoot High; 8 Shoot Low; 9 Lifter; 10 Lifter Retract
 		 * 
-		 * RightJoystick 1 Drive Together
+		 * RightJoystick 1 Drive Together; 11 & 12 Reset Gyro
 		 * 
 		 * Left Joystick 1 Half Speed; 5 Toggle PID; 7 Low bar; 8 Rock Wall: 9
 		 * Normal Defense: 10 Cheval
@@ -206,6 +206,12 @@ public class MullenatorTeleop implements ITeleopControl
 					{
 						launcher.stopIntakeBoulder();
 						movedIntakeWheels = false;
+					}
+					
+					//Reset Gyro
+					if ((rightJoystick.getButtonValue(EJoystickButtons.ELEVEN) && rightJoystick.getButtonValue(EJoystickButtons.TWELVE)))
+					{
+						SensorConfig.getInstance().getGyro().resetCount();
 					}
 
 				}

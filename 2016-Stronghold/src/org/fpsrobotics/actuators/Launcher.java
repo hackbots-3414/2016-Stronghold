@@ -680,7 +680,7 @@ public class Launcher implements ILauncher
 			moveShooterToPosition(TOP_LIMIT_POT_VALUE_SHOOTER + 200);
 			break;
 		case LOW_BAR:
-			moveShooterToPosition(1000);
+			moveShooterToPosition(BOTTOM_LIMIT_POT_VALUE_SHOOTER - 300);
 			break;
 		case LOAD_BOULDER:
 			moveShooterToPosition(BOTTOM_LIMIT_POT_VALUE_SHOOTER - 200);
@@ -696,6 +696,10 @@ public class Launcher implements ILauncher
 			break;
 		case TOP_LIMIT:
 			raiseShooterToTopLimit();
+			break;
+		case AUTO_LOW:
+			moveShooterToPosition(BOTTOM_LIMIT_POT_VALUE_SHOOTER - 200); // to go higher, subtract more
+			//bottom is 1300
 			break;
 		default:
 			// Do Nothing
@@ -727,7 +731,7 @@ public class Launcher implements ILauncher
 			moveAugerToPosition(BOTTOM_POT_LIMIT_AUGER + 750);
 			break;
 		case PICK_UP:
-			moveAugerToPosition(BOTTOM_POT_LIMIT_AUGER + 100);
+			moveAugerToPosition(BOTTOM_POT_LIMIT_AUGER + 175);
 			break;
 		default:
 			// Do Nothing

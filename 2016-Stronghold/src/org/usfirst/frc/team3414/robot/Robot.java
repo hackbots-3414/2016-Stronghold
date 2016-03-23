@@ -51,9 +51,9 @@ public class Robot extends SampleRobot
 		autoChooser.addDefault("Drive Straight", new AutonDriveStraight());
 		autoChooser.addObject("Low Bar", new AutonLowBar());
 		autoChooser.addObject("Rock Wall", new AutonRockWall());
-		autoChooser.addObject("Rough Terrain", new AutonRoughTerrain());
-		autoChooser.addObject("Turn and Shoot", new AutonTurnAndShoot());
-		autoChooser.addDefault("Chevel De Friz", new AutonChevelDeFriz());
+//		autoChooser.addObject("Rough Terrain", new AutonRoughTerrain());
+//		autoChooser.addObject("Turn and Shoot", new AutonTurnAndShoot());
+//		autoChooser.addDefault("Chevel De Friz", new AutonChevelDeFriz());
 
 		SmartDashboard.putData("Autonomous Chooser", autoChooser);
 	}
