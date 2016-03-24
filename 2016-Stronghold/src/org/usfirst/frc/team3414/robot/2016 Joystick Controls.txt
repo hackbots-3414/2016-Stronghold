@@ -1,0 +1,27 @@
+Left Joystick
+
+1 - Half Speed
+5 - Toggle PID
+7 - Low Bar
+8 - Normal Defenses (Rough Terrain, Moat, Sally Port)
+9 - Rock Wall
+10 - Cheval (maybe...)
+
+Right Joystick
+
+1 - Drive Together
+7 & 8 - Override Shoot Piston
+11 & 12 - Reset Gyro
+
+Gamepad
+1 & 2 - Shooter Down Slow
+2 - Shooter Down
+3 - Suck Ball In
+1 & 4 - Shooter Up Slow
+4 - Shooter Up
+5 - Auger Down
+6 - Auger Up
+7 - Shoot High
+8 - Shoot Low
+(DISABLED) 9 - Lifter
+(DISABLED) 10 - Lifter Retract
