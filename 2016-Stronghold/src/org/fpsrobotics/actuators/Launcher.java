@@ -1,6 +1,7 @@
 package org.fpsrobotics.actuators;
 
 import org.fpsrobotics.PID.IPIDFeedbackDevice;
+import org.fpsrobotics.sensors.EJoystickButtons;
 import org.fpsrobotics.sensors.ILimitSwitch;
 import org.fpsrobotics.sensors.SensorConfig;
 import org.usfirst.frc.team3414.robot.RobotStatus;
@@ -45,7 +46,7 @@ public class Launcher implements ILauncher
 
 	// Calibrate Functions
 
-//	private final double CALIBRATION_SPEED = 0.1;
+	// private final double CALIBRATION_SPEED = 0.1;
 
 	private boolean isAugerCalibrated;
 	private boolean isAugerAtIntake = false;
@@ -54,7 +55,7 @@ public class Launcher implements ILauncher
 	private ICANMotor augerIntakeMotor, shooterLifterMotor;
 	private ICANMotor augerLifterMotor;
 	private ILimitSwitch bottomLimitShooter, topLimitShooter;
-	private ILimitSwitch bottomLimitAuger, topLimitAuger;	//TODO: Do we need??
+	private ILimitSwitch bottomLimitAuger, topLimitAuger; // TODO: Do we need??
 	private IPIDFeedbackDevice shooterPot, augerPot;
 
 	private ISolenoid shooterActuator;
@@ -98,7 +99,7 @@ public class Launcher implements ILauncher
 
 		if (isAlpha)
 		{
-			//TODO
+			// TODO
 			TOP_LIMIT_POT_VALUE_SHOOTER = 291;
 			BOTTOM_LIMIT_POT_VALUE_SHOOTER = 1863;
 			TOP_POT_LIMIT_AUGER = 0;
@@ -119,61 +120,61 @@ public class Launcher implements ILauncher
 		SmartDashboard.putNumber("Bottom Pot Limit Auger", BOTTOM_POT_LIMIT_AUGER);
 	}
 
-//	/**
-//	 * Auger and shooter calibration sequence, requires limit switches be
-//	 * mounted or else things will break.
-//	 */
-//	private void calibrate()
-//	{
-//		// calibrates shooter
-//		shooterLifterMotor.setSpeed(-CALIBRATION_SPEED);
-//
-//		while (!bottomLimitShooter.isHit() && RobotStatus.isRunning())
-//		{
-//
-//		}
-//
-//		shooterLifterMotor.stop();
-//
-//		BOTTOM_LIMIT_POT_VALUE_SHOOTER = shooterPot.getCount() - 25;
-//
-//		shooterLifterMotor.setSpeed(CALIBRATION_SPEED);
-//
-//		while (!topLimitShooter.isHit() && RobotStatus.isRunning())
-//		{
-//
-//		}
-//
-//		shooterLifterMotor.stop();
-//
-//		TOP_LIMIT_POT_VALUE_SHOOTER = shooterPot.getCount() + 25;
-//
-//		// calibrates auger
-//		augerLifterMotor.setSpeed(-CALIBRATION_SPEED);
-//
-//		while (!bottomLimitAuger.isHit() && RobotStatus.isRunning())
-//		{
-//
-//		}
-//
-//		augerLifterMotor.stop();
-//
-//		augerPot.resetCount();
-//
-//		BOTTOM_POT_LIMIT_AUGER = (int) augerPot.getCount();
-//
-//		augerLifterMotor.setSpeed(CALIBRATION_SPEED);
-//
-//		while (!topLimitAuger.isHit() && RobotStatus.isRunning())
-//		{
-//
-//		}
-//		stopShooterLifter();
-//
-//		TOP_POT_LIMIT_AUGER = (int) augerPot.getCount();
-//
-//		isAugerCalibrated = true;
-//	}
+	// /**
+	// * Auger and shooter calibration sequence, requires limit switches be
+	// * mounted or else things will break.
+	// */
+	// private void calibrate()
+	// {
+	// // calibrates shooter
+	// shooterLifterMotor.setSpeed(-CALIBRATION_SPEED);
+	//
+	// while (!bottomLimitShooter.isHit() && RobotStatus.isRunning())
+	// {
+	//
+	// }
+	//
+	// shooterLifterMotor.stop();
+	//
+	// BOTTOM_LIMIT_POT_VALUE_SHOOTER = shooterPot.getCount() - 25;
+	//
+	// shooterLifterMotor.setSpeed(CALIBRATION_SPEED);
+	//
+	// while (!topLimitShooter.isHit() && RobotStatus.isRunning())
+	// {
+	//
+	// }
+	//
+	// shooterLifterMotor.stop();
+	//
+	// TOP_LIMIT_POT_VALUE_SHOOTER = shooterPot.getCount() + 25;
+	//
+	// // calibrates auger
+	// augerLifterMotor.setSpeed(-CALIBRATION_SPEED);
+	//
+	// while (!bottomLimitAuger.isHit() && RobotStatus.isRunning())
+	// {
+	//
+	// }
+	//
+	// augerLifterMotor.stop();
+	//
+	// augerPot.resetCount();
+	//
+	// BOTTOM_POT_LIMIT_AUGER = (int) augerPot.getCount();
+	//
+	// augerLifterMotor.setSpeed(CALIBRATION_SPEED);
+	//
+	// while (!topLimitAuger.isHit() && RobotStatus.isRunning())
+	// {
+	//
+	// }
+	// stopShooterLifter();
+	//
+	// TOP_POT_LIMIT_AUGER = (int) augerPot.getCount();
+	//
+	// isAugerCalibrated = true;
+	// }
 
 	@Override
 	public boolean isAugerCalibrated()
@@ -225,13 +226,13 @@ public class Launcher implements ILauncher
 			stopShooterLifter();
 		}
 	}
-	
+
 	@Override
 	public void raiseShooterSlow()
 	{
 		if (!isShooterAtTopLimit())
 		{
-			shooterLifterMotor.setSpeed(Math.abs(LINEAR_ACTUATOR_SPEED * 0.5));
+			shooterLifterMotor.setSpeed(Math.abs(LINEAR_ACTUATOR_SPEED * 0.4));
 		} else
 		{
 			stopShooterLifter();
@@ -243,7 +244,7 @@ public class Launcher implements ILauncher
 	{
 		if (!isShooterAtBottomLimit())
 		{
-			shooterLifterMotor.setSpeed(-Math.abs(LINEAR_ACTUATOR_SPEED * 0.5));
+			shooterLifterMotor.setSpeed(-Math.abs(LINEAR_ACTUATOR_SPEED * 0.4));
 		} else
 		{
 			stopShooterLifter();
@@ -680,7 +681,7 @@ public class Launcher implements ILauncher
 			raiseAugerToTopLimit();
 			break;
 		case FOURTY_KAI: // USED AT START OF MATCH
-			moveAugerToPosition(BOTTOM_POT_LIMIT_AUGER + 500); 
+			moveAugerToPosition(BOTTOM_POT_LIMIT_AUGER + 500);
 			// used to be +400
 			break;
 		case SHOOT:
@@ -717,7 +718,14 @@ public class Launcher implements ILauncher
 		SensorConfig.getInstance().getTimer().waitTimeInMillis(400);
 		spinShooterWheels(speed);
 		SensorConfig.getInstance().getTimer().waitTimeInMillis(1500);
-		launchBoulder();
+		if (!SensorConfig.getInstance().getRightJoystick().getButtonValue(EJoystickButtons.SEVEN)
+				&& !SensorConfig.getInstance().getRightJoystick().getButtonValue(EJoystickButtons.EIGHT))
+		{
+			launchBoulder();
+		} else
+		{
+			stopShooterWheels();
+		}
 	}
 
 	@Override
