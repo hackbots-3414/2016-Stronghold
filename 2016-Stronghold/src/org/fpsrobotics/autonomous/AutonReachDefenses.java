@@ -11,6 +11,10 @@ public class AutonReachDefenses implements IAutonomousControl
 
 	private boolean timeBased = false;
 
+	private int DRIVE_TIME = 2700;
+	private int DRIVE_DISTANCE = 12_000;
+	private double DRIVE_SPEED = 0.8;
+
 	public AutonReachDefenses()
 	{
 
@@ -34,14 +38,14 @@ public class AutonReachDefenses implements IAutonomousControl
 				// TIME BASED
 				ActuatorConfig.getInstance().getDriveTrain().disablePID();
 
-				ActuatorConfig.getInstance().getDriveTrain().setSpeed(0.5);
+				ActuatorConfig.getInstance().getDriveTrain().setSpeed(DRIVE_SPEED);
 
-				SensorConfig.getInstance().getTimer().waitTimeInMillis(1000);
+				SensorConfig.getInstance().getTimer().waitTimeInMillis(DRIVE_TIME);
 
 				ActuatorConfig.getInstance().getDriveTrain().stop();
 			} else
 			{
-				ActuatorConfig.getInstance().getDriveTrain().goStraight(0.8, 12_000);
+				ActuatorConfig.getInstance().getDriveTrain().goStraight(DRIVE_SPEED, DRIVE_DISTANCE);
 			}
 
 			break;

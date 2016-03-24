@@ -283,7 +283,7 @@ public class MullenatorTeleop implements ITeleopControl
 		executor.submit(() ->
 		{
 			// ActuatorConfig.getInstance().getLifter().retract(); //TODO
-			ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.FOURTY_KAI);
+			ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.FOURTY_KAI);	//TODO: Calibrate 40KAI
 
 			while (RobotStatus.isRunning())
 			{

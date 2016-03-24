@@ -12,9 +12,9 @@ public class AutonLowBarAndShoot implements IAutonomousControl
 	private boolean timeBased = false;
 	private boolean shootHigh = false;
 	
-	private double DRIVE_SPEED = 0.5;
+	private double DRIVE_SPEED = 0.6;	//Used to be 0.5
 	private int DRIVE_TIME = 5000;
-	private int DRIVE_DISTANCE = 146_000;
+	private int DRIVE_DISTANCE = 122_000; // Used to be 146_000
 
 	@Override
 	public void doAuto()

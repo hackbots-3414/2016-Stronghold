@@ -14,39 +14,39 @@ public class SensorConfig
 {
 	private static SensorConfig singleton = null;
 
-	//Shooter Limits
+	// Shooter Limits
 	private final int SHOOTER_BOTTOM_LIMIT_CHANNEL = 0;
 	private final int SHOOTER_TOP_LIMIT_CHANNEL = 1;
 	private ILimitSwitch shooterBottomLimitSwitch;
 	private ILimitSwitch shooterTopLimitSwitch;
 
-	//Shooter Potentiometer
+	// Shooter Potentiometer
 	private final int POTENTIOMETER_CHANNEL = 0;
 	private IPIDFeedbackDevice shooterPot;
 
-	//Auger Limits
+	// Auger Limits
 	private final int AUGER_BOTTOM_LIMIT_SWITCH = 2;
 	private final int AUGER_TOP_LIMIT_SWITCH = 3;
 	private ILimitSwitch augerBottomLimitSwitch;
 	private ILimitSwitch augerTopLimitSwitch;
 
-	//Camera
+	// Camera
 	private final String CAMERA_USB_PORT = "cam0";
 	private ICamera cameraOne;
 
-	//Pressure Guage
+	// Pressure Guage
 	private final int PRESSURE_SWITCH_CHANNEL = 9;
 	private ILimitSwitch pressureSwitch;
 
-	//Joysticks
+	// Joysticks
 	private final int LEFT_JOY_CHANNEL = 0;
 	private final int RIGHT_JOY_CHANNEL = 1;
 	private final int GAMEPAD_CHANNEL = 2;
 	private IJoystick leftJoystick;
 	private IJoystick rightJoystick;
 	private IGamepad gamepad;
-	
-	//Cool stuff
+
+	// Cool stuff
 	private CompassNavX compassNavX;
 	private AccelerometerNavX accelNavX;
 
@@ -96,28 +96,18 @@ public class SensorConfig
 		try
 		{
 			ahrs = new AHRS(SPI.Port.kMXP);
-			gyro = new GyroscopeNavX(ahrs);	//Resets on start up
+			gyro = new GyroscopeNavX(ahrs); // Resets on start up
 		} catch (Exception e)
 		{
 			System.err.println("No NavX MXP board found, or plugged into the wrong spot");
 		}
 
-//		try
-//		{
-//			autoSwitchOnes = new DigitalLimitSwitch(new DigitalInput(AUTO_SWITCH_ONE_CHANNEL), true);
-//			autoSwitchTwos = new DigitalLimitSwitch(new DigitalInput(AUTO_SWITCH_TWO_CHANNEL), true);
-//			autoSwitchFours = new DigitalLimitSwitch(new DigitalInput(AUTO_SWITCH_FOUR_CHANNEL), true);
-//		} catch (Exception e)
-//		{
-//			System.err.println("Auto Switches failed to initialize: Make sure to set SmartDashboard to not 0");
-//		}
-
 		pdp = new PowerDistributionPanel();
-		
+
 		cameraOne = new MicrosoftLifeCam(CAMERA_USB_PORT);
 
 		cameraOne.enable();
-		
+
 		accelNavX = new AccelerometerNavX(ahrs);
 		compassNavX = new CompassNavX(ahrs);
 	}
@@ -192,33 +182,19 @@ public class SensorConfig
 		return pressureSwitch;
 	}
 
-//	public ILimitSwitch getAutoSwitchOnes()
-//	{
-//		return autoSwitchOnes;
-//	}
-//
-//	public ILimitSwitch getAutoSwitchTwos()
-//	{
-//		return autoSwitchTwos;
-//	}
-//
-//	public ILimitSwitch getAutoSwitchFours()
-//	{
-//		return autoSwitchFours;
-//	}
-	
 	public AccelerometerNavX getAccelerometer()
 	{
 		return accelNavX;
 	}
-	
+
 	public CompassNavX getCompass()
 	{
 		return compassNavX;
 	}
 
-	/*
-	 * public ICamera getCameraOne() { return cameraOne; }
-	 */
+//	public ICamera getCameraOne()
+//	{
+//		return cameraOne;
+//	}
 
 }
