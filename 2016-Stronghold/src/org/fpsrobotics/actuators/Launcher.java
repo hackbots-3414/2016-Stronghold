@@ -22,7 +22,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Launcher implements ILauncher
 {
 	// Lifter Functions
-	private final double LINEAR_ACTUATOR_SPEED = 0.7; // Used to be 0.5
+	private double LINEAR_ACTUATOR_SPEED;
 
 	// Shooter Functions
 	private final double INTAKE_SPEED = -0.7;
@@ -33,9 +33,9 @@ public class Launcher implements ILauncher
 	// Auger Functions
 	private final double INTAKE_AUGER_SPEED = 0.8;
 
-	private final double AUGER_LIFTER_SPEED_RAISE = 0.5;
-	private final double AUGER_LIFTER_SPEED_LOWER = 0.4;
-	private double HIGH_VALUE_AUGER_SPEED = 0.5;
+	private double AUGER_LIFTER_SPEED_RAISE;
+	private double AUGER_LIFTER_SPEED_LOWER;
+	private double HIGH_VALUE_AUGER_SPEED = 0.8;
 
 	private double TOP_LIMIT_POT_VALUE_SHOOTER;
 	private double BOTTOM_LIMIT_POT_VALUE_SHOOTER;
@@ -99,25 +99,37 @@ public class Launcher implements ILauncher
 
 		if (isAlpha)
 		{
-			// TODO
-			TOP_LIMIT_POT_VALUE_SHOOTER = 291;
-			BOTTOM_LIMIT_POT_VALUE_SHOOTER = 1863;
-			TOP_POT_LIMIT_AUGER = 0;
-			BOTTOM_POT_LIMIT_AUGER = 1500;
+			LINEAR_ACTUATOR_SPEED = 0.5;
 
-			HIGH_VALUE_AUGER = 0;
+			TOP_LIMIT_POT_VALUE_SHOOTER = 280;
+			BOTTOM_LIMIT_POT_VALUE_SHOOTER = 1800;
+			TOP_POT_LIMIT_AUGER = 1622;
+			BOTTOM_POT_LIMIT_AUGER = 290;
+
+			AUGER_LIFTER_SPEED_RAISE = 0.5;
+			AUGER_LIFTER_SPEED_LOWER = 0.6;
+
+			HIGH_VALUE_AUGER = 1400;
 		} else
 		{
+			LINEAR_ACTUATOR_SPEED = 0.5;
+
 			TOP_LIMIT_POT_VALUE_SHOOTER = 190;
 			BOTTOM_LIMIT_POT_VALUE_SHOOTER = 1300;
 			TOP_POT_LIMIT_AUGER = 2400;
 			BOTTOM_POT_LIMIT_AUGER = 900;
+
+			AUGER_LIFTER_SPEED_RAISE = 0.5;
+			AUGER_LIFTER_SPEED_LOWER = 0.4;
 
 			HIGH_VALUE_AUGER = 2300;
 		}
 
 		SmartDashboard.putNumber("Top Pot Limit Auger", TOP_POT_LIMIT_AUGER);
 		SmartDashboard.putNumber("Bottom Pot Limit Auger", BOTTOM_POT_LIMIT_AUGER);
+		
+		SmartDashboard.putNumber("Top Pot Limit Shooter", TOP_LIMIT_POT_VALUE_SHOOTER);
+		SmartDashboard.putNumber("Bottom Pot Limit Shooter", BOTTOM_LIMIT_POT_VALUE_SHOOTER);
 	}
 
 	// /**
@@ -642,17 +654,16 @@ public class Launcher implements ILauncher
 	{
 		// Bottom Beta: 1300
 		// Top Beta: 190
+		// Bottom Alpha: 1800
+		// Top Alpha: 200
 		switch (preset)
 		{
 		case PICK_UP:
 			lowerShooterToBottomLimit();
 			break;
 		case SHOOT_LOW:
-			moveShooterToPosition(BOTTOM_LIMIT_POT_VALUE_SHOOTER - 200); // to
-																			// go
-																			// higher,
-																			// subtract
-																			// more
+			moveShooterToPosition(BOTTOM_LIMIT_POT_VALUE_SHOOTER - 200);
+			// to go higher, subtract more
 			break;
 		case SHOOT_HIGH:
 			moveShooterToPosition(TOP_LIMIT_POT_VALUE_SHOOTER + 200);
@@ -672,6 +683,8 @@ public class Launcher implements ILauncher
 	{
 		// Top Beta 2400
 		// Bottom Beta 900
+		// Top Alpha 1622
+		// Bottom Alpha 290
 		switch (preset)
 		{
 		case BOTTOM_LIMIT:
