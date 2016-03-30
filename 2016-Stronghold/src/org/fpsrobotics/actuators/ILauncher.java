@@ -73,4 +73,8 @@ public interface ILauncher
 	
 	public void lowerAugerToBottomLimit(double speed);
 
+	public void shootSequenceLowAuto();
+	
+	public void shootSequenceHighAuto();
+
 }

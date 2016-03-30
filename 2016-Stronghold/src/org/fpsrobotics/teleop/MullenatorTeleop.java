@@ -44,12 +44,15 @@ public class MullenatorTeleop implements ITeleopControl
 
 			double correctedYLeft, correctedYRight;
 			// double yLeft, yRight;
-			boolean pidOn = true;
+			boolean pidOn = false;
+			ActuatorConfig.getInstance().getDriveTrain().disablePID();
+			PIDOverride.getInstance().setTeleopDisablePID(true);
+			
 			boolean deadZoned = false;
 
 			double speedMultiplier = 1.0;
 			boolean toggleLockA = false;
-			boolean toggleLockB = false;
+			boolean toggleLockB = true;
 
 			boolean movedShooter = false;
 			boolean movedAuger = false;
@@ -240,7 +243,7 @@ public class MullenatorTeleop implements ITeleopControl
 						SensorConfig.getInstance().getShooterTopLimitSwitch().isHit());
 
 				// Auger Current
-				SmartDashboard.putNumber("Auger Current", SensorConfig.getInstance().getPdp().getCurrent(3));
+				//SmartDashboard.putNumber("Auger Current", SensorConfig.getInstance().getPdp().getCurrent(3));
 
 				// Pressure sensor feedback
 				SmartDashboard.putBoolean("Pressure", SensorConfig.getInstance().getPressureSwitch().isHit());
@@ -253,7 +256,8 @@ public class MullenatorTeleop implements ITeleopControl
 				// }
 
 				// Auger Pot Value
-				SmartDashboard.putNumber("Auger Pot", ActuatorConfig.getInstance().getAugerPotentiometer().getCount());
+				//SmartDashboard.putNumber("Auger Pot", ActuatorConfig.getInstance().getAugerPotentiometer().getCount());
+				System.out.println(ActuatorConfig.getInstance().getAugerPotentiometer().getCount());
 
 				// Should we raise value
 				SmartDashboard.putBoolean("Should we raise",
@@ -283,7 +287,7 @@ public class MullenatorTeleop implements ITeleopControl
 		executor.submit(() ->
 		{
 			// ActuatorConfig.getInstance().getLifter().retract(); //TODO
-			ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.FOURTY_KAI);	//TODO: Calibrate 40KAI
+			//ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.FOURTY_KAI);	
 
 			while (RobotStatus.isRunning())
 			{
@@ -333,6 +337,10 @@ public class MullenatorTeleop implements ITeleopControl
 					shootingLockOut = true;
 					ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.FOURTY_KAI);
 				}
+				
+				//if (leftJoystick.getButtonValue(EJoystickButton.ELEVEN)&& )
+				//	&& !shootingLockOut && ActuatorConfig.getInstance().getLauncher()
+						
 
 				// // Portcullis TODO: ONLY IF WE HAVE HOOKS IN FRONT OF AUGER
 				// if (leftJoystick.getButtonValue(EJoystickButtons.ELEVEN) &&

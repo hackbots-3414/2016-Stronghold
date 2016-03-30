@@ -11,7 +11,7 @@ public class AutonLowBar implements IAutonomousControl
 	private boolean timeBased = false;
 	private double DRIVE_SPEED = 0.5;
 	private int DRIVE_TIME = 5000;
-	private int DRIVE_DISTANCE = 90_000;
+	private int DRIVE_DISTANCE = 130_000;//used to be 90,000
 
 	public AutonLowBar()
 	{

@@ -229,7 +229,7 @@ public class TankDrive implements IDriveTrain
 		}
 	}
 
-	private final double Kp = 0.01;
+	private final double Kp = 0.005; // used to be .01
 
 	@Override
 	public void goStraight(double speed, int distance)

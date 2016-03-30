@@ -9,7 +9,7 @@ import org.usfirst.frc.team3414.robot.RobotStatus;
 public class AutonBreachDefenses implements IAutonomousControl
 {
 	private boolean timeBased = true;
-	private int DRIVE_TIME = 2700;
+	private int DRIVE_TIME = 4000;
 	private int DRIVE_DISTANCE = 90_000;
 	private double DRIVE_SPEED = 0.8;
 
@@ -26,7 +26,7 @@ public class AutonBreachDefenses implements IAutonomousControl
 
 			// Move shooter to rock wall
 			ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.TOP_LIMIT);
-			ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.SHOOT);
+			ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.SHOOT_LOW);
 
 			if (!RobotStatus.isAuto())
 				break;

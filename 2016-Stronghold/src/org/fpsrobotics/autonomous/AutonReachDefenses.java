@@ -12,8 +12,8 @@ public class AutonReachDefenses implements IAutonomousControl
 	private boolean timeBased = false;
 
 	private int DRIVE_TIME = 2700;
-	private int DRIVE_DISTANCE = 12_000;
-	private double DRIVE_SPEED = 0.8;
+	private int DRIVE_DISTANCE = 40_000;
+	private double DRIVE_SPEED = 0.5;
 
 	public AutonReachDefenses()
 	{

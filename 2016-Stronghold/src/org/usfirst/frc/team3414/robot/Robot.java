@@ -36,11 +36,13 @@ public class Robot extends SampleRobot
 	{
 		autoChooser = new SendableChooser();
 
-		autoChooser.addDefault("Do Nothing", new AutonDoNothing());
-		autoChooser.addDefault("Reach Defenses", new AutonReachDefenses());
+		autoChooser.addObject("Do Nothing", new AutonDoNothing());
+		autoChooser.addObject("Reach Defenses", new AutonReachDefenses());
 		autoChooser.addObject("Breach Standard Defenses", new AutonBreachDefenses());
 		autoChooser.addDefault("Low Bar NO SHOOT", new AutonLowBar());
-		autoChooser.addObject("Low Bar and Shoot", new AutonLowBarAndShoot());
+		autoChooser.addObject("Low Bar and Shoot Low", new AutonLowBarAndShoot());
+		autoChooser.addObject("Low Bar and Shoot High-PICK THIS ALMOST ALWAYS", new AutonLowBarAndShootHigh());
+		autoChooser.addObject("Fourty Kai", new FourtyKai());
 //		autoChooser.addDefault("Chevel De Friz", new AutonChevelDeFriz());	//TODO: Untested
 
 		SmartDashboard.putData("Autonomous Chooser", autoChooser);
@@ -52,7 +54,7 @@ public class Robot extends SampleRobot
 		RobotStatus.setIsAuto(true);
 		RobotStatus.setIsTeleop(false);
 
-		SensorConfig.getInstance().getGyro().resetCount();
+		//SensorConfig.getInstance().getGyro().resetCount();
 		
 		executor.submit(() ->
 		{

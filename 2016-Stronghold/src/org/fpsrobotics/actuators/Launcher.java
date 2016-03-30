@@ -26,8 +26,8 @@ public class Launcher implements ILauncher
 
 	// Shooter Functions
 	private final double INTAKE_SPEED = -0.7;
-	private double SHOOT_SPEED_HIGH = 0.95;
-	private double SHOOT_SPEED_LOW = 0.6;
+	private double SHOOT_SPEED_HIGH = 1.0; // was 0.95
+	private double SHOOT_SPEED_LOW = 0.5;
 	private int RAMP_RATE = 3;
 
 	// Auger Functions
@@ -36,13 +36,15 @@ public class Launcher implements ILauncher
 	private double AUGER_LIFTER_SPEED_RAISE;
 	private double AUGER_LIFTER_SPEED_LOWER;
 	private double HIGH_VALUE_AUGER_SPEED = 0.8;
+	private double LOW_VALUE_AUGER_SPEED = 0.6;
 
 	private double TOP_LIMIT_POT_VALUE_SHOOTER;
 	private double BOTTOM_LIMIT_POT_VALUE_SHOOTER;
 
 	private int TOP_POT_LIMIT_AUGER;
 	private int BOTTOM_POT_LIMIT_AUGER;
-	private double HIGH_VALUE_AUGER;
+	private int HIGH_VALUE_AUGER;
+	private int LOW_VALUE_AUGER;
 
 	// Calibrate Functions
 
@@ -101,8 +103,8 @@ public class Launcher implements ILauncher
 		{
 			LINEAR_ACTUATOR_SPEED = 0.5;
 
-			TOP_LIMIT_POT_VALUE_SHOOTER = 280;
-			BOTTOM_LIMIT_POT_VALUE_SHOOTER = 1800;
+			TOP_LIMIT_POT_VALUE_SHOOTER = 588;
+			BOTTOM_LIMIT_POT_VALUE_SHOOTER = 2100;
 			TOP_POT_LIMIT_AUGER = 1622;
 			BOTTOM_POT_LIMIT_AUGER = 290;
 
@@ -110,24 +112,26 @@ public class Launcher implements ILauncher
 			AUGER_LIFTER_SPEED_LOWER = 0.6;
 
 			HIGH_VALUE_AUGER = 1400;
+			LOW_VALUE_AUGER = 0;
 		} else
 		{
 			LINEAR_ACTUATOR_SPEED = 0.5;
 
 			TOP_LIMIT_POT_VALUE_SHOOTER = 190;
 			BOTTOM_LIMIT_POT_VALUE_SHOOTER = 1300;
-			TOP_POT_LIMIT_AUGER = 2400;
-			BOTTOM_POT_LIMIT_AUGER = 900;
+			TOP_POT_LIMIT_AUGER = 2100;
+			BOTTOM_POT_LIMIT_AUGER = 780;
 
 			AUGER_LIFTER_SPEED_RAISE = 0.5;
-			AUGER_LIFTER_SPEED_LOWER = 0.4;
+			AUGER_LIFTER_SPEED_LOWER = 0.5;
 
-			HIGH_VALUE_AUGER = 2300;
+			HIGH_VALUE_AUGER = 1200;
+			LOW_VALUE_AUGER = 900;
 		}
 
 		SmartDashboard.putNumber("Top Pot Limit Auger", TOP_POT_LIMIT_AUGER);
 		SmartDashboard.putNumber("Bottom Pot Limit Auger", BOTTOM_POT_LIMIT_AUGER);
-		
+
 		SmartDashboard.putNumber("Top Pot Limit Shooter", TOP_LIMIT_POT_VALUE_SHOOTER);
 		SmartDashboard.putNumber("Bottom Pot Limit Shooter", BOTTOM_LIMIT_POT_VALUE_SHOOTER);
 	}
@@ -346,7 +350,7 @@ public class Launcher implements ILauncher
 	public void launchBoulder()
 	{
 		shooterActuator.engage();
-		SensorConfig.getInstance().getTimer().waitTimeInMillis(100);
+		SensorConfig.getInstance().getTimer().waitTimeInMillis(150); //used to be 100
 		stopShooterWheels();
 		shooterActuator.disengage();
 	}
@@ -401,7 +405,10 @@ public class Launcher implements ILauncher
 		{
 			if (augerLifterMotor.getSpeed() > 0)
 			{
-				if (augerPot.getCount() > (HIGH_VALUE_AUGER))
+				if(augerPot.getCount() > (TOP_POT_LIMIT_AUGER - 100))
+				{
+					augerLifterMotor.setSpeed(Math.abs(AUGER_LIFTER_SPEED_RAISE - 0.1));
+				} else if (augerPot.getCount() > (HIGH_VALUE_AUGER))
 				{
 					augerLifterMotor.setSpeed(Math.abs(HIGH_VALUE_AUGER_SPEED));
 				} else
@@ -518,6 +525,9 @@ public class Launcher implements ILauncher
 			if (augerLifterMotor.getSpeed() < 0)
 			{
 				augerLifterMotor.setSpeed(-Math.abs(speed));
+			} else if(augerPot.getCount() < (LOW_VALUE_AUGER))
+			{
+				augerLifterMotor.setSpeed(Math.abs(LOW_VALUE_AUGER_SPEED));
 			} else
 			{
 				rampUpMotor(-Math.abs(speed));
@@ -574,7 +584,7 @@ public class Launcher implements ILauncher
 
 	private boolean isAugerAtTopLimit()
 	{
-		if (augerPot.getCount() > TOP_POT_LIMIT_AUGER)
+		if (augerPot.getCount() >= TOP_POT_LIMIT_AUGER)
 		{
 			return true;
 		} else
@@ -694,14 +704,18 @@ public class Launcher implements ILauncher
 			raiseAugerToTopLimit();
 			break;
 		case FOURTY_KAI: // USED AT START OF MATCH
-			moveAugerToPosition(BOTTOM_POT_LIMIT_AUGER + 500);
+			moveAugerToPosition(BOTTOM_POT_LIMIT_AUGER + 1126);
 			// used to be +400
 			break;
 		case SHOOT:
-			moveAugerToPosition(BOTTOM_POT_LIMIT_AUGER + 750);
+			// moveAugerToPosition(BOTTOM_POT_LIMIT_AUGER + 750);
+			moveAugerToPreset(EAugerPresets.FOURTY_KAI);
 			break;
 		case PICK_UP:
 			moveAugerToPosition(BOTTOM_POT_LIMIT_AUGER + 175);
+			break;
+		case SHOOT_LOW:
+			moveAugerToPosition(716);
 			break;
 		default:
 			// Do Nothing
@@ -714,16 +728,74 @@ public class Launcher implements ILauncher
 		shootSequence(SHOOT_SPEED_HIGH);
 	}
 
+	public void shootSequenceHighAuto()
+	{
+		moveAugerToPreset(EAugerPresets.SHOOT);
+		
+		spinShooterWheels(SHOOT_SPEED_HIGH);
+		SensorConfig.getInstance().getTimer().waitTimeInMillis(1500);
+		if (!SensorConfig.getInstance().getRightJoystick().getButtonValue(EJoystickButtons.SEVEN)
+				&& !SensorConfig.getInstance().getRightJoystick().getButtonValue(EJoystickButtons.EIGHT))
+		{
+			launchBoulder();
+		} else
+		{
+			stopShooterWheels();
+		}
+	}
+	
 	@Override
 	public void shootSequenceLow()
 	{
-		shootSequence(SHOOT_SPEED_LOW);
+		
+
+		if (augerPot.getCount() < (716))
+		{
+			moveAugerToPreset(EAugerPresets.SHOOT_LOW);
+		}
+
+		spinShooterWheels(SHOOT_SPEED_LOW + 0.1);
+		
+		SensorConfig.getInstance().getTimer().waitTimeInMillis(500);
+
+		if (!SensorConfig.getInstance().getRightJoystick().getButtonValue(EJoystickButtons.SEVEN)
+				&& !SensorConfig.getInstance().getRightJoystick().getButtonValue(EJoystickButtons.EIGHT))
+		{
+			launchBoulder();
+		} else
+		{
+			stopShooterWheels();
+		}
+	}
+	
+	@Override
+	public void shootSequenceLowAuto()
+	{
+
+		if (augerPot.getCount() < (716))
+		{
+			moveAugerToPreset(EAugerPresets.SHOOT_LOW);
+		}
+
+		SensorConfig.getInstance().getTimer().waitTimeInMillis(400);
+
+			spinShooterWheels(0.7);
+			
+		SensorConfig.getInstance().getTimer().waitTimeInMillis(1500);
+
+		if (!SensorConfig.getInstance().getRightJoystick().getButtonValue(EJoystickButtons.SEVEN)
+				&& !SensorConfig.getInstance().getRightJoystick().getButtonValue(EJoystickButtons.EIGHT))
+		{
+			launchBoulder();
+		} else
+		{
+			stopShooterWheels();
+		}
 	}
 
 	@Override
 	public void shootSequence(double speed)
 	{
-		SensorConfig.getInstance().getTimer().waitTimeInMillis(400);
 
 		moveAugerToPreset(EAugerPresets.SHOOT);
 
