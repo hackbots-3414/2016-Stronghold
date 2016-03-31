@@ -51,28 +51,26 @@ public class DriveTrainAssist
 
 			if (gyro.getCount() > desiredDegrees)
 			{
-				while (gyro.getCount() > desiredDegrees)
-				{
-
-					driveTrain.setSpeed(speed, -speed);
-				}
+				driveTrain.setSpeed(speed, -speed);
+				while ((gyro.getCount() > desiredDegrees) && RobotStatus.isRunning())
+					;
 			} else if (gyro.getCount() < desiredDegrees)
 			{
-				while (gyro.getCount() < desiredDegrees)
-				{
-					driveTrain.setSpeed(-speed, speed);
-				}
+
+				driveTrain.setSpeed(-speed, speed);
+				while ((gyro.getCount() < desiredDegrees) && RobotStatus.isRunning())
+					;
 			}
 
 			driveTrain.stop();
 		}
 	}
-	
+
 	public boolean isTilt()
 	{
 		SmartDashboard.putNumber("Y Rate", SensorConfig.getInstance().getAccelerometer().getY());
-		
-		if(SensorConfig.getInstance().getAccelerometer().getY() > 6)
+
+		if (SensorConfig.getInstance().getAccelerometer().getY() > 6)
 		{
 			return true;
 		} else
@@ -80,14 +78,15 @@ public class DriveTrainAssist
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Doesn't work too well
+	 * 
 	 * @return isTiltGyro
 	 */
 	public boolean isTiltGyro()
 	{
-		if(SensorConfig.getInstance().getGyro().getPitchRate() > 20) // From 25
+		if (SensorConfig.getInstance().getGyro().getPitchRate() > 20) // From 25
 		{
 			return true;
 		} else
@@ -95,6 +94,5 @@ public class DriveTrainAssist
 			return false;
 		}
 	}
-	
 
 }

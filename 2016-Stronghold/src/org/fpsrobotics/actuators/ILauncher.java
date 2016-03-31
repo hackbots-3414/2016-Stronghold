@@ -8,21 +8,25 @@ public interface ILauncher
 {
 
 	// Lifter Functions
-	// public void lowerShooterToBottomLimit();
+	/**
+	 * 
+	 * @param slow
+	 *            - Used for Driver Control - Gamepad Button 1
+	 */
+	public void raiseShooter(boolean slow);
 
-	// public void raiseShooterToTopLimit();
+	/**
+	 * 
+	 * @param slow
+	 *            - Used for Driver Control - Gamepad Button 1
+	 */
+	public void lowerShooter(boolean slow);
 
-	public void raiseShooter();
-
-	public void lowerShooter();
-
-	//Used for driver with Button 1
-	public void raiseShooterSlow();
-
-	//Used for driver with Button 1
-	public void lowerShooterSlow();
-	
 	public void stopShooterLifter();
+	
+	//private boolean isShooterAtTopLimit()
+	
+	//private boolean isShooterAtBottomLimit()
 
 	public void moveShooterToPosition(double position);
 
@@ -34,17 +38,35 @@ public interface ILauncher
 
 	public void launchBoulder();
 
+	/**
+	 * Used for Teleop if Sami wants manual spinUp
+	 */
 	public void spinShooterWheelsHigh();
 
+	/**
+	 * Used for Teleop if Sami wants manual spinUp
+	 */
 	public void spinShooterWheelsLow();
+	
+	//private void spinShooterWheels(double speed)
+	
+	//private void jostle()
 
 	public void stopShooterWheels();
 
 	// Auger Functions
 
 	public void raiseAuger();
+	
+	//private void raiseAuger(double speed)
+	
+	//private void rampUpMotor(double speed)
 
 	public void lowerAuger();
+	
+	//private void lowerAuger(double speed)
+	
+	//private void rampDownMotor(double speed)
 
 	public void stopAugerLifter(boolean ramp);
 
@@ -52,9 +74,13 @@ public interface ILauncher
 
 	public void stopAugerWheels();
 
-	// public void raiseAugerToTopLimit();
+	// private void raiseAugerToTopLimit();
 
-	// public void lowerAugerToBottomLimit();
+	// private void lowerAugerToBottomLimit();
+	
+	//private boolean isAugerAtBottomLimit()
+	
+	//private boolean isAugerAtTopLimit()
 
 	public void moveAugerToPosition(int position);
 
@@ -67,11 +93,9 @@ public interface ILauncher
 	public void shootSequenceHigh();
 
 	public void shootSequenceLow();
-	
-	public void lowerAugerToBottomLimit(double speed);
 
 	public void shootSequenceLowAuto();
-	
+
 	public void shootSequenceHighAuto();
 
 }

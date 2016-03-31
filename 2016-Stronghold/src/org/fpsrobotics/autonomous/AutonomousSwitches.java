@@ -7,6 +7,7 @@ import org.fpsrobotics.sensors.ILimitSwitch;
  * A class that implements the 8 position switch that is used to determine the
  * autonomous mode at the beginning of a match.
  *
+ * NOT USED FOR 2016
  */
 public class AutonomousSwitches implements IAutoSwitches
 {

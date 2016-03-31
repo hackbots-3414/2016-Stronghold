@@ -12,9 +12,6 @@ import org.usfirst.frc.team3414.robot.RobotStatus;
 public class AutonBreachDefensesAndShoot implements IAutonomousControl
 {
 	private boolean timeBased = true;
-	private int DRIVE_TIME = 2700;
-	private int DRIVE_DISTANCE = 90_000;
-	private double DRIVE_SPEED = 0.8;
 	private int SHOOT_ANGLE = 30;
 
 	public AutonBreachDefensesAndShoot()
@@ -30,7 +27,7 @@ public class AutonBreachDefensesAndShoot implements IAutonomousControl
 
 			// Move shooter to rock wall
 			ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.TOP_LIMIT);
-			ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.SHOOT);
+			ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.STANDARD_DEFENSE);
 
 			if (!RobotStatus.isAuto())
 				break;
@@ -40,14 +37,14 @@ public class AutonBreachDefensesAndShoot implements IAutonomousControl
 			{
 				//Time Based
 				ActuatorConfig.getInstance().getDriveTrain().disablePID();
-				ActuatorConfig.getInstance().getDriveTrain().setSpeed(-DRIVE_SPEED);
+				ActuatorConfig.getInstance().getDriveTrain().setSpeed(-0.8);
 
-				SensorConfig.getInstance().getTimer().waitTimeInMillis(DRIVE_TIME);
+				SensorConfig.getInstance().getTimer().waitTimeInMillis(2700);
 
 			} else
 			{
 				//Encoder Based
-				ActuatorConfig.getInstance().getDriveTrain().goStraight(DRIVE_SPEED, DRIVE_DISTANCE);
+				ActuatorConfig.getInstance().getDriveTrain().goForward(0.8, 90_000);
 			}
 
 			ActuatorConfig.getInstance().getDriveTrain().stop();
@@ -62,7 +59,7 @@ public class AutonBreachDefensesAndShoot implements IAutonomousControl
 				break;
 
 			// Shooter to Shoot Position
-			ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.SHOOT_LOW);
+			ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.LOW_BAR);
 
 			if (!RobotStatus.isAuto())
 				break;

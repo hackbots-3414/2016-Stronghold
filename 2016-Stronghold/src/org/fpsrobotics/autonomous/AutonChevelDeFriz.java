@@ -12,8 +12,7 @@ import org.usfirst.frc.team3414.robot.RobotStatus;
 public class AutonChevelDeFriz implements IAutonomousControl
 {
 	private boolean timeBased = false;
-	private double DRIVE_SPEED = 0.5;
-	private int SHOOT_ANGLE = 90;
+	private int SHOOT_ANGLE = 30;
 
 	public AutonChevelDeFriz()
 	{
@@ -26,8 +25,8 @@ public class AutonChevelDeFriz implements IAutonomousControl
 		{
 
 			// Move shooter to normal defense
-			ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.SHOOT_HIGH);
-			ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.SHOOT);
+			ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.TOP_LIMIT);
+			ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.SHOOT_HIGH);
 
 			if (!RobotStatus.isAuto())
 				break;
@@ -38,7 +37,7 @@ public class AutonChevelDeFriz implements IAutonomousControl
 
 				// Drive to Cheval
 				ActuatorConfig.getInstance().getDriveTrain().disablePID();
-				ActuatorConfig.getInstance().getDriveTrain().setSpeed(DRIVE_SPEED);
+				ActuatorConfig.getInstance().getDriveTrain().setSpeed(0.5);
 
 				SensorConfig.getInstance().getTimer().waitTimeInMillis(5000);
 
@@ -54,7 +53,7 @@ public class AutonChevelDeFriz implements IAutonomousControl
 					break;
 
 				// Go over half of Cheval
-				ActuatorConfig.getInstance().getDriveTrain().setSpeed(DRIVE_SPEED);
+				ActuatorConfig.getInstance().getDriveTrain().setSpeed(0.5);
 
 				SensorConfig.getInstance().getTimer().waitTimeInMillis(1500);
 
@@ -64,13 +63,13 @@ public class AutonChevelDeFriz implements IAutonomousControl
 					break;
 
 				// Move Auger Up
-				ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.SHOOT);
+				ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.SHOOT_HIGH);
 
 				if (!RobotStatus.isAuto())
 					break;
 
 				// Keep Driving
-				ActuatorConfig.getInstance().getDriveTrain().setSpeed(DRIVE_SPEED);
+				ActuatorConfig.getInstance().getDriveTrain().setSpeed(0.5);
 
 				SensorConfig.getInstance().getTimer().waitTimeInMillis(1500);
 
@@ -84,7 +83,7 @@ public class AutonChevelDeFriz implements IAutonomousControl
 				// ENCODER BASED
 
 				// Drive to Cheval
-				ActuatorConfig.getInstance().getDriveTrain().goStraight(DRIVE_SPEED, 1000);
+				ActuatorConfig.getInstance().getDriveTrain().goForward(0.5, 1000);
 
 				if (!RobotStatus.isAuto())
 					break;
@@ -96,7 +95,7 @@ public class AutonChevelDeFriz implements IAutonomousControl
 					break;
 
 				// Go over half of chevel
-				ActuatorConfig.getInstance().getDriveTrain().goStraight(DRIVE_SPEED, 4000);
+				ActuatorConfig.getInstance().getDriveTrain().goForward(0.5, 4000);
 				
 				if (!RobotStatus.isAuto())
 					break;
@@ -108,11 +107,13 @@ public class AutonChevelDeFriz implements IAutonomousControl
 					break;
 
 				// Keep Driving
-				ActuatorConfig.getInstance().getDriveTrain().goStraight(DRIVE_SPEED, 4000);
+				ActuatorConfig.getInstance().getDriveTrain().goForward(0.5, 4000);
 			}
 
 			ActuatorConfig.getInstance().getDriveTrain().stop();
 
+			//TO SHOOT
+			
 			// if (!RobotStatus.isAuto())
 			// break;
 			//

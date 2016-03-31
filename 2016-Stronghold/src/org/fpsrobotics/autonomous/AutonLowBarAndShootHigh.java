@@ -10,7 +10,7 @@ public class AutonLowBarAndShootHigh implements IAutonomousControl
 	private int SHOOT_ANGLE = 46;
 
 	private double DRIVE_SPEED = 0.80; // Used to be 0.5
-	private int DRIVE_DISTANCE = 145_000; //130_000 alpha
+	private int DRIVE_DISTANCE = 145_000; // 130_000 alpha
 
 	@Override
 	public void doAuto()
@@ -25,7 +25,7 @@ public class AutonLowBarAndShootHigh implements IAutonomousControl
 				break;
 
 			// Go under low bar
-			ActuatorConfig.getInstance().getDriveTrain().goStraight(DRIVE_SPEED, DRIVE_DISTANCE);
+			ActuatorConfig.getInstance().getDriveTrain().goForward(DRIVE_SPEED, DRIVE_DISTANCE);
 
 			if (!RobotStatus.isAuto())
 				break;
@@ -33,18 +33,23 @@ public class AutonLowBarAndShootHigh implements IAutonomousControl
 			// Angle drive train toward goal
 
 			ActuatorConfig.getInstance().getDriveTrainAssist().turnToAngle(SHOOT_ANGLE, 0.3);
-			
+
 			if (!RobotStatus.isAuto())
 				break;
-			
-//			ActuatorConfig.getInstance().getLauncher().moveShooterToPosition(850); //alpha
-			ActuatorConfig.getInstance().getLauncher().moveShooterToPosition(300); //beta
+
+			if (RobotStatus.isAlpha())
+			{
+				ActuatorConfig.getInstance().getLauncher().moveShooterToPosition(850); // alpha
+			} else
+			{
+				ActuatorConfig.getInstance().getLauncher().moveShooterToPosition(300); // beta
+			}
 
 			if (!RobotStatus.isAuto())
 				break;
 
 			ActuatorConfig.getInstance().getLauncher().shootSequenceHighAuto();
-			
+
 			break;
 		}
 	}

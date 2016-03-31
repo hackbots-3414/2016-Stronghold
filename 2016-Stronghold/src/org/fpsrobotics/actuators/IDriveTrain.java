@@ -25,7 +25,7 @@ public interface IDriveTrain extends IPIDEnabledDevice
 
 	public void goForward(double speed);
 
-	public void goStraight(double speed, int distance);
+	public void goForward(double speed, int distance);
 
 	public void goBackward(double speed);
 
@@ -34,4 +34,6 @@ public interface IDriveTrain extends IPIDEnabledDevice
 	public void driveLeft(double speed);
 
 	public void driveRight(double speed);
+
+	public void driveStraight(double speed);
 }

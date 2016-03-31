@@ -7,7 +7,6 @@ import org.fpsrobotics.teleop.PIDOverride;
 import org.usfirst.frc.team3414.robot.RobotStatus;
 
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Creates a drive train that has two double motors on either side with encoders
@@ -20,6 +19,8 @@ public class TankDrive implements IDriveTrain
 	private DoubleMotor motorLeft, motorRight;
 
 	private IGyroscope gyro;
+	
+	private boolean autoGyroDriveActivated;
 
 	public TankDrive(DoubleMotor motorLeft, DoubleMotor motorRight)
 	{
@@ -35,17 +36,25 @@ public class TankDrive implements IDriveTrain
 	}
 
 	@Override
+	/**
+	 * Sets left and right motors to leftSpeed and righSpeed Respectively
+	 */
 	public void setSpeed(double leftSpeed, double rightSpeed)
 	{
-		//Caution: May want to disable PID
+		// Caution: May want to disable PID
+		autoGyroDriveActivated = false;
 		motorLeft.setSpeed(leftSpeed);
 		motorRight.setSpeed(rightSpeed);
 	}
 
 	@Override
+	/**
+	 * Sets left and right motors to speed
+	 */
 	public void setSpeed(double speed)
 	{
-		//Caution: May want to disable PID
+		// Caution: May want to disable PID
+		autoGyroDriveActivated = false;
 		motorLeft.setSpeed(speed);
 		motorRight.setSpeed(speed);
 	}
@@ -53,58 +62,86 @@ public class TankDrive implements IDriveTrain
 	@Override
 	public void stop()
 	{
-		//Caution: May want to disable PID
+		// Caution: May want to disable PID
+		autoGyroDriveActivated = false;
 		motorLeft.stop();
 		motorRight.stop();
 	}
 
 	@Override
+	/**
+	 * Turns left at speed
+	 */
 	public void turnLeft(double speed)
 	{
-		//Caution: May want to disable PID
+		// Caution: May want to disable PID
+		autoGyroDriveActivated = false;
 		motorLeft.setSpeed(speed);
 		motorRight.setSpeed(-speed);
 	}
 
 	@Override
+	/**
+	 * Turns right at speed
+	 */
 	public void turnRight(double speed)
 	{
-		//Caution: May want to disable PID
+		// Caution: May want to disable PID
+		autoGyroDriveActivated = false;
 		motorLeft.setSpeed(-speed);
 		motorRight.setSpeed(speed);
 	}
 
 	@Override
+	/**
+	 * Drives at Absolute Value of Speed
+	 */
 	public void goForward(double speed)
 	{
-		//Caution: May want to disable PID
+		// Caution: May want to disable PID
+		autoGyroDriveActivated = false;
 		motorLeft.setSpeed(Math.abs(speed));
 		motorRight.setSpeed(Math.abs(speed));
 	}
 
 	@Override
+	/**
+	 * Drives at Negative Absolute Value of Speed
+	 */
 	public void goBackward(double speed)
 	{
-		//Caution: May want to disable PID
+		// Caution: May want to disable PID
+		autoGyroDriveActivated = false;
 		motorLeft.setSpeed(-Math.abs(speed));
 		motorRight.setSpeed(-Math.abs(speed));
 	}
 
 	@Override
+	/**
+	 * Turns left 90 degrees (in while loop) then drives forward
+	 */
 	public void driveLeft(double speed)
 	{
+		autoGyroDriveActivated = false;
 		turnLeft(speed, 90);
 		goForward(speed);
 	}
 
 	@Override
+	/**
+	 * Turns right 90 degrees (in while loop) then drives forward
+	 */
 	public void driveRight(double speed)
 	{
+		autoGyroDriveActivated = false;
 		turnRight(speed, 90);
 		goForward(speed);
 	}
 
 	@Override
+	/**
+	 * CAUTION: Use Silverlight
+	 */
 	public void setP(double p)
 	{
 		motorLeft.setP(p);
@@ -112,6 +149,9 @@ public class TankDrive implements IDriveTrain
 	}
 
 	@Override
+	/**
+	 * CAUTION: Use Silverlight
+	 */
 	public void setI(double i)
 	{
 		motorLeft.setI(i);
@@ -119,6 +159,9 @@ public class TankDrive implements IDriveTrain
 	}
 
 	@Override
+	/**
+	 * CAUTION: Use Silverlight
+	 */
 	public void setD(double d)
 	{
 		motorLeft.setD(d);
@@ -178,6 +221,9 @@ public class TankDrive implements IDriveTrain
 	}
 
 	@Override
+	/**
+	 * Use in Autonomous Mode (Uses while loop)
+	 */
 	public void turnLeft(double speed, double degrees)
 	{
 		if (gyro != null)
@@ -204,6 +250,9 @@ public class TankDrive implements IDriveTrain
 	}
 
 	@Override
+	/**
+	 * Use in Autonomous Mode (Uses while loop)
+	 */
 	public void turnRight(double speed, double degrees)
 	{
 		if (gyro != null)
@@ -232,7 +281,10 @@ public class TankDrive implements IDriveTrain
 	private final double Kp = 0.005; // used to be .01
 
 	@Override
-	public void goStraight(double speed, int distance)
+	/**
+	 * Use in Autonomous Mode (Uses while loop)
+	 */
+	public void goForward(double speed, int distance)
 	{
 		double initialCountRight = motorRight.getCANMotorOne().getPIDFeedbackDevice().getCount();
 		double initialCountLeft = motorLeft.getCANMotorOne().getPIDFeedbackDevice().getCount();
@@ -272,13 +324,46 @@ public class TankDrive implements IDriveTrain
 	}
 
 	@Override
+	/**
+	 * Use in Autonomous Mode (Uses while loop)
+	 */
 	public void goBackward(double speed, int distance)
 	{
-		goStraight(-speed, distance);
+		goForward(-speed, distance);
+	}
+
+
+	/**
+	 * Resets the gyro
+	 */
+	@Override
+	public void driveStraight(double speed)
+	{
+		if (gyro != null)
+		{
+			if (!autoGyroDriveActivated)
+			{
+				disablePID();
+
+				gyro.resetCount();
+
+				autoGyroDriveActivated = true;
+			}
+			drive(-speed, -gyro.getCount() * Kp);
+		} else
+		{
+			setSpeed(speed);
+		}
 	}
 
 	private final double m_sensitivity = 0.5;
 
+	/**
+	 * Use for PID Driving
+	 * 
+	 * @param outputMagnitude
+	 * @param curve
+	 */
 	private void drive(double outputMagnitude, double curve)
 	{
 		double leftOutput, rightOutput;

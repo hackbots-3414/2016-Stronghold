@@ -11,10 +11,6 @@ public class AutonReachDefenses implements IAutonomousControl
 
 	private boolean timeBased = false;
 
-	private int DRIVE_TIME = 2700;
-	private int DRIVE_DISTANCE = 40_000;
-	private double DRIVE_SPEED = 0.5;
-
 	public AutonReachDefenses()
 	{
 
@@ -27,25 +23,25 @@ public class AutonReachDefenses implements IAutonomousControl
 		{
 			// Shooter to rock wall position
 			ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.TOP_LIMIT);
-			ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.FOURTY_KAI);
+			ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.STANDARD_DEFENSE);
 
 			if (!RobotStatus.isAuto())
 				break;
-			
+
 			// Go to defenses
 			if (timeBased)
 			{
 				// TIME BASED
 				ActuatorConfig.getInstance().getDriveTrain().disablePID();
 
-				ActuatorConfig.getInstance().getDriveTrain().setSpeed(DRIVE_SPEED);
+				ActuatorConfig.getInstance().getDriveTrain().setSpeed(0.5);
 
-				SensorConfig.getInstance().getTimer().waitTimeInMillis(DRIVE_TIME);
+				SensorConfig.getInstance().getTimer().waitTimeInMillis(2700);
 
 				ActuatorConfig.getInstance().getDriveTrain().stop();
 			} else
 			{
-				ActuatorConfig.getInstance().getDriveTrain().goStraight(DRIVE_SPEED, DRIVE_DISTANCE);
+				ActuatorConfig.getInstance().getDriveTrain().goForward(0.5, 40_000);
 			}
 
 			break;

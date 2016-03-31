@@ -6,14 +6,13 @@ import org.fpsrobotics.actuators.EShooterPresets;
 import org.fpsrobotics.sensors.SensorConfig;
 import org.usfirst.frc.team3414.robot.RobotStatus;
 
-public class AutonLowBar implements IAutonomousControl
+public class AutonLowBarAndShootLow implements IAutonomousControl
 {
-	private boolean timeBased = false;
+	private int SHOOT_ANGLE = 46;
 
-	public AutonLowBar()
-	{
-
-	}
+	private double DRIVE_SPEED = 0.80; // Used to be 0.5
+	private int DRIVE_DISTANCE = 130_000; // Used to be 146_000
+	//used to be 122,000
 
 	@Override
 	public void doAuto()
@@ -27,21 +26,20 @@ public class AutonLowBar implements IAutonomousControl
 			if (!RobotStatus.isAuto())
 				break;
 
-			if (timeBased)
-			{
-				ActuatorConfig.getInstance().getDriveTrain().disablePID();
-				ActuatorConfig.getInstance().getDriveTrain().setSpeed(-0.5);
+			// Go under low bar
+			ActuatorConfig.getInstance().getDriveTrain().goForward(DRIVE_SPEED, DRIVE_DISTANCE);
 
-				SensorConfig.getInstance().getTimer().waitTimeInMillis(5000);
+			if (!RobotStatus.isAuto())
+				break;
 
-				ActuatorConfig.getInstance().getDriveTrain().stop();
-			} else
-			{
-				// Go under low bar
-				ActuatorConfig.getInstance().getDriveTrain().goForward(0.5, 130_000);
-			}
+			// Angle drive train toward goal
 
-			ActuatorConfig.getInstance().getDriveTrain().stop();
+			ActuatorConfig.getInstance().getDriveTrainAssist().turnToAngle(SHOOT_ANGLE, 0.3);
+
+			if (!RobotStatus.isAuto())
+				break;
+
+			ActuatorConfig.getInstance().getLauncher().shootSequenceLowAuto();
 
 			break;
 		}

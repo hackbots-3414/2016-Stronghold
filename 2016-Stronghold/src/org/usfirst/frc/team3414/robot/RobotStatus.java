@@ -17,7 +17,7 @@ public class RobotStatus
 	private static boolean isAuto = false;
 	private static boolean isTeleop = false;
 	private static boolean isAlpha = true;
-//	private boolean alphaHasBeenChecked = false;
+	private static boolean alphaHasBeenChecked = false;
 
 	public static boolean isRunning()
 	{
@@ -34,10 +34,10 @@ public class RobotStatus
 		return isTeleop;
 	}
 
-//	public static boolean isAlpha()
-//	{
-//		return isAlpha;
-//	}
+	public static boolean isAlpha()
+	{
+		return isAlpha;
+	}
 
 	protected static void setIsRunning(boolean isRunning)
 	{
@@ -54,49 +54,49 @@ public class RobotStatus
 		RobotStatus.isTeleop = isRunning;
 	}
 
-//	protected void checkIsAlpha()
-//	{
-//		if (!alphaHasBeenChecked)
-//		{
-//			FileReader fileReader = null;
-//			try
-//			{
-//				fileReader = new FileReader("/home/lvuser/AlphaOrBeta.txt");
-//				// TODO: Make sure file exists at this exact path
-//			} catch (FileNotFoundException e1)
-//			{
-//				e1.printStackTrace();
-//			}
-//
-//			try
-//			{
-//				BufferedReader textReader = new BufferedReader(fileReader);
-//
-//				String alphaOrBeta = textReader.readLine();
-//
-//				if (alphaOrBeta.equals("alpha"))
-//				{
-//					isAlpha = true;
-//				} else if (alphaOrBeta.equals("beta"))
-//				{
-//					isAlpha = false;
-//				} else
-//				{
-//					System.err.println(
-//							"File is openable but doesn't specify alpha or beta on the first line, assuming alpha.");
-//				}
-//				SmartDashboard.putBoolean("isAlpha", isAlpha);
-//				textReader.close();
-//
-//			} catch (Exception e)
-//			{
-//				System.err.println("Cannot determine if alpha or beta, assuming alpha");
-//				isAlpha = true;
-//			}
-//
-//			alphaHasBeenChecked = true;
-//		}
-//
-//	}
+	protected static void checkIsAlpha()
+	{
+		if (!RobotStatus.alphaHasBeenChecked)
+		{
+			FileReader fileReader = null;
+			try
+			{
+				fileReader = new FileReader("/home/lvuser/AlphaOrBeta.txt");
+				// TODO: Make sure file exists at this exact path
+			} catch (FileNotFoundException e1)
+			{
+				e1.printStackTrace();
+			}
+
+			try
+			{
+				BufferedReader textReader = new BufferedReader(fileReader);
+
+				String alphaOrBeta = textReader.readLine();
+
+				if (alphaOrBeta.equals("alpha"))
+				{
+					isAlpha = true;
+				} else if (alphaOrBeta.equals("beta"))
+				{
+					isAlpha = false;
+				} else
+				{
+					System.err.println(
+							"File is openable but doesn't specify alpha or beta on the first line, assuming alpha.");
+				}
+				SmartDashboard.putBoolean("isAlpha", isAlpha);
+				textReader.close();
+
+			} catch (Exception e)
+			{
+				System.err.println("Cannot determine if alpha or beta, assuming alpha");
+				isAlpha = true;
+			}
+
+			RobotStatus.alphaHasBeenChecked = true;
+		}
+
+	}
 
 }
