@@ -256,8 +256,8 @@ public class MullenatorTeleop implements ITeleopControl
 				// }
 
 				// Auger Pot Value
-				//SmartDashboard.putNumber("Auger Pot", ActuatorConfig.getInstance().getAugerPotentiometer().getCount());
-				System.out.println(ActuatorConfig.getInstance().getAugerPotentiometer().getCount());
+				SmartDashboard.putNumber("Auger Pot", ActuatorConfig.getInstance().getAugerPotentiometer().getCount());
+//				System.out.println(ActuatorConfig.getInstance().getAugerPotentiometer().getCount());
 
 				// Should we raise value
 				SmartDashboard.putBoolean("Should we raise",
@@ -318,7 +318,7 @@ public class MullenatorTeleop implements ITeleopControl
 				if (leftJoystick.getButtonValue(EJoystickButtons.EIGHT) && !shootingLockOut)
 				{
 					shootingLockOut = true;
-					ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.SHOOT);
+					ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.STANDARD_DEFENSE);
 					ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.SHOOT_HIGH);
 				}
 
@@ -336,6 +336,36 @@ public class MullenatorTeleop implements ITeleopControl
 				{
 					shootingLockOut = true;
 					ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.FOURTY_KAI);
+				}
+				
+				//Center Shot preset
+				if (rightJoystick.getButtonValue(EJoystickButtons.NINE) && !shootingLockOut)
+				{
+					shootingLockOut = true;
+//					if (RobotStatus.isAlpha())
+//					{
+//						ActuatorConfig.getInstance().getLauncher().moveShooterToPosition(290);	//TODO: Tune this
+//					} else
+//					{
+//					ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.SHOOT);	
+						ActuatorConfig.getInstance().getLauncher().moveShooterToPosition(290);
+//					}
+					ActuatorConfig.getInstance().getLauncher().shootSequenceHigh();
+				}
+				
+				//Side/ corner shot preset
+				if (rightJoystick.getButtonValue(EJoystickButtons.TEN) && !shootingLockOut)
+				{
+					shootingLockOut = true;
+//					ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.SHOOT);
+//					if (RobotStatus.isAlpha())
+//					{
+//						ActuatorConfig.getInstance().getLauncher().moveShooterToPosition(290);	//TODO: Tune this
+//					} else
+//					{
+						ActuatorConfig.getInstance().getLauncher().moveShooterToPosition(285);
+//					}
+					ActuatorConfig.getInstance().getLauncher().shootSequenceHigh();
 				}
 				
 				//if (leftJoystick.getButtonValue(EJoystickButton.ELEVEN)&& )
@@ -373,6 +403,8 @@ public class MullenatorTeleop implements ITeleopControl
 				if (!gamepad.getButtonValue(EJoystickButtons.SEVEN) && !gamepad.getButtonValue(EJoystickButtons.EIGHT)
 						&& !gamepad.getButtonValue(EJoystickButtons.NINE)
 						&& !gamepad.getButtonValue(EJoystickButtons.TEN)
+						&& !rightJoystick.getButtonValue(EJoystickButtons.NINE)
+						&& !rightJoystick.getButtonValue(EJoystickButtons.TEN)
 						&& !leftJoystick.getButtonValue(EJoystickButtons.EIGHT)
 						&& !leftJoystick.getButtonValue(EJoystickButtons.SEVEN)
 						&& !leftJoystick.getButtonValue(EJoystickButtons.NINE)

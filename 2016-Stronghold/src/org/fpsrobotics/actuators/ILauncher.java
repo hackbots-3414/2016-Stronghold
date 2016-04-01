@@ -6,7 +6,6 @@ package org.fpsrobotics.actuators;
  */
 public interface ILauncher
 {
-	public boolean isAugerCalibrated();
 
 	// Lifter Functions
 	// public void lowerShooterToBottomLimit();
@@ -68,8 +67,6 @@ public interface ILauncher
 	public void shootSequenceHigh();
 
 	public void shootSequenceLow();
-
-	public void shootSequence(double speed);
 	
 	public void lowerAugerToBottomLimit(double speed);
 
