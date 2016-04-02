@@ -21,14 +21,16 @@ public class Robot extends SampleRobot
 
 	public Robot()
 	{
+		RobotStatus.checkIsAlpha();
+		
 		teleop = new MullenatorTeleop();
 		executor = Executors.newFixedThreadPool(1);
 	}
 
 	public void robotInit()
 	{
+
 		makeAutoChooser();
-		RobotStatus.checkIsAlpha();
 		SensorConfig.getInstance();
 		ActuatorConfig.getInstance();
 	}

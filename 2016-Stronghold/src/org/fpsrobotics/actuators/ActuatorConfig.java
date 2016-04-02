@@ -229,7 +229,7 @@ public class ActuatorConfig
 				SensorConfig.getInstance().getAugerTopLimitSwitch(), augerPotentiometer);
 				
 		// Instantiate the lifter
-		lift = new Lifter(new org.fpsrobotics.actuators.DoubleSolenoid(new edu.wpi.first.wpilibj.DoubleSolenoid(2,3)));
+//		lift = new Lifter(new org.fpsrobotics.actuators.SingleSolenoid(new edu.wpi.first.wpilibj.DoubleSolenoid(2,3))); //TODO: MAKE LIFTER ACUTATOR CONFIG
 	}
 
 	public static synchronized ActuatorConfig getInstance()

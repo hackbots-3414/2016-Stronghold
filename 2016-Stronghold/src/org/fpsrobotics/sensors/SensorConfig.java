@@ -109,7 +109,7 @@ public class SensorConfig
 		cameraOne.enable();
 
 		accelNavX = new AccelerometerNavX(ahrs);
-		compassNavX = new CompassNavX(ahrs);
+//		compassNavX = new CompassNavX(ahrs);
 	}
 
 	public static synchronized SensorConfig getInstance()
