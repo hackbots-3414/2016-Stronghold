@@ -81,14 +81,7 @@ public class MullenatorTeleop implements ITeleopControl
 				printToSmartDashboard();
 
 				// Wait for Thread
-				try
-				{
-					Thread.sleep(50);
-				} catch (Exception e)
-				{
-					e.printStackTrace();
-				}
-
+				SensorConfig.getInstance().getTimer().waitTimeInMillis(50);
 			}
 		});
 
@@ -225,13 +218,7 @@ public class MullenatorTeleop implements ITeleopControl
 				}
 
 				// Wait for Thread
-				try
-				{
-					Thread.sleep(50);
-				} catch (Exception e)
-				{
-					e.printStackTrace();
-				}
+				SensorConfig.getInstance().getTimer().waitTimeInMillis(50);
 			}
 		});
 

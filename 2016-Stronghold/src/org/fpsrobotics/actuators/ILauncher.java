@@ -23,10 +23,10 @@ public interface ILauncher
 	public void lowerShooter(boolean slow);
 
 	public void stopShooterLifter();
-	
-	//private boolean isShooterAtTopLimit()
-	
-	//private boolean isShooterAtBottomLimit()
+
+	// private boolean isShooterAtTopLimit()
+
+	// private boolean isShooterAtBottomLimit()
 
 	public void moveShooterToPosition(double position);
 
@@ -47,26 +47,26 @@ public interface ILauncher
 	 * Used for Teleop if Sami wants manual spinUp
 	 */
 	public void spinShooterWheelsLow();
-	
-	//private void spinShooterWheels(double speed)
-	
-	//private void jostle()
+
+	// private void spinShooterWheels(double speed)
+
+	// private void jostle()
 
 	public void stopShooterWheels();
 
 	// Auger Functions
 
 	public void raiseAuger();
-	
-	//private void raiseAuger(double speed)
-	
-	//private void rampUpMotor(double speed)
+
+	// private void raiseAuger(double speed)
+
+	// private void rampUpMotor(double speed)
 
 	public void lowerAuger();
-	
-	//private void lowerAuger(double speed)
-	
-	//private void rampDownMotor(double speed)
+
+	// private void lowerAuger(double speed)
+
+	// private void rampDownMotor(double speed)
 
 	public void stopAugerLifter(boolean ramp);
 
@@ -77,10 +77,10 @@ public interface ILauncher
 	// private void raiseAugerToTopLimit();
 
 	// private void lowerAugerToBottomLimit();
-	
-	//private boolean isAugerAtBottomLimit()
-	
-	//private boolean isAugerAtTopLimit()
+
+	// private boolean isAugerAtBottomLimit()
+
+	// private boolean isAugerAtTopLimit()
 
 	public void moveAugerToPosition(int position);
 
