@@ -19,30 +19,6 @@ public class Logitech3DJoystick implements IJoystick
 		this.joy = joy;
 	}
 
-//	@Override
-	// public double getX()
-	// {
-	// return joy.getRawAxis(HORIZONTAL_AXIS);
-	// }
-	//
-	// @Override
-	// public double getY()
-	// {
-	// return joy.getRawAxis(VERTICAL_AXIS);
-	// }
-	//
-	// @Override
-	// public double getTwist()
-	// {
-	// return joy.getRawAxis(TWIST_AXIS);
-	// }
-	//
-	// @Override
-	// public double getSwitch()
-	// {
-	// return joy.getRawAxis(SWITCH_AXIS);
-	// }
-
 	@Override
 	public double getX()
 	{

@@ -229,8 +229,7 @@ public class MechanumDrive
 	private IAccelerometer accel;
 	// private double devAngle;
 	private static final double ROTATE_CONSTANT = 0.5;
-	private double ROTATE_SECONDS_PER_DEGREE; // TODO: Rotate seconds per degree
-												// based on 0.3 power
+	private double ROTATE_SECONDS_PER_DEGREE; // Rotate seconds per degree based on 0.3 power
 	private double ROTATE_POWER_INTO_MOTORS = 0.3;
 
 	double Kp = 1.0;

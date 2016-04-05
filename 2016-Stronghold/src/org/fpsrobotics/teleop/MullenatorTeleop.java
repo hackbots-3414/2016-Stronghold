@@ -87,7 +87,6 @@ public class MullenatorTeleop implements ITeleopControl
 
 		executor.submit(() ->
 		{
-			// ActuatorConfig.getInstance().getLifter().retract(); //TODO
 
 			while (RobotStatus.isRunning())
 			{
@@ -129,7 +128,7 @@ public class MullenatorTeleop implements ITeleopControl
 					shootingLockOut = true;
 					if (RobotStatus.isAlpha())
 					{
-						// Alpha TODO: Tune this Alpha
+						// Alpha TODO: Tune Center shot Preset - Alpha
 						ActuatorConfig.getInstance().getLauncher().moveShooterToPosition(290);
 					} else
 					{
@@ -145,7 +144,7 @@ public class MullenatorTeleop implements ITeleopControl
 					shootingLockOut = true;
 					if (RobotStatus.isAlpha())
 					{
-						// Alpha TODO: Tune this Alpha
+						// Alpha TODO: Tune Corner shot Prest - Alpha
 						ActuatorConfig.getInstance().getLauncher().moveShooterToPosition(290);
 					} else
 					{
@@ -155,8 +154,8 @@ public class MullenatorTeleop implements ITeleopControl
 					ActuatorConfig.getInstance().getLauncher().shootSequenceHigh();
 				}
 
-				// // Portcullis - So you have to hold Button Eleven TODO: Tune
-				// This
+				// // Portcullis - So you have to hold Button Eleven 
+				// TODO: Tune Portcullis auto action during teleop
 				// if (leftJoystick.getButtonValue(EJoystickButtons.ELEVEN) &&
 				// !shootingLockOut)
 				// {
@@ -183,7 +182,7 @@ public class MullenatorTeleop implements ITeleopControl
 				// }
 				// }
 
-				// Lift Robot TODO: ONLY IF WE HAVE PISTONS ATTACHED
+				// Lift Robot TODO: Lift Robot ONLY IF WE HAVE PISTONS ATTACHED
 
 //				if (Timer.getFPGATimestamp() > 120)
 //				{
@@ -275,8 +274,6 @@ public class MullenatorTeleop implements ITeleopControl
 				if (SensorConfig.getInstance().getRightJoystick().getButtonValue(EJoystickButtons.ONE))
 				{
 					ActuatorConfig.getInstance().getDriveTrain().setSpeed(correctedYRight * speedMultiplier);
-					// ActuatorConfig.getInstance().getDriveTrain().driveStraight(correctedYRight
-					// * speedMultiplier); //TODO Test this
 					SmartDashboard.putBoolean("DRIVE TOGETHER", true);
 				} else
 				{
@@ -306,8 +303,6 @@ public class MullenatorTeleop implements ITeleopControl
 			{
 				ActuatorConfig.getInstance().getDriveTrain()
 						.setSpeed(SensorConfig.getInstance().getRightJoystick().getY() * speedMultiplier);
-				// ActuatorConfig.getInstance().getDriveTrain().driveStraight(SensorConfig.getInstance().getRightJoystick().getY()
-				// * speedMultiplier); //TODO
 				SmartDashboard.putBoolean("DRIVE TOGETHER", true);
 			} else
 			{

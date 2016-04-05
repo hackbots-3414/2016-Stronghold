@@ -6,6 +6,10 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
 
+/**
+ * Not used for 2016 Season
+ *
+ */
 public class JoystickLogger implements ILogger
 {
 	private IJoystick joyLeft;
@@ -24,12 +28,10 @@ public class JoystickLogger implements ILogger
 			bw = new PrintWriter("joystickLog_" + getLoggerTimeStamp() + "_.txt", "UTF-8");
 		} catch (FileNotFoundException e)
 		{
-			// TODO Auto-generated catch block
 			System.out.println("Write File Not Found");
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e)
 		{
-			// TODO Auto-generated catch block
 			System.out.println("UTF-8 Not Found");
 			e.printStackTrace();
 		}

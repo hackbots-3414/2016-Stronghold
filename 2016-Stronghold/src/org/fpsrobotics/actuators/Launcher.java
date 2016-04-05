@@ -9,11 +9,15 @@ import org.usfirst.frc.team3414.robot.RobotStatus;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
- * Creates a Launcher for the 2016 Season FIRST Stronghold: A Servo pushes the ball from a holding bay into two motors
- * to fire the ball. It has a linear actuator which controls the vertical angle of the shooter, along with two limit
- * switches and a potentiometer that define it's limits of travel. It also has an auger that utilizes a motor to suck in
- * the ball and a motor to move itself vertically. The auger also has limit switches for it's outer reaches of travel.
+ * Creates a Flywheel Launcher for the 2016 Season FIRST Stronghold: A Servo pushes the ball from a holding bay into two
+ * motors to fire the ball. It has a linear actuator which controls the vertical angle of the shooter, along with two
+ * limit switches and a potentiometer that define it's limits of travel. It also has an auger that utilizes a motor to
+ * suck in the ball and a motor to move itself vertically. The auger also has limit switches for it's outer reaches of
+ * travel.
  *
+ * Update 4/4/16: The auger should move itself automatically if the shooter will hit [the auger] when the shooter is
+ * being raised manually. The auger will detect if it is nearing the shooter or the ground, and slow down to a halt
+ * before it collides.
  */
 public class Launcher implements ILauncher
 {
@@ -49,6 +53,8 @@ public class Launcher implements ILauncher
 
 	private int LOW_BAR_SHOOTER_VALUE; // the highest point for the shooter at which the shooter and auger will not
 										// collide
+	private int AUGER_WITHIN_RANGE_OF_HITTING_SOMETHING; // used for moving the auger if it will hit the shooter or
+															// ground
 
 	private boolean isAugerAtIntake = false; // used to stop intake boulder
 	private boolean autoRaiseAuger = false; // used so manual [lower auger] is disabled when auto raising auger
@@ -140,6 +146,8 @@ public class Launcher implements ILauncher
 			AUGER_SHOOT_LOW_POT_VALUE = 1276;
 		}
 
+		AUGER_WITHIN_RANGE_OF_HITTING_SOMETHING = BOTTOM_POT_LIMIT_AUGER + 100;
+
 		SmartDashboard.putNumber("Top Pot Limit Auger", TOP_POT_LIMIT_AUGER);
 		SmartDashboard.putNumber("Bottom Pot Limit Auger", BOTTOM_POT_LIMIT_AUGER);
 
@@ -179,7 +187,7 @@ public class Launcher implements ILauncher
 		{
 			if (slow)
 			{
-				if ((augerPot.getCount() < (BOTTOM_POT_LIMIT_AUGER + 100)) && (shooterPot.getCount() < LOW_BAR_SHOOTER_VALUE))
+				if ((augerPot.getCount() < (AUGER_WITHIN_RANGE_OF_HITTING_SOMETHING)) && (shooterPot.getCount() < LOW_BAR_SHOOTER_VALUE))
 				// If Auger is within range of getting hit, and Shooter is above "Low Bar Preset," within range of
 				// getting hit -> Move the auger too
 				{
@@ -195,7 +203,7 @@ public class Launcher implements ILauncher
 				}
 			} else
 			{
-				if ((augerPot.getCount() < (BOTTOM_POT_LIMIT_AUGER + 100)) && (shooterPot.getCount() < LOW_BAR_SHOOTER_VALUE))
+				if ((augerPot.getCount() < (AUGER_WITHIN_RANGE_OF_HITTING_SOMETHING)) && (shooterPot.getCount() < LOW_BAR_SHOOTER_VALUE))
 				// If Auger is within range of getting hit, and Shooter is above "Low Bar Preset," within range of
 				// getting hit -> Move the auger too
 				{
@@ -471,7 +479,7 @@ public class Launcher implements ILauncher
 			if ((shooterPot.getCount() < LOW_BAR_SHOOTER_VALUE))
 			{
 				// If auger is nearing the shooter
-				if ((augerPot.getCount() < (BOTTOM_POT_LIMIT_AUGER + 200)))
+				if ((augerPot.getCount() < (AUGER_WITHIN_RANGE_OF_HITTING_SOMETHING + 100)))
 				{
 					stopAugerLifter(false);
 				} else
@@ -485,7 +493,7 @@ public class Launcher implements ILauncher
 				// If auger is nearing the bottom of its path
 				// used to be !isAugerAtBottomLimit -> used to not have auger slam on ground
 				// if (!isAugerAtBottomLimit())
-				if (augerPot.getCount() < (BOTTOM_POT_LIMIT_AUGER + 100))
+				if (augerPot.getCount() < (AUGER_WITHIN_RANGE_OF_HITTING_SOMETHING))
 				{
 					// slow down and stop
 					stopAugerLifter(true);
@@ -669,7 +677,7 @@ public class Launcher implements ILauncher
 	{
 		if (RobotStatus.isAlpha())
 		{
-			// ALPHA
+			// ALPHA //TODO: Tune Alpha for Shooter
 			// Top Alpha: 588
 			// Bottom Alpha: 2100
 			switch (preset)
@@ -712,7 +720,7 @@ public class Launcher implements ILauncher
 	{
 		if (RobotStatus.isAlpha())
 		{
-			// ALPHA //TODO: Tune Alpha
+			// ALPHA //TODO: Tune Alpha for Auger
 			// Top Alpha 1622
 			// Bottom Alpha 290
 			switch (preset)

@@ -38,6 +38,17 @@ public class AutonLowBarAndShootLow implements IAutonomousControl
 
 			if (!RobotStatus.isAuto())
 				break;
+			
+			if (RobotStatus.isAlpha())
+			{
+				ActuatorConfig.getInstance().getLauncher().moveShooterToPosition(850); // alpha //TODO: Tune Autonomous mode for Alpha (DO BEFORE COMPETITION)
+			} else
+			{
+				ActuatorConfig.getInstance().getLauncher().moveShooterToPosition(300); // beta
+			}
+			
+			if (!RobotStatus.isAuto())
+				break;
 
 			ActuatorConfig.getInstance().getLauncher().shootSequenceLowAuto();
 

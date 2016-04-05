@@ -94,45 +94,6 @@ public class ActuatorConfig
 	
 	private ActuatorConfig()
 	{
-
-//		// To distinguish between alpha and beta
-//		boolean isAlpha = true;
-//		FileReader fileReader = null;
-//		try
-//		{
-//			fileReader = new FileReader("/home/lvuser/AlphaOrBeta.txt");
-//			// TODO: Make sure file exists at this exact path
-//		} catch (FileNotFoundException e1)
-//		{
-//			e1.printStackTrace();
-//		}
-//
-//		try
-//		{
-//			BufferedReader textReader = new BufferedReader(fileReader);
-//
-//			String alphaOrBeta = textReader.readLine();
-//
-//			if (alphaOrBeta.equals("alpha"))
-//			{
-//				isAlpha = true;
-//			} else if (alphaOrBeta.equals("beta"))
-//			{
-//				isAlpha = false;
-//			} else
-//			{
-//				System.err.println(
-//						"File is openable but doesn't specify alpha or beta on the first line, assuming alpha.");
-//			}
-//			SmartDashboard.putBoolean("isAlpha", isAlpha);
-//			textReader.close();
-//
-//		} catch (Exception e)
-//		{
-//			System.err.println("Cannot determine if alpha or beta, assuming alpha");
-//			isAlpha = true;
-//		}
-
 		try
 		{
 			// Instantiate CANTalons

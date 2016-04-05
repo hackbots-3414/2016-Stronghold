@@ -46,7 +46,7 @@ public class Robot extends SampleRobot
 		autoChooser.addObject("Low Bar and Shoot Low", new AutonLowBarAndShootLow());
 		autoChooser.addObject("Low Bar and Shoot High-PICK THIS ALMOST ALWAYS", new AutonLowBarAndShootHigh());
 		autoChooser.addObject("Fourty Kai", new FourtyKai());
-//		autoChooser.addDefault("Chevel De Friz", new AutonChevelDeFriz());	//TODO: Untested
+//		autoChooser.addDefault("Chevel De Friz", new AutonChevelDeFriz());	//Untested
 
 		SmartDashboard.putData("Autonomous Chooser", autoChooser);
 	}

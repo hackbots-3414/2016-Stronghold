@@ -7,6 +7,10 @@ import java.util.Calendar;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+/**
+ * Not Used for 2016 Season
+ *
+ */
 public class GamepadLogger implements ILogger
 {
 	private IGamepad gamepad;
@@ -26,7 +30,6 @@ public class GamepadLogger implements ILogger
 		 }
 		 catch (UnsupportedEncodingException e)
 		{
-			// TODO Auto-generated catch block
 			 System.out.println("UTF-8 Not Found");
 			 e.printStackTrace();
 		}

@@ -51,7 +51,7 @@ public class Gyroscope implements IGyroscope
 	{
 		gyro.reset();
 	}
-	
+
 	public double getAttitude()
 	{
 		return 0.0;
@@ -60,21 +60,18 @@ public class Gyroscope implements IGyroscope
 	@Override
 	public double getPitch()
 	{
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public double getRate()
 	{
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public double getPitchRate()
 	{
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
