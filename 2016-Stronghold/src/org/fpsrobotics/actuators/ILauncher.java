@@ -63,14 +63,14 @@ public interface ILauncher
 	// private void rampUpMotor(double speed)
 
 	public void lowerAuger();
+	
+	public void lowerAugerForEndGame();
 
 	// private void lowerAuger(double speed)
 
 	// private void rampDownMotor(double speed)
 
 	public void stopAugerLifter(boolean ramp);
-
-	public void spinAugerWheels();
 
 	public void stopAugerWheels();
 

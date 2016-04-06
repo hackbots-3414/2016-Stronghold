@@ -25,5 +25,9 @@ public class Lifter implements ILifter
 		lifterTwo.engage();
 		SensorConfig.getInstance().getTimer().waitTimeInMillis(1000);
 		lifterTwo.disengage();
+		SensorConfig.getInstance().getTimer().waitTimeInMillis(1000);
+		ActuatorConfig.getInstance().getLauncher().lowerAugerForEndGame();
+		SensorConfig.getInstance().getTimer().waitTimeInMillis(1000);
+		ActuatorConfig.getInstance().getLauncher().stopAugerLifter(false);;
 	}
 }

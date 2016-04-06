@@ -15,7 +15,6 @@ import org.fpsrobotics.sensors.SensorConfig;
 import org.usfirst.frc.team3414.robot.RobotStatus;
 
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class MullenatorTeleop implements ITeleopControl
@@ -110,7 +109,7 @@ public class MullenatorTeleop implements ITeleopControl
 					shootingLockOut = true;
 
 					launcher.moveShooterToPreset(EShooterPresets.LOW_BAR);
-					launcher.moveAugerToPreset(EAugerPresets.BOTTOM_LIMIT);
+					launcher.moveAugerToPreset(EAugerPresets.LOW_BAR);
 				}
 
 				// Any Normal Defense
@@ -118,8 +117,8 @@ public class MullenatorTeleop implements ITeleopControl
 				{
 					shootingLockOut = true;
 
-					launcher.moveShooterToPreset(EShooterPresets.TOP_LIMIT);
-					launcher.moveAugerToPreset(EAugerPresets.STANDARD_DEFENSE);
+					launcher.moveShooterToPreset(EShooterPresets.STANDARD_DEFENSE_SHOOTER);
+					launcher.moveAugerToPreset(EAugerPresets.STANDARD_DEFENSE_AUGER);
 				}
 
 				// Center Shot preset

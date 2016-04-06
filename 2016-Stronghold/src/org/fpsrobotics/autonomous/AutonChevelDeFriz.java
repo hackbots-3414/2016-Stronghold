@@ -25,8 +25,8 @@ public class AutonChevelDeFriz implements IAutonomousControl
 		{
 
 			// Move shooter to normal defense
-			ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.TOP_LIMIT);
-			ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.SHOOT_HIGH);
+			ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.STANDARD_DEFENSE_SHOOTER);
+			ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.FOURTY_KAI);
 
 			if (!RobotStatus.isAuto())
 				break;
@@ -47,7 +47,7 @@ public class AutonChevelDeFriz implements IAutonomousControl
 					break;
 
 				// Move Auger to Bottom Limit
-				ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.BOTTOM_LIMIT);
+				ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.LOW_BAR);
 
 				if (!RobotStatus.isAuto())
 					break;
@@ -63,7 +63,7 @@ public class AutonChevelDeFriz implements IAutonomousControl
 					break;
 
 				// Move Auger Up
-				ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.SHOOT_HIGH);
+				ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.FOURTY_KAI);
 
 				if (!RobotStatus.isAuto())
 					break;
@@ -89,7 +89,7 @@ public class AutonChevelDeFriz implements IAutonomousControl
 					break;
 				
 				// Move Auger to Bottom Limit
-				ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.BOTTOM_LIMIT);
+				ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.LOW_BAR);
 				
 				if (!RobotStatus.isAuto())
 					break;

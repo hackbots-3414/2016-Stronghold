@@ -668,7 +668,7 @@ public class LauncherWithoutPistons implements ILauncher
 			// Bottom Alpha 290
 			switch (preset)
 			{
-			case BOTTOM_LIMIT: // USED FOR AUTONOMOUS: ANY LOW BAR PRESET
+			case LOW_BAR: // USED FOR AUTONOMOUS: ANY LOW BAR PRESET
 				lowerAugerToBottomLimit();
 				break;
 			case TOP_LIMIT: // USED FOR AUTONOMOUS: TO LIFT ROBOT
@@ -686,7 +686,7 @@ public class LauncherWithoutPistons implements ILauncher
 			case SHOOT_LOW: // USED FOR AUTONOMOUS AND DRIVER PRESET
 				moveAugerToPosition(716);
 				break;
-			case STANDARD_DEFENSE: // USED FOR DRIVER PRESET
+			case STANDARD_DEFENSE_AUGER: // USED FOR DRIVER PRESET
 				moveAugerToPosition(711);
 				break;
 			default:
@@ -699,7 +699,7 @@ public class LauncherWithoutPistons implements ILauncher
 			// Bottom Beta 850
 			switch (preset)
 			{
-			case BOTTOM_LIMIT: // USED FOR AUTONOMOUS: ANY LOW BAR PRESET
+			case LOW_BAR: // USED FOR AUTONOMOUS: ANY LOW BAR PRESET
 				lowerAugerToBottomLimit();
 				break;
 			case TOP_LIMIT: // USED FOR AUTONOMOUS: TO LIFT ROBOT
@@ -717,7 +717,7 @@ public class LauncherWithoutPistons implements ILauncher
 			case SHOOT_LOW: // USED FOR AUTONOMOUS AND DRIVER PRESET
 				moveAugerToPosition(1276);
 				break;
-			case STANDARD_DEFENSE: // USED FOR DRIVER PRESET
+			case STANDARD_DEFENSE_AUGER: // USED FOR DRIVER PRESET
 				moveAugerToPosition(983);
 				break;
 			default:

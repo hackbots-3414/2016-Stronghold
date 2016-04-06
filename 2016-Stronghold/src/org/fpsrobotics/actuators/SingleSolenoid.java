@@ -11,9 +11,9 @@ public class SingleSolenoid implements ISolenoid
 {
 	private Solenoid solenoid;
 
-	public SingleSolenoid(int channel)
+	public SingleSolenoid(Solenoid solenoid)
 	{
-		solenoid = new Solenoid(channel);
+		this.solenoid = solenoid;
 	}
 
 	@Override
