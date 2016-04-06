@@ -181,14 +181,28 @@ public class ActuatorConfig
 		}
 
 		// Instantiate the launcher itself
-		launcher = new Launcher(new CANMotor(leftShooterMotor, true), new CANMotor(rightShooterMotor, false),
-				new CANMotor(linearActuator, true), shooterSolenoid,
-				SensorConfig.getInstance().getShooterBottomLimitSwitch(),
-				SensorConfig.getInstance().getShooterTopLimitSwitch(), SensorConfig.getInstance().getShooterPot(),
-				new CANMotor(augerIntakeMotor, false), new CANMotor(augerLifterMotor, false),
-				SensorConfig.getInstance().getAugerBottomLimitSwitch(),
-				SensorConfig.getInstance().getAugerTopLimitSwitch(), augerPotentiometer);
-				
+		if (RobotStatus.isAlpha())
+		{
+			launcher = new AlphaLauncher(new CANMotor(leftShooterMotor, true), new CANMotor(rightShooterMotor, false),
+					new CANMotor(linearActuator, true), shooterSolenoid,
+					SensorConfig.getInstance().getShooterBottomLimitSwitch(),
+					SensorConfig.getInstance().getShooterTopLimitSwitch(), SensorConfig.getInstance().getShooterPot(),
+					new CANMotor(augerIntakeMotor, false), new CANMotor(augerLifterMotor, false),
+					SensorConfig.getInstance().getAugerBottomLimitSwitch(),
+					SensorConfig.getInstance().getAugerTopLimitSwitch(), augerPotentiometer);
+					
+		} else
+		{
+			launcher = new BetaLauncher(new CANMotor(leftShooterMotor, true), new CANMotor(rightShooterMotor, false),
+					new CANMotor(linearActuator, true), shooterSolenoid,
+					SensorConfig.getInstance().getShooterBottomLimitSwitch(),
+					SensorConfig.getInstance().getShooterTopLimitSwitch(), SensorConfig.getInstance().getShooterPot(),
+					new CANMotor(augerIntakeMotor, false), new CANMotor(augerLifterMotor, false),
+					SensorConfig.getInstance().getAugerBottomLimitSwitch(),
+					SensorConfig.getInstance().getAugerTopLimitSwitch(), augerPotentiometer);
+					
+		}
+		
 		// Instantiate the lifter
 //		lift = new Lifter(new org.fpsrobotics.actuators.SingleSolenoid(new edu.wpi.first.wpilibj.DoubleSolenoid(2,3))); //TODO: MAKE LIFTER ACUTATOR CONFIG
 	}

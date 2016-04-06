@@ -85,7 +85,7 @@ public class RobotStatus
 					System.err.println(
 							"File is openable but doesn't specify alpha or beta on the first line, assuming alpha.");
 				}
-				SmartDashboard.putBoolean("Robot Status isAlpha", isAlpha);
+				SmartDashboard.putBoolean("isAlpha", isAlpha);
 				textReader.close();
 
 			} catch (Exception e)

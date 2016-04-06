@@ -44,7 +44,7 @@ public class MullenatorTeleop implements ITeleopControl
 	private IJoystick rightJoystick;
 
 	// Lifter
-	private boolean isAugerReadyToLift = false;
+	private boolean isAugerReadyToLift = false; //do not delete
 
 	public MullenatorTeleop()
 	{
@@ -105,21 +105,21 @@ public class MullenatorTeleop implements ITeleopControl
 				}
 
 				// Low bar
-				if (leftJoystick.getButtonValue(EJoystickButtons.SEVEN) && !shootingLockOut)
+				if (rightJoystick.getButtonValue(EJoystickButtons.THREE) && !shootingLockOut)
 				{
 					shootingLockOut = true;
+
 					launcher.moveShooterToPreset(EShooterPresets.LOW_BAR);
 					launcher.moveAugerToPreset(EAugerPresets.BOTTOM_LIMIT);
 				}
 
 				// Any Normal Defense
-				if (leftJoystick.getButtonValue(EJoystickButtons.EIGHT) && !shootingLockOut)
+				if (rightJoystick.getButtonValue(EJoystickButtons.FOUR) && !shootingLockOut)
 				{
 					shootingLockOut = true;
 
 					launcher.moveShooterToPreset(EShooterPresets.TOP_LIMIT);
 					launcher.moveAugerToPreset(EAugerPresets.STANDARD_DEFENSE);
-					
 				}
 
 				// Center Shot preset
@@ -129,7 +129,7 @@ public class MullenatorTeleop implements ITeleopControl
 					if (RobotStatus.isAlpha())
 					{
 						// Alpha TODO: Tune Center shot Preset - Alpha
-						ActuatorConfig.getInstance().getLauncher().moveShooterToPosition(290);
+						ActuatorConfig.getInstance().getLauncher().moveShooterToPosition(750);
 					} else
 					{
 						// Beta
@@ -145,7 +145,7 @@ public class MullenatorTeleop implements ITeleopControl
 					if (RobotStatus.isAlpha())
 					{
 						// Alpha TODO: Tune Corner shot Prest - Alpha
-						ActuatorConfig.getInstance().getLauncher().moveShooterToPosition(290);
+						ActuatorConfig.getInstance().getLauncher().moveShooterToPosition(755);
 					} else
 					{
 						// Beta
@@ -207,8 +207,8 @@ public class MullenatorTeleop implements ITeleopControl
 						&& !gamepad.getButtonValue(EJoystickButtons.TEN)
 						&& !rightJoystick.getButtonValue(EJoystickButtons.NINE)
 						&& !rightJoystick.getButtonValue(EJoystickButtons.TEN)
-						&& !leftJoystick.getButtonValue(EJoystickButtons.EIGHT)
-						&& !leftJoystick.getButtonValue(EJoystickButtons.SEVEN)
+						&& !rightJoystick.getButtonValue(EJoystickButtons.FOUR)
+						&& !rightJoystick.getButtonValue(EJoystickButtons.THREE)
 						&& !leftJoystick.getButtonValue(EJoystickButtons.NINE)
 						&& !leftJoystick.getButtonValue(EJoystickButtons.TEN)
 						&& !leftJoystick.getButtonValue(EJoystickButtons.ELEVEN) && shootingLockOut)

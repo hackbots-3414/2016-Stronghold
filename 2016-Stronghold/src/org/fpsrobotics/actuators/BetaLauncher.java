@@ -1,3 +1,4 @@
+
 package org.fpsrobotics.actuators;
 
 import org.fpsrobotics.PID.IPIDFeedbackDevice;
@@ -9,50 +10,87 @@ import org.usfirst.frc.team3414.robot.RobotStatus;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
- * Creates a Launcher for the 2016 Season FIRST Stronghold: A Servo pushes the ball from a holding bay into two motors
- * to fire the ball. It has a linear actuator which controls the vertical angle of the shooter, along with two limit
- * switches and a potentiometer that define it's limits of travel. It also has an auger that utilizes a motor to suck in
- * the ball and a motor to move itself vertically. The auger also has limit switches for it's outer reaches of travel.
+ * Creates a Flywheel Launcher for the 2016 Season FIRST Stronghold: A Servo pushes the ball from a holding bay into two
+ * motors to fire the ball. It has a linear actuator which controls the vertical angle of the shooter, along with two
+ * limit switches and a potentiometer that define it's limits of travel. It also has an auger that utilizes a motor to
+ * suck in the ball and a motor to move itself vertically. The auger also has limit switches for it's outer reaches of
+ * travel.
  *
- * Imported From: Wednesday, March 30
- * Updated to conform to the rest of the updated code
- * 
+ * Update 4/4/16: The auger should move itself automatically if the shooter will hit [the auger] when the shooter is
+ * being raised manually. The auger will detect if it is nearing the shooter or the ground, and slow down to a halt
+ * before it collides.
  */
-public class LauncherBackUp implements ILauncher
+public class BetaLauncher implements ILauncher
 {
 	// Lifter Functions
-	private double LINEAR_ACTUATOR_SPEED;
+	private double LINEAR_ACTUATOR_SPEED = 0.5; // intermediate speed to move
+												// the shooter
+	private double AUTO_AUGER_SPEED = 0.40; // speed when auto raising the
+											// auger, when raising the shooter
+	private double SLOW_FACTOR = 0.6; // teleop driver button 1 - move the
+										// shooter slower
+
+	private double TOP_LIMIT_POT_VALUE_SHOOTER; // top limit the shooter can
+												// move to
+	private double BOTTOM_LIMIT_POT_VALUE_SHOOTER; // bottom limit the shooter
+													// can move to
 
 	// Shooter Functions
-	private final double INTAKE_SPEED = -0.7;
-	private double SHOOT_SPEED_HIGH = 1.0; // was 0.95
-	private double SHOOT_SPEED_LOW = 0.6;
-	private int RAMP_RATE = 3;
+	private final double INTAKE_SPEED = -0.7; // intake the boulder
+	private double SHOOT_SPEED_HIGH = 1.0; // shoot high speed
+	private double SHOOT_SPEED_LOW = 0.6; // shoot low speed
 
 	// Auger Functions
-	private final double INTAKE_AUGER_SPEED = 0.8;
+	private final double INTAKE_AUGER_SPEED = 0.8; // intake the boulder
+	private double AUGER_LIFTER_SPEED_RAISE; // intermediate speed to raise the
+												// auger
+	private double AUGER_LIFTER_SPEED_LOWER; // intermediate speed to lower the
+												// auger
+	private double HIGH_VALUE_AUGER_SPEED = 0.8; // speed to move the auger at
+													// higher values - towards
+													// top of path
+	private double LOW_VALUE_AUGER_SPEED = 0.3;// speed to move the auger at
+												// lower values - towards bottom
+												// of path
+	private int RAMP_RATE = 3; // to ramp up the auger
 
-	private double AUGER_LIFTER_SPEED_RAISE;
-	private double AUGER_LIFTER_SPEED_LOWER;
-	private double HIGH_VALUE_AUGER_SPEED = 0.8;
-	private double LOW_VALUE_AUGER_SPEED = 0.4;
+	private int TOP_POT_LIMIT_AUGER; // top limit the auger can move to
+	private int BOTTOM_POT_LIMIT_AUGER;// bottom limit the auger can move to
+	private int HIGH_VALUE_AUGER; // the pot position to define whether the
+									// auger is at higher values
+	private int LOW_VALUE_AUGER; // the pot position to define whether the auger
+									// is at lower values
+	private int AUGER_SHOOT_HIGH_POT_VALUE; // the pot position to define where
+											// the auger should move to in
+											// autonomous
+	private int AUGER_SHOOT_LOW_POT_VALUE;// the pot position to define where
+											// the auger should move to in
+											// autonomous
 
-	private double TOP_LIMIT_POT_VALUE_SHOOTER;
-	private double BOTTOM_LIMIT_POT_VALUE_SHOOTER;
+	private double augerPrevValue; // for moveAugerToPosition();
 
-	private int TOP_POT_LIMIT_AUGER;
-	private int BOTTOM_POT_LIMIT_AUGER;
-	private int HIGH_VALUE_AUGER;
-	private int LOW_VALUE_AUGER;
+	private int LOW_BAR_SHOOTER_VALUE; // the highest point for the shooter at
+										// which the shooter and auger will not
+										// collide
+	private int AUGER_WITHIN_RANGE_OF_HITTING_SOMETHING; // used for moving the
+															// auger if it will
+															// hit the shooter
+															// or
+															// ground
 
-	private boolean isAugerAtIntake = false;
+	private boolean isAugerAtIntake = false; // used to stop intake boulder
+	private boolean autoRaiseAuger = false; // used so manual [lower auger] is
+											// disabled when auto raising auger
+	private boolean manualRaiseAuger = false; // used so auto [raise auger] is
+												// disabled when manually
+												// raising auger
 
 	private ICANMotor leftShooterMotor, rightShooterMotor;
 	private ICANMotor augerIntakeMotor, shooterLifterMotor;
 	private ICANMotor augerLifterMotor;
 	private ILimitSwitch bottomLimitShooter, topLimitShooter;
-	// private ILimitSwitch bottomLimitAuger, topLimitAuger; // TODO: Do we
-	// need??
+	// private ILimitSwitch bottomLimitAuger, topLimitAuger;
+
 	private IPIDFeedbackDevice shooterPot, augerPot;
 
 	private ISolenoid shooterActuator;
@@ -60,6 +98,7 @@ public class LauncherBackUp implements ILauncher
 	/**
 	 * 
 	 * @param leftShooterMotor
+	 * @param rightShooterMotor
 	 * @param shooterLifterMotor
 	 * @param shooterActuator
 	 * @param shooterBottomLimit
@@ -71,11 +110,12 @@ public class LauncherBackUp implements ILauncher
 	 * @param topLimitAuger
 	 * @param augerPot
 	 */
-	public LauncherBackUp(ICANMotor leftShooterMotor, ICANMotor rightShooterMotor, ICANMotor shooterLifterMotor, ISolenoid shooterActuator,
-			ILimitSwitch shooterBottomLimit, ILimitSwitch shooterTopLimit, IPIDFeedbackDevice shooterPot, ICANMotor augerIntakeMotor,
-			ICANMotor augerLifterMotor, ILimitSwitch bottomLimitAuger, ILimitSwitch topLimitAuger, IPIDFeedbackDevice augerPot, boolean isAlpha)
-
+	public BetaLauncher(ICANMotor leftShooterMotor, ICANMotor rightShooterMotor, ICANMotor shooterLifterMotor,
+			ISolenoid shooterActuator, ILimitSwitch shooterBottomLimit, ILimitSwitch shooterTopLimit,
+			IPIDFeedbackDevice shooterPot, ICANMotor augerIntakeMotor, ICANMotor augerLifterMotor,
+			ILimitSwitch bottomLimitAuger, ILimitSwitch topLimitAuger, IPIDFeedbackDevice augerPot)
 	{
+
 		// Shooter
 		this.leftShooterMotor = leftShooterMotor;
 		this.rightShooterMotor = rightShooterMotor;
@@ -93,37 +133,50 @@ public class LauncherBackUp implements ILauncher
 
 		if (RobotStatus.isAlpha())
 		{
-			LINEAR_ACTUATOR_SPEED = 0.5;
-
+			// TODO: BETA TUNE ALPHA
 			// Shooter
 			TOP_LIMIT_POT_VALUE_SHOOTER = 588;
 			BOTTOM_LIMIT_POT_VALUE_SHOOTER = 2100;
 			// Auger
 			TOP_POT_LIMIT_AUGER = 1622;
 			BOTTOM_POT_LIMIT_AUGER = 290;
+			// Shooter-Auger Conflict Stuff
+			LOW_BAR_SHOOTER_VALUE = 1800; // used to be 1000 before pistons were
+											// added
 
 			AUGER_LIFTER_SPEED_RAISE = 0.5;
 			AUGER_LIFTER_SPEED_LOWER = 0.6;
 
 			HIGH_VALUE_AUGER = 1400;
 			LOW_VALUE_AUGER = 0;
+
+			AUGER_SHOOT_HIGH_POT_VALUE = 1416;
+			AUGER_SHOOT_LOW_POT_VALUE = 716;
 		} else
 		{
-			LINEAR_ACTUATOR_SPEED = 0.5;
-
 			// Shooter
 			TOP_LIMIT_POT_VALUE_SHOOTER = 190;
 			BOTTOM_LIMIT_POT_VALUE_SHOOTER = 1300;
 			// Auger
-			TOP_POT_LIMIT_AUGER = 2100;
-			BOTTOM_POT_LIMIT_AUGER = 850; // was 800
+			TOP_POT_LIMIT_AUGER = 2200;
+			BOTTOM_POT_LIMIT_AUGER = 900; // was 950
+			// Shooter-Auger Conflict Stuff
+			LOW_BAR_SHOOTER_VALUE = 1200; // used to be 1000 before pistons were
+											// added
+			// 1130 has to be slightly higher (<) than 1200, but can't interfere with auger
 
 			AUGER_LIFTER_SPEED_RAISE = 0.5;
 			AUGER_LIFTER_SPEED_LOWER = 0.5;
 
 			HIGH_VALUE_AUGER = 1200;
 			LOW_VALUE_AUGER = 900;
+
+			AUGER_SHOOT_HIGH_POT_VALUE = 1650;
+			AUGER_SHOOT_LOW_POT_VALUE = 1276;
 		}
+
+		AUGER_WITHIN_RANGE_OF_HITTING_SOMETHING = BOTTOM_POT_LIMIT_AUGER + 120; // TODO: BETA Confirm this value with
+																				// Presets
 
 		SmartDashboard.putNumber("Top Pot Limit Auger", TOP_POT_LIMIT_AUGER);
 		SmartDashboard.putNumber("Bottom Pot Limit Auger", BOTTOM_POT_LIMIT_AUGER);
@@ -139,7 +192,6 @@ public class LauncherBackUp implements ILauncher
 		{
 			lowerShooter(false);
 		}
-
 		stopShooterLifter();
 	}
 
@@ -149,21 +201,56 @@ public class LauncherBackUp implements ILauncher
 		{
 			raiseShooter(false);
 		}
-
 		stopShooterLifter();
 	}
 
 	@Override
+	/**
+	 * 
+	 * @param slow
+	 *            - Used for Driver Control - Gamepad Button 1
+	 */
+
 	public void raiseShooter(boolean slow)
 	{
 		if (!isShooterAtTopLimit())
 		{
 			if (slow)
 			{
-				shooterLifterMotor.setSpeed(Math.abs(LINEAR_ACTUATOR_SPEED) * 0.6);
+				if ((augerPot.getCount() < (AUGER_WITHIN_RANGE_OF_HITTING_SOMETHING))
+						&& (shooterPot.getCount() < LOW_BAR_SHOOTER_VALUE))
+				// If Auger is within range of getting hit, and Shooter is above
+				// "Low Bar Preset," within range of
+				// getting hit -> Move the auger too
+				{
+					if (!manualRaiseAuger)
+					{
+						raiseAuger(AUTO_AUGER_SPEED);
+						autoRaiseAuger = true;
+					}
+					shooterLifterMotor.setSpeed(Math.abs(LINEAR_ACTUATOR_SPEED) * SLOW_FACTOR);
+				} else
+				{
+					shooterLifterMotor.setSpeed(Math.abs(LINEAR_ACTUATOR_SPEED) * SLOW_FACTOR);
+				}
 			} else
 			{
-				shooterLifterMotor.setSpeed(Math.abs(LINEAR_ACTUATOR_SPEED));
+				if ((augerPot.getCount() < (AUGER_WITHIN_RANGE_OF_HITTING_SOMETHING))
+						&& (shooterPot.getCount() < LOW_BAR_SHOOTER_VALUE))
+				// If Auger is within range of getting hit, and Shooter is above
+				// "Low Bar Preset," within range of
+				// getting hit -> Move the auger too
+				{
+					if (!manualRaiseAuger)
+					{
+						raiseAuger(AUTO_AUGER_SPEED);
+						autoRaiseAuger = true;
+					}
+					shooterLifterMotor.setSpeed(Math.abs(LINEAR_ACTUATOR_SPEED));
+				} else
+				{
+					shooterLifterMotor.setSpeed(Math.abs(LINEAR_ACTUATOR_SPEED));
+				}
 			}
 		} else
 		{
@@ -172,6 +259,11 @@ public class LauncherBackUp implements ILauncher
 	}
 
 	@Override
+	/**
+	 * 
+	 * @param slow
+	 *            - Used for Driver Control - Gamepad Button 1
+	 */
 	public void lowerShooter(boolean slow)
 	{
 		if (!isShooterAtBottomLimit())
@@ -193,10 +285,16 @@ public class LauncherBackUp implements ILauncher
 	public void stopShooterLifter()
 	{
 		shooterLifterMotor.stop();
+		if (autoRaiseAuger)
+		{
+			stopAugerLifter(false);
+			autoRaiseAuger = false;
+		}
 	}
 
 	private boolean isShooterAtTopLimit()
 	{
+		// if shooter is above top limit pot value, or top limit is hit
 		if ((shooterPot.getCount() <= TOP_LIMIT_POT_VALUE_SHOOTER) || topLimitShooter.isHit())
 		{
 			return true;
@@ -208,6 +306,7 @@ public class LauncherBackUp implements ILauncher
 
 	private boolean isShooterAtBottomLimit()
 	{
+		// if shooter is below bottom limit pot value, or bottom limit is hit
 		if ((shooterPot.getCount() >= BOTTOM_LIMIT_POT_VALUE_SHOOTER) || bottomLimitShooter.isHit())
 		{
 			return true;
@@ -220,140 +319,51 @@ public class LauncherBackUp implements ILauncher
 	@Override
 	public void moveShooterToPosition(double desiredPosition)
 	{
-		if ((shooterPot.getCount() < (desiredPosition - 10)) || (shooterPot.getCount() > (desiredPosition + 10)))
+		if ((shooterPot.getCount() < (desiredPosition - 50)) || (shooterPot.getCount() > (desiredPosition + 50)))
 		{
 			// If the shooter is less than the desired position
 			if (shooterPot.getCount() > desiredPosition)
 			{
-				raiseShooter(false);
-
-				// while this is so or we reach the top limit of travel
+				// while shooter is less than the desired position or we reach
+				// the top limit of travel
 				while (!isShooterAtTopLimit() && (shooterPot.getCount() > desiredPosition) && (RobotStatus.isRunning()))
 				{
-					try
-					{
-						Thread.sleep(50);
-					} catch (InterruptedException e)
-					{
-						e.printStackTrace();
-					}
+					raiseShooter(false);
+					SensorConfig.getInstance().getTimer().waitTimeInMillis(50);
 				}
 				// If the shooter is greater than the desired position
 			} else
 			{
-				lowerShooter(false);
-
-				// while this is so or we reach the bottom limit of our travel
-				while (!isShooterAtBottomLimit() && (shooterPot.getCount() < desiredPosition) && (RobotStatus.isRunning()))
+				// while shooter is greater than the desired position or we
+				// reach the bottom limit of our travel
+				while (!isShooterAtBottomLimit() && (shooterPot.getCount() < desiredPosition)
+						&& (RobotStatus.isRunning()))
 				{
-					try
-					{
-						Thread.sleep(50);
-					} catch (InterruptedException e)
-					{
-						e.printStackTrace();
-					}
+					lowerShooter(false);
+					SensorConfig.getInstance().getTimer().waitTimeInMillis(50);
 				}
 			}
 		}
 		stopShooterLifter();
-	}
-
-	// TODO
-	public void moveShooterAndAugerToPosition(double desiredShooter, double desiredAuger)
-	{
-
-		double augerPrevValue = augerPot.getCount();
-
-		boolean isShooterGood = false;
-		boolean isAugerGood = false;
-
-		if ((shooterPot.getCount() < (desiredShooter - 10)) || (shooterPot.getCount() > (desiredShooter + 10)))
-		{
-			// If the shooter is less than the desired position
-			if (shooterPot.getCount() > desiredShooter)
-			{
-				raiseShooter(false);
-			} else
-			{
-				lowerShooter(false);
-			}
-		} else
-		{
-			isShooterGood = true;
-		}
-
-		if ((augerPot.getCount() < (desiredAuger + 10)) || (augerPot.getCount() > (desiredAuger - 10)))
-		{
-			// if the auger is higher than the position
-			if (desiredAuger < augerPot.getCount())
-			{
-				lowerAuger();
-			} else
-			{
-				raiseAuger();
-			}
-		} else
-		{
-			isAugerGood = true;
-		}
-
-		while ((!isShooterGood || !isAugerGood) && RobotStatus.isRunning())
-		{
-			// Shooter
-			if ((!isShooterAtTopLimit() && (shooterPot.getCount() > desiredShooter)) || (!isShooterAtBottomLimit() && (shooterPot.getCount() < desiredShooter)))
-			{
-				// Keep Going
-			} else
-			{
-				stopShooterLifter();
-				isShooterGood = true;
-			}
-
-			// Auger
-			if (!isAugerGood
-					&& (!isAugerAtBottomLimit() && (desiredAuger < augerPot.getCount()) || (!isAugerAtBottomLimit() && (desiredAuger < augerPot.getCount()))))
-			{
-				// If stalled then stop
-				if ((augerPot.getCount() >= (augerPrevValue - 5)) || (augerPot.getCount() <= (augerPrevValue + 5)))
-				{
-					System.out.println("Auger Stalled");
-					stopAugerLifter(false);
-					isAugerGood = true;
-				}
-
-				augerPrevValue = augerPot.getCount();
-				// Otherwise keep going
-			} else
-			{
-				stopAugerLifter(false);
-				isAugerGood = true;
-			}
-
-			try
-			{
-				Thread.sleep(50);
-			} catch (InterruptedException e)
-			{
-				e.printStackTrace();
-			}
-		}
-		stopShooterLifter();
-		stopAugerLifter(false);
 	}
 
 	// Shooter Functions
 	@Override
 	public void intakeBoulder()
 	{
+
 		rightShooterMotor.setSpeed(INTAKE_SPEED);
 		leftShooterMotor.setSpeed(INTAKE_SPEED);
+
 		if (!isAugerAtIntake)
 		{
-			moveAugerToPreset(EAugerPresets.INTAKE);
+
 			moveShooterToPreset(EShooterPresets.INTAKE);
+			moveAugerToPreset(EAugerPresets.INTAKE);
+
 			isAugerAtIntake = true;
 		}
+
 		augerIntakeMotor.setSpeed(INTAKE_AUGER_SPEED);
 	}
 
@@ -371,7 +381,6 @@ public class LauncherBackUp implements ILauncher
 	{
 		shooterActuator.engage();
 		SensorConfig.getInstance().getTimer().waitTimeInMillis(150);
-		// used to be 100
 		stopShooterWheels();
 		shooterActuator.disengage();
 	}
@@ -400,16 +409,16 @@ public class LauncherBackUp implements ILauncher
 		rightShooterMotor.setSpeed(speed);
 	}
 
-//	private void jostle()
-//	{
-//		stopShooterWheels();
-//
-//		leftShooterMotor.setSpeed(0.4);
-//		rightShooterMotor.setSpeed(0.4);
-//
-//		SensorConfig.getInstance().getTimer().waitTimeInMillis(400);
-//		stopShooterWheels();
-//	}
+	// private void jostle()
+	// {
+	// stopShooterWheels();
+	//
+	// leftShooterMotor.setSpeed(0.4);
+	// rightShooterMotor.setSpeed(0.4);
+	//
+	// SensorConfig.getInstance().getTimer().waitTimeInMillis(400);
+	// stopShooterWheels();
+	// }
 
 	@Override
 	public void stopShooterWheels()
@@ -423,6 +432,7 @@ public class LauncherBackUp implements ILauncher
 	@Override
 	public void raiseAuger()
 	{
+		manualRaiseAuger = true;
 		raiseAuger(AUGER_LIFTER_SPEED_RAISE);
 	}
 
@@ -433,12 +443,16 @@ public class LauncherBackUp implements ILauncher
 		{
 			if (augerLifterMotor.getSpeed() > 0)
 			{
+				// If auger is nearing the VERY Top, slow down
 				if (augerPot.getCount() > (TOP_POT_LIMIT_AUGER - 100))
 				{
 					augerLifterMotor.setSpeed(Math.abs(AUGER_LIFTER_SPEED_RAISE - 0.1));
+					// If Auger is nearing the top, speed up
 				} else if (augerPot.getCount() > (HIGH_VALUE_AUGER))
 				{
 					augerLifterMotor.setSpeed(Math.abs(HIGH_VALUE_AUGER_SPEED));
+					// Else if auger is somewhere in between, go at assigned
+					// speed
 				} else
 				{
 					augerLifterMotor.setSpeed(Math.abs(speed));
@@ -451,6 +465,7 @@ public class LauncherBackUp implements ILauncher
 		{
 			stopAugerLifter(true);
 		}
+
 	}
 
 	private void rampUpMotor(double speed)
@@ -462,13 +477,7 @@ public class LauncherBackUp implements ILauncher
 				if (RobotStatus.isRunning())
 				{
 					augerLifterMotor.setSpeed(i);
-					try
-					{
-						Thread.sleep(RAMP_RATE);
-					} catch (InterruptedException e)
-					{
-						e.printStackTrace();
-					}
+					SensorConfig.getInstance().getTimer().waitTimeInMillis(RAMP_RATE);
 				} else
 				{
 					return;
@@ -481,13 +490,7 @@ public class LauncherBackUp implements ILauncher
 				if (RobotStatus.isRunning())
 				{
 					augerLifterMotor.setSpeed(i);
-					try
-					{
-						Thread.sleep(RAMP_RATE);
-					} catch (InterruptedException e)
-					{
-						e.printStackTrace();
-					}
+					SensorConfig.getInstance().getTimer().waitTimeInMillis(RAMP_RATE);
 				} else
 				{
 					return;
@@ -495,6 +498,78 @@ public class LauncherBackUp implements ILauncher
 			}
 		}
 
+	}
+
+	@Override
+	public void lowerAuger()
+	{
+		lowerAugerWithConditions(AUGER_LIFTER_SPEED_LOWER);
+	}
+
+	/**
+	 * Conditions are used for manually moving the auger
+	 * 
+	 * @param speed
+	 */
+	private void lowerAugerWithConditions(double speed)
+	{
+		// If not being autoRaised by raiseShooter() method -> this is how the
+		// shooter overrides the auger
+		if (!autoRaiseAuger)
+		{
+			// If shooter is above "Low Bar Preset," within range of getting hit
+			if ((shooterPot.getCount() < LOW_BAR_SHOOTER_VALUE))
+			{
+				// If auger is nearing the shooter
+				if ((augerPot.getCount() < (AUGER_WITHIN_RANGE_OF_HITTING_SOMETHING + 100)))
+				{
+					System.out.println("LOWER A");
+					stopAugerLifter(false);
+				} else
+				{
+					System.out.println("LOWER B");
+					// move freely
+					lowerAuger(speed);
+				}
+			} else
+			// If shooter is safe from getting hit
+			{
+				// If auger is nearing the bottom of its path
+				// used to be !isAugerAtBottomLimit -> used to not have auger
+				// slam on ground
+				// if (!isAugerAtBottomLimit())
+				if (augerPot.getCount() < (AUGER_WITHIN_RANGE_OF_HITTING_SOMETHING))
+				{
+
+					System.out.println("LOWER C");
+					// slow down and stop
+					stopAugerLifter(true);
+				} else
+				{
+					System.out.println("LOWER D");
+					// move freely
+					lowerAuger(speed);
+				}
+			}
+		}
+	}
+
+	private void lowerAuger(double speed)
+	{
+		System.out.println("LOWER E");
+		// if auger is getting towards bottom of path
+		if (augerPot.getCount() < (LOW_VALUE_AUGER))
+		{
+			augerLifterMotor.setSpeed(Math.abs(LOW_VALUE_AUGER_SPEED));
+		} else if (augerLifterMotor.getSpeed() < 0)
+		// else move regularly
+		{
+			augerLifterMotor.setSpeed(-Math.abs(speed));
+		} else
+		// ramp up initially
+		{
+			rampUpMotor(-Math.abs(speed));
+		}
 	}
 
 	private void rampDownMotor(double speed)
@@ -506,13 +581,7 @@ public class LauncherBackUp implements ILauncher
 				if (RobotStatus.isRunning())
 				{
 					augerLifterMotor.setSpeed(i);
-					try
-					{
-						Thread.sleep(RAMP_RATE);
-					} catch (InterruptedException e)
-					{
-						e.printStackTrace();
-					}
+					SensorConfig.getInstance().getTimer().waitTimeInMillis(RAMP_RATE);
 				} else
 				{
 					return;
@@ -525,44 +594,12 @@ public class LauncherBackUp implements ILauncher
 				if (RobotStatus.isRunning())
 				{
 					augerLifterMotor.setSpeed(i);
-					try
-					{
-						Thread.sleep(RAMP_RATE);
-					} catch (InterruptedException e)
-					{
-						e.printStackTrace();
-					}
+					SensorConfig.getInstance().getTimer().waitTimeInMillis(RAMP_RATE);
 				} else
 				{
 					return;
 				}
 			}
-		}
-	}
-
-	@Override
-	public void lowerAuger()
-	{
-		lowerAuger(AUGER_LIFTER_SPEED_LOWER);
-	}
-
-	private void lowerAuger(double speed)
-	{
-		if (!isAugerAtBottomLimit())
-		{
-			if (augerLifterMotor.getSpeed() < 0)
-			{
-				augerLifterMotor.setSpeed(-Math.abs(speed));
-			} else if (augerPot.getCount() < (LOW_VALUE_AUGER))
-			{
-				augerLifterMotor.setSpeed(Math.abs(LOW_VALUE_AUGER_SPEED));
-			} else
-			{
-				rampUpMotor(-Math.abs(speed));
-			}
-		} else
-		{
-			stopAugerLifter(true); // TODO: used to be true
 		}
 	}
 
@@ -575,6 +612,7 @@ public class LauncherBackUp implements ILauncher
 		{
 			augerLifterMotor.stop();
 		}
+		manualRaiseAuger = false;
 	}
 
 	@Override
@@ -623,65 +661,58 @@ public class LauncherBackUp implements ILauncher
 	}
 
 	@Override
+	/**
+	 * ALWAYS MOVE SHOOTER TO POSITION BEFORE AUGER
+	 */
 	public void moveAugerToPosition(int desiredPosition)
 	{
-		double augerPrevValue = augerPot.getCount();
+		augerPrevValue = augerPot.getCount();
 
-		if ((augerPot.getCount() < (desiredPosition + 10)) || (augerPot.getCount() > (desiredPosition - 10)))
+		if ((augerPot.getCount() < (desiredPosition - 10)) || (augerPot.getCount() > (desiredPosition + 10)))
 		{
 			// if the auger is higher than the position
-			if (desiredPosition < augerPot.getCount())
+			if (augerPot.getCount() > desiredPosition)
 			{
-				lowerAuger();
-
-				while (!isAugerAtBottomLimit() && (desiredPosition < augerPot.getCount()) && (RobotStatus.isRunning()))
+				System.out.println("HIT B - 1");
+				while (!isAugerAtBottomLimit() && (augerPot.getCount() > desiredPosition) && (RobotStatus.isRunning()))
 				{
-					try
-					{
-						Thread.sleep(50);
-					} catch (InterruptedException e)
-					{
-						e.printStackTrace();
-					}
+					// lowerAuger() uses conditions
+					lowerAuger();
 
+					// Wait for thread
+					SensorConfig.getInstance().getTimer().waitTimeInMillis(50);
+
+					// If it gets stalled then stop
 					if (augerPot.getCount() >= (augerPrevValue - 5))
-					// if it gets stalled then stop
 					{
 						System.out.println("Auger Stalled");
 						stopAugerLifter(false);
 						return;
 					}
-
 					augerPrevValue = augerPot.getCount();
-
 				}
 			} else
 			{
-				raiseAuger();
-
+				System.out.println("HIT B - 2");
 				while (!isAugerAtTopLimit() && (augerPot.getCount() < desiredPosition) && (RobotStatus.isRunning()))
 				{
-					try
-					{
-						Thread.sleep(50);
-					} catch (InterruptedException e)
-					{
-						e.printStackTrace();
-					}
+					// raiseAuger() uses conditions
+					raiseAuger();
 
-					if (augerPot.getCount() <= (augerPrevValue + 5))
+					// Wait for thread
+					SensorConfig.getInstance().getTimer().waitTimeInMillis(50);
+
 					// if it gets stalled then stop
+					if (augerPot.getCount() <= (augerPrevValue + 5))
 					{
 						System.out.println("Auger Stalled");
 						stopAugerLifter(false);
 						return;
 					}
-
 					augerPrevValue = augerPot.getCount();
 				}
 			}
 		}
-
 		stopAugerLifter(false);
 	}
 
@@ -695,7 +726,7 @@ public class LauncherBackUp implements ILauncher
 	{
 		if (RobotStatus.isAlpha())
 		{
-			// ALPHA //TODO: Tune Alpha for Shooter
+			// ALPHA //TODO: BETA Tune Alpha for Shooter
 			// Top Alpha: 588
 			// Bottom Alpha: 2100
 			switch (preset)
@@ -704,7 +735,7 @@ public class LauncherBackUp implements ILauncher
 				lowerShooterToBottomLimit();
 				break;
 			case LOW_BAR: // USED FOR AUTONOMOUS: ANY LOW BAR PRESET
-				moveShooterToPosition(1800);
+				moveShooterToPosition(LOW_BAR_SHOOTER_VALUE);
 				break;
 			case TOP_LIMIT: // USED FOR AUTONOMOUS
 				raiseShooterToTopLimit();
@@ -723,7 +754,7 @@ public class LauncherBackUp implements ILauncher
 				moveShooterToPosition(2863);
 				break;
 			case LOW_BAR: // USED FOR AUTONOMOUS: ANY LOW BAR PRESET
-				moveShooterToPosition(1130);
+				moveShooterToPosition(LOW_BAR_SHOOTER_VALUE);
 				break;
 			case TOP_LIMIT: // USED FOR AUTONOMOUS
 				raiseShooterToTopLimit();
@@ -738,7 +769,7 @@ public class LauncherBackUp implements ILauncher
 	{
 		if (RobotStatus.isAlpha())
 		{
-			// ALPHA //TODO: Tune Alpha for Auger
+			// ALPHA //TODO: BETA Tune Alpha for Auger
 			// Top Alpha 1622
 			// Bottom Alpha 290
 			switch (preset)
@@ -787,7 +818,7 @@ public class LauncherBackUp implements ILauncher
 				moveAugerToPosition(1650);
 				break;
 			case INTAKE: // BUTTON DRIVER PRESET
-				moveAugerToPosition(950); // 858 without cylinders
+				moveAugerToPosition(1050); // 858 without cylinders
 				break;
 			case SHOOT_LOW: // USED FOR AUTONOMOUS AND DRIVER PRESET
 				moveAugerToPosition(1276);
@@ -807,12 +838,6 @@ public class LauncherBackUp implements ILauncher
 	 */
 	public void shootSequenceHigh()
 	{
-		// moveAugerToPreset(EAugerPresets.SHOOT); //TODO
-
-		// jostle();
-
-		// SensorConfig.getInstance().getTimer().waitTimeInMillis(400);
-
 		spinShooterWheels(SHOOT_SPEED_HIGH);
 
 		SensorConfig.getInstance().getTimer().waitTimeInMillis(500);
@@ -834,36 +859,7 @@ public class LauncherBackUp implements ILauncher
 	@Override
 	public void shootSequenceLow()
 	{
-
-		if (augerPot.getCount() < (BOTTOM_POT_LIMIT_AUGER + 426))
-		// For alpha = 716
-		{
-			moveAugerToPreset(EAugerPresets.SHOOT_LOW);
-		}
-
 		spinShooterWheels(SHOOT_SPEED_LOW);
-
-		SensorConfig.getInstance().getTimer().waitTimeInMillis(500); // Was 500
-
-		if (!SensorConfig.getInstance().getRightJoystick().getButtonValue(EJoystickButtons.SEVEN)
-				&& !SensorConfig.getInstance().getRightJoystick().getButtonValue(EJoystickButtons.EIGHT))
-		{
-			launchBoulder();
-		} else
-		{
-			stopShooterWheels();
-		}
-	}
-
-	/**
-	 * Used for Auto
-	 */
-	@Override
-	public void shootSequenceHighAuto()
-	{
-		moveAugerToPreset(EAugerPresets.SHOOT_HIGH);
-
-		spinShooterWheels(SHOOT_SPEED_HIGH);
 
 		SensorConfig.getInstance().getTimer().waitTimeInMillis(500);
 
@@ -878,14 +874,30 @@ public class LauncherBackUp implements ILauncher
 	}
 
 	/**
-	 * Used for Auto
+	 * Used for Auton
+	 */
+	@Override
+	public void shootSequenceHighAuto()
+	{
+		if (augerPot.getCount() < (AUGER_SHOOT_HIGH_POT_VALUE))
+		{
+			moveAugerToPreset(EAugerPresets.SHOOT_HIGH);
+		}
+
+		spinShooterWheels(SHOOT_SPEED_HIGH);
+
+		SensorConfig.getInstance().getTimer().waitTimeInMillis(500);
+
+		launchBoulder();
+	}
+
+	/**
+	 * Used for Auton
 	 */
 	@Override
 	public void shootSequenceLowAuto()
 	{
-
-		if (augerPot.getCount() < (BOTTOM_POT_LIMIT_AUGER + 426))
-		// For Alpha = 716
+		if (augerPot.getCount() < AUGER_SHOOT_LOW_POT_VALUE)
 		{
 			moveAugerToPreset(EAugerPresets.SHOOT_LOW);
 		}
@@ -895,6 +907,5 @@ public class LauncherBackUp implements ILauncher
 		SensorConfig.getInstance().getTimer().waitTimeInMillis(500);
 
 		launchBoulder();
-
 	}
 }

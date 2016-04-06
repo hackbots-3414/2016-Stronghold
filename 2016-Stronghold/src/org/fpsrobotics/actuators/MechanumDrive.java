@@ -164,7 +164,6 @@
 //				throw new Exception("Josh made a PNG (Raul), no gyroscope");
 //			} catch (Exception e)
 //			{
-//				// TODO Auto-generated catch block
 //				e.printStackTrace();
 //			}
 //		}
