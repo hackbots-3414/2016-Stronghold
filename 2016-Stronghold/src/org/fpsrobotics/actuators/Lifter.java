@@ -1,33 +1,21 @@
 package org.fpsrobotics.actuators;
 
-import org.fpsrobotics.sensors.SensorConfig;
-
 public class Lifter implements ILifter
 {
-	private SingleSolenoid lifterOne;
-	private SingleSolenoid lifterTwo;
+	private DoubleSolenoid lifter;
 
-	public Lifter(SingleSolenoid lifterOne, SingleSolenoid lifterTwo)
+	public Lifter(DoubleSolenoid lifter)
 	{
-		this.lifterOne = lifterOne;
-		this.lifterTwo = lifterTwo;
+		this.lifter = lifter;
 	}
 
 	public void lift()
 	{
-		lifterOne.engage();
-		SensorConfig.getInstance().getTimer().waitTimeInMillis(1000);
-		lifterOne.disengage();
+		lifter.engage();
 	}
 
 	public void retract()
 	{
-		lifterTwo.engage();
-		SensorConfig.getInstance().getTimer().waitTimeInMillis(1000);
-		lifterTwo.disengage();
-		SensorConfig.getInstance().getTimer().waitTimeInMillis(1000);
-		ActuatorConfig.getInstance().getLauncher().lowerAugerForEndGame();
-		SensorConfig.getInstance().getTimer().waitTimeInMillis(1000);
-		ActuatorConfig.getInstance().getLauncher().stopAugerLifter(false);;
+		lifter.disengage();
 	}
 }

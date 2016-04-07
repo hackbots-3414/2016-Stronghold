@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
  * Used to control a double solenoid connected to the pneumatics breakout board
  * in the 2016 season.
  *
- * NOT USED FOR 2016 SEASON
  */
 public class DoubleSolenoid implements ISolenoid
 {

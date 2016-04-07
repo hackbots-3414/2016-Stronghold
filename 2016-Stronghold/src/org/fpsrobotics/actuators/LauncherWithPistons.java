@@ -40,7 +40,7 @@ public class LauncherWithPistons implements ILauncher
 	private ICANMotor augerIntakeMotor, shooterLifterMotor;
 	private ICANMotor augerLifterMotor;
 	private ILimitSwitch bottomLimitShooter, topLimitShooter;
-	// private ILimitSwitch bottomLimitAuger, topLimitAuger;
+	private ILimitSwitch bottomLimitAuger, topLimitAuger;
 
 	private IPIDFeedbackDevice shooterPot, augerPot;
 
@@ -76,9 +76,10 @@ public class LauncherWithPistons implements ILauncher
 	 * @param topLimitAuger
 	 * @param augerPot
 	 */
-	public LauncherWithPistons(ICANMotor leftShooterMotor, ICANMotor rightShooterMotor, ICANMotor shooterLifterMotor, ISolenoid shooterActuator,
-			ILimitSwitch shooterBottomLimit, ILimitSwitch shooterTopLimit, IPIDFeedbackDevice shooterPot, ICANMotor augerIntakeMotor,
-			ICANMotor augerLifterMotor, ILimitSwitch bottomLimitAuger, ILimitSwitch topLimitAuger, IPIDFeedbackDevice augerPot)
+	public LauncherWithPistons(ICANMotor leftShooterMotor, ICANMotor rightShooterMotor, ICANMotor shooterLifterMotor,
+			ISolenoid shooterActuator, ILimitSwitch shooterBottomLimit, ILimitSwitch shooterTopLimit,
+			IPIDFeedbackDevice shooterPot, ICANMotor augerIntakeMotor, ICANMotor augerLifterMotor,
+			ILimitSwitch bottomLimitAuger, ILimitSwitch topLimitAuger, IPIDFeedbackDevice augerPot)
 	{
 
 		// Shooter
@@ -92,8 +93,8 @@ public class LauncherWithPistons implements ILauncher
 		// Auger
 		this.augerIntakeMotor = augerIntakeMotor;
 		this.augerLifterMotor = augerLifterMotor;
-		// this.bottomLimitAuger = bottomLimitAuger;
-		// this.topLimitAuger = topLimitAuger;
+		this.bottomLimitAuger = bottomLimitAuger;
+		this.topLimitAuger = topLimitAuger;
 		this.augerPot = augerPot;
 
 		if (RobotStatus.isAlpha())
@@ -119,7 +120,7 @@ public class LauncherWithPistons implements ILauncher
 			// AUGER
 			TOP_LIMIT_AUGER = 2200;
 			BOTTOM_LIMIT_AUGER = 900;
-			LOW_BAR_AUGER_FOR_SHOOTER = 716; // must be just above highest collision point
+			LOW_BAR_AUGER_FOR_SHOOTER = 1176; // must be just above highest collision point
 			// Presets
 			LOW_BAR_SHOOTER = 1130; // must be just below lowest collision point
 			HIGH_VALUE_AUGER = 1200;
@@ -127,7 +128,7 @@ public class LauncherWithPistons implements ILauncher
 			STANDARD_DEFENSE_AUGER = 1276; // used to be "shoot low"
 			INTAKE_AUGER = 1050;
 		}
-		
+
 		SmartDashboard.putNumber("Top Pot Limit Auger", TOP_LIMIT_AUGER);
 		SmartDashboard.putNumber("Bottom Pot Limit Auger", BOTTOM_LIMIT_AUGER);
 
@@ -142,10 +143,15 @@ public class LauncherWithPistons implements ILauncher
 	{
 		if (!isShooterAtTopLimit())
 		{
-			if ((augerPot.getCount() < (LOW_BAR_AUGER_FOR_SHOOTER)) && (shooterPot.getCount() < LOW_BAR_SHOOTER) && (!manualLowerAuger))
+			if ((augerPot.getCount() < (LOW_BAR_AUGER_FOR_SHOOTER)) && (shooterPot.getCount() < LOW_BAR_SHOOTER)
+					&& (!manualLowerAuger))
 			{
 				raiseAuger(AUTO_AUGER_SPEED);
 				autoRaiseAuger = true;
+			} else
+			{
+				stopAugerLifter(false);
+				autoRaiseAuger = false;
 			}
 
 			if (slow)
@@ -193,6 +199,10 @@ public class LauncherWithPistons implements ILauncher
 	public void stopShooterLifter()
 	{
 		shooterLifterMotor.stop();
+		if (autoRaiseAuger)
+		{
+			stopAugerLifter(true);
+		}
 	}
 
 	private boolean isShooterAtTopLimit()
@@ -326,6 +336,7 @@ public class LauncherWithPistons implements ILauncher
 		{
 			if (augerLifterMotor.getSpeed() > 0)
 			{
+				System.out.println("Raising");
 				// If auger is nearing the VERY Top, slow down
 				if (augerPot.getCount() > (TOP_LIMIT_AUGER - 100))
 				{
@@ -548,7 +559,7 @@ public class LauncherWithPistons implements ILauncher
 
 	private boolean isAugerAtBottomLimit()
 	{
-		if (augerPot.getCount() < BOTTOM_LIMIT_AUGER)
+		if ((augerPot.getCount() < BOTTOM_LIMIT_AUGER) || bottomLimitAuger.isHit())
 		{
 			return true;
 		} else
@@ -559,7 +570,7 @@ public class LauncherWithPistons implements ILauncher
 
 	private boolean isAugerAtTopLimit()
 	{
-		if (augerPot.getCount() >= TOP_LIMIT_AUGER)
+		if ((augerPot.getCount() >= TOP_LIMIT_AUGER) || topLimitAuger.isHit())
 		{
 			return true;
 		} else

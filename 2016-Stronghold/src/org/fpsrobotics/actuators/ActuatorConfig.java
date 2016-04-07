@@ -1,21 +1,15 @@
 package org.fpsrobotics.actuators;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-
 import org.fpsrobotics.PID.IPIDFeedbackDevice;
 import org.fpsrobotics.autonomous.DriveTrainAssist;
 import org.fpsrobotics.sensors.BuiltInCANTalonEncoder;
 import org.fpsrobotics.sensors.Potentiometer;
 import org.fpsrobotics.sensors.SensorConfig;
-import org.usfirst.frc.team3414.robot.RobotStatus;
 
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Singleton class that creates and distributes all of the actuators (motors,
@@ -211,7 +205,7 @@ public class ActuatorConfig
 //		}
 		
 		// Instantiate the lifter
-//		lift = new Lifter(new SingleSolenoid(new Solenoid(2)), new SingleSolenoid(new Solenoid(3)));
+		lift = new Lifter(new DoubleSolenoid(new edu.wpi.first.wpilibj.DoubleSolenoid(2, 3)));
 		//TODO: MAKE LIFTER ACUTATOR CONFIG
 	}
 

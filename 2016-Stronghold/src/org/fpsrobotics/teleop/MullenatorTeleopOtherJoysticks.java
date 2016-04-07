@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class MullenatorTeleop implements ITeleopControl
+public class MullenatorTeleopOtherJoysticks implements ITeleopControl
 {
 	private ExecutorService executor;
 
@@ -36,10 +36,6 @@ public class MullenatorTeleop implements ITeleopControl
 	private boolean movedAuger = false;
 	private boolean movedIntakeWheels = false;
 
-	// Lifter
-	private boolean isAugerReadyToLiftA = false; // do not delete
-	private boolean isAugerReadyToLiftB = false; // do not delete
-	
 	// Instances
 	private ILauncher launcher;
 	private IGamepad gamepad;
@@ -47,7 +43,11 @@ public class MullenatorTeleop implements ITeleopControl
 	private IJoystick leftJoystick;
 	private IJoystick rightJoystick;
 
-	public MullenatorTeleop()
+	// Lifter
+	private boolean isAugerReadyToLiftA = false; // do not delete
+	private boolean isAugerReadyToLiftB = false; // do not delete
+
+	public MullenatorTeleopOtherJoysticks()
 	{
 		executor = Executors.newFixedThreadPool(2);
 
@@ -106,7 +106,7 @@ public class MullenatorTeleop implements ITeleopControl
 				}
 
 				// Low bar
-				if ((rightJoystick.getButtonValue(EJoystickButtons.THREE) || leftJoystick.getButtonValue(EJoystickButtons.SEVEN)) && !shootingLockOut)
+				if (rightJoystick.getButtonValue(EJoystickButtons.FOUR) && !shootingLockOut)
 				{
 					shootingLockOut = true;
 
@@ -115,7 +115,7 @@ public class MullenatorTeleop implements ITeleopControl
 				}
 
 				// Any Normal Defense
-				if ((rightJoystick.getButtonValue(EJoystickButtons.FOUR) || leftJoystick.getButtonValue(EJoystickButtons.EIGHT)) && !shootingLockOut)
+				if (rightJoystick.getButtonValue(EJoystickButtons.FIVE) && !shootingLockOut)
 				{
 					shootingLockOut = true;
 
@@ -124,7 +124,7 @@ public class MullenatorTeleop implements ITeleopControl
 				}
 
 				// Center Shot preset
-				if (rightJoystick.getButtonValue(EJoystickButtons.NINE) && !shootingLockOut)
+				if (rightJoystick.getButtonValue(EJoystickButtons.THREE) && !shootingLockOut)
 				{
 					shootingLockOut = true;
 					if (RobotStatus.isAlpha())
@@ -140,7 +140,7 @@ public class MullenatorTeleop implements ITeleopControl
 				}
 
 				// Side/ corner shot preset
-				if (rightJoystick.getButtonValue(EJoystickButtons.TEN) && !shootingLockOut)
+				if (rightJoystick.getButtonValue(EJoystickButtons.TWO) && !shootingLockOut)
 				{
 					shootingLockOut = true;
 					if (RobotStatus.isAlpha())
@@ -214,12 +214,10 @@ public class MullenatorTeleop implements ITeleopControl
 				if (!gamepad.getButtonValue(EJoystickButtons.SEVEN) && !gamepad.getButtonValue(EJoystickButtons.EIGHT)
 						&& !gamepad.getButtonValue(EJoystickButtons.NINE)
 						&& !gamepad.getButtonValue(EJoystickButtons.TEN)
-						&& !rightJoystick.getButtonValue(EJoystickButtons.NINE)
-						&& !rightJoystick.getButtonValue(EJoystickButtons.TEN)
+						&& !rightJoystick.getButtonValue(EJoystickButtons.TWO)
+						&& !rightJoystick.getButtonValue(EJoystickButtons.FIVE)
 						&& !rightJoystick.getButtonValue(EJoystickButtons.FOUR)
 						&& !rightJoystick.getButtonValue(EJoystickButtons.THREE)
-						&& !leftJoystick.getButtonValue(EJoystickButtons.SEVEN)
-						&& !leftJoystick.getButtonValue(EJoystickButtons.EIGHT)
 						&& !leftJoystick.getButtonValue(EJoystickButtons.NINE)
 						&& !leftJoystick.getButtonValue(EJoystickButtons.TEN)
 						&& !leftJoystick.getButtonValue(EJoystickButtons.ELEVEN) && shootingLockOut)
