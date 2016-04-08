@@ -83,6 +83,8 @@ public interface ILauncher
 	// private boolean isAugerAtTopLimit()
 
 	public void moveAugerToPosition(int position);
+	
+	public void moveAugerToPosition(int position, double lowerSpeed);
 
 	// Sequences
 

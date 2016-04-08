@@ -10,7 +10,7 @@ public class AutonLowBarAndShootHigh implements IAutonomousControl
 	private int SHOOT_ANGLE = 46;
 
 	private double DRIVE_SPEED = 0.80; // Used to be 0.5
-	private int DRIVE_DISTANCE = 130_000; // 145_000 beta
+	private int DRIVE_DISTANCE = 140_000; // 130_000 beta
 
 	@Override
 	public void doAuto()
@@ -39,6 +39,7 @@ public class AutonLowBarAndShootHigh implements IAutonomousControl
 
 			if (RobotStatus.isAlpha())
 			{
+				//lower numbers to raise shooter
 				ActuatorConfig.getInstance().getLauncher().moveShooterToPosition(765); // alpha //TODO: Tune Autonomous mode for Alpha (DO BEFORE COMPETITION)
 			} else
 			{

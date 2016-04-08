@@ -94,15 +94,17 @@ public class MullenatorTeleop implements ITeleopControl
 
 			while (RobotStatus.isRunning())
 			{
-				// Shoot High
-				if (gamepad.getButtonValue(EJoystickButtons.SEVEN) && !shootingLockOut)
-				{
-					shootingLockOut = true;
-					launcher.shootSequenceHigh();
-				}
+				// // Shoot High
+				// if (gamepad.getButtonValue(EJoystickButtons.SEVEN) && !shootingLockOut)
+				// {
+				// shootingLockOut = true;
+				// launcher.shootSequenceHigh();
+				// }
 
 				// Shoot Low
-				if (gamepad.getButtonValue(EJoystickButtons.EIGHT) && !shootingLockOut)
+				if ((gamepad.getButtonValue(EJoystickButtons.ONE) && gamepad.getButtonValue(EJoystickButtons.SEVEN))
+						|| ((gamepad.getButtonValue(EJoystickButtons.ONE)
+								&& gamepad.getButtonValue(EJoystickButtons.EIGHT)) && !shootingLockOut))
 				{
 					shootingLockOut = true;
 					launcher.shootSequenceLow();
@@ -129,13 +131,13 @@ public class MullenatorTeleop implements ITeleopControl
 				}
 
 				// Center Shot preset
-				if (rightJoystick.getButtonValue(EJoystickButtons.NINE) && !shootingLockOut)
+				if (gamepad.getButtonValue(EJoystickButtons.SEVEN) && !shootingLockOut)
 				{
 					shootingLockOut = true;
 					if (RobotStatus.isAlpha())
 					{
-						// Alpha TODO: Tune Center shot Preset - Alpha
-						ActuatorConfig.getInstance().getLauncher().moveShooterToPosition(750);
+						// To raise shooter, lower values
+						ActuatorConfig.getInstance().getLauncher().moveShooterToPosition(680);
 					} else
 					{
 						// Beta
@@ -145,13 +147,12 @@ public class MullenatorTeleop implements ITeleopControl
 				}
 
 				// Side/ corner shot preset
-				if (rightJoystick.getButtonValue(EJoystickButtons.TEN) && !shootingLockOut)
+				if (gamepad.getButtonValue(EJoystickButtons.EIGHT) && !shootingLockOut)
 				{
 					shootingLockOut = true;
 					if (RobotStatus.isAlpha())
 					{
-						// Alpha TODO: Tune Corner shot Prest - Alpha
-						ActuatorConfig.getInstance().getLauncher().moveShooterToPosition(755);
+						ActuatorConfig.getInstance().getLauncher().moveShooterToPosition(675);
 					} else
 					{
 						// Beta
@@ -172,19 +173,18 @@ public class MullenatorTeleop implements ITeleopControl
 					isAugerReadyToLift = true;
 				}
 
-				if (gamepad.getButtonValue(EJoystickButtons.TEN) && isAugerReadyToLift && !shootingLockOut)
+				if (gamepad.getButtonValue(EJoystickButtons.TEN) && !shootingLockOut)
+				// if (gamepad.getButtonValue(EJoystickButtons.TEN) && isAugerReadyToLift && !shootingLockOut)
 				{
 					shootingLockOut = true;
 					ActuatorConfig.getInstance().getLifter().retract();
-					// SensorConfig.getInstance().getTimer().waitTimeInMillis(1000);
-					// ActuatorConfig.getInstance().getLauncher().lowerAugerForEndGame();
-					// SensorConfig.getInstance().getTimer().waitTimeInMillis(3000);
-					// ActuatorConfig.getInstance().getLauncher().stopAugerLifter(false);
+					SensorConfig.getInstance().getTimer().waitTimeInMillis(2000);
+					ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.FOURTY_KAI_END_GAME);
 
 					isAugerReadyToLift = false;
 				}
 				// }
-
+				
 				if (!gamepad.getButtonValue(EJoystickButtons.SEVEN) && !gamepad.getButtonValue(EJoystickButtons.EIGHT)
 						&& !gamepad.getButtonValue(EJoystickButtons.NINE)
 						&& !gamepad.getButtonValue(EJoystickButtons.TEN)
@@ -287,11 +287,6 @@ public class MullenatorTeleop implements ITeleopControl
 			if (SensorConfig.getInstance().getRightJoystick().getButtonValue(EJoystickButtons.ONE))
 			{
 				ActuatorConfig.getInstance().getDriveTrain()
-						.driveStraight(SensorConfig.getInstance().getRightJoystick().getY() * speedMultiplier);
-				SmartDashboard.putBoolean("DRIVE TOGETHER", false);
-			} else if (SensorConfig.getInstance().getRightJoystick().getButtonValue(EJoystickButtons.TWO))
-			{
-				ActuatorConfig.getInstance().getDriveTrain()
 						.setSpeed(SensorConfig.getInstance().getRightJoystick().getY() * speedMultiplier);
 				SmartDashboard.putBoolean("DRIVE TOGETHER", true);
 			} else
@@ -356,9 +351,7 @@ public class MullenatorTeleop implements ITeleopControl
 			// Manual Auger
 			if (gamepad.getButtonValue(EJoystickButtons.FIVE))
 			{
-				// TODO: Make sure "Mode" light is off
-				if ((gamepad.getAnalogStickValue(EAnalogStickAxis.D_PAD_DOWN) > 0.30)
-						&& (Timer.getFPGATimestamp() > END_GAME))
+				if (gamepad.getButtonValue(EJoystickButtons.TWELVE))
 				{
 					launcher.lowerAugerForEndGame();
 				} else
@@ -420,6 +413,5 @@ public class MullenatorTeleop implements ITeleopControl
 
 		// Manual Shooter Lock Out
 		SmartDashboard.putBoolean("Shooter Lock out", shootingLockOut);
-
 	}
 }

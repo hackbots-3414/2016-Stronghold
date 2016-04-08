@@ -65,38 +65,6 @@ public class DualShockTwoController implements IGamepad
 			{
 				return joy.getRawAxis(RIGHT_VERTICAL);
 			}
-		case D_PAD_LEFT:
-			if (Math.abs(joy.getRawAxis(D_PAD_LEFT)) < D_PAD_TOLERANCE)
-			{
-				return 0.0;
-			} else
-			{
-				return joy.getRawAxis(D_PAD_LEFT);
-			}
-		case D_PAD_RIGHT:
-			if (Math.abs(joy.getRawAxis(D_PAD_RIGHT)) < D_PAD_TOLERANCE)
-			{
-				return 0.0;
-			} else
-			{
-				return joy.getRawAxis(D_PAD_RIGHT);
-			}
-		case D_PAD_UP: 
-			if (Math.abs(joy.getRawAxis(D_PAD_UP)) < D_PAD_TOLERANCE)
-			{
-				return 0.0;
-			} else
-			{
-				return joy.getRawAxis(D_PAD_UP);
-			}
-		case D_PAD_DOWN:
-			if (Math.abs(joy.getRawAxis(D_PAD_DOWN)) < D_PAD_TOLERANCE)
-			{
-				return 0.0;
-			} else
-			{
-				return joy.getRawAxis(D_PAD_DOWN);
-			}
 		default: 
 			return 0.0;
 		}
