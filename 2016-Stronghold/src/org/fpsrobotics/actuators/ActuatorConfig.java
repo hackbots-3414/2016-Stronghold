@@ -37,6 +37,8 @@ public class ActuatorConfig
 	private final int AUGER_POTENTIOMETER_CHANNEL = 1;
 
 	private final int SHOOTER_SOLENOID_PORT = 0;
+	private final int LIFTER_SOLENOID_PORT_A = 1;
+	private final int LIFTER_SOLENOID_PORT_B = 2;
 
 	// Shooter Solenoid
 	private ISolenoid shooterSolenoid;
@@ -183,29 +185,9 @@ public class ActuatorConfig
 				new CANMotor(augerIntakeMotor, false), new CANMotor(augerLifterMotor, false),
 				SensorConfig.getInstance().getAugerBottomLimitSwitch(),
 				SensorConfig.getInstance().getAugerTopLimitSwitch(), augerPotentiometer);
-//		if (RobotStatus.isAlpha())
-//		{
-//			launcher = new AlphaLauncher(new CANMotor(leftShooterMotor, true), new CANMotor(rightShooterMotor, false),
-//					new CANMotor(linearActuator, true), shooterSolenoid,
-//					SensorConfig.getInstance().getShooterBottomLimitSwitch(),
-//					SensorConfig.getInstance().getShooterTopLimitSwitch(), SensorConfig.getInstance().getShooterPot(),
-//					new CANMotor(augerIntakeMotor, false), new CANMotor(augerLifterMotor, false),
-//					SensorConfig.getInstance().getAugerBottomLimitSwitch(),
-//					SensorConfig.getInstance().getAugerTopLimitSwitch(), augerPotentiometer);
-//					
-//		} else
-//		{
-//			launcher = new BetaLauncher(new CANMotor(leftShooterMotor, true), new CANMotor(rightShooterMotor, false),
-//					new CANMotor(linearActuator, true), shooterSolenoid,
-//					SensorConfig.getInstance().getShooterBottomLimitSwitch(),
-//					SensorConfig.getInstance().getShooterTopLimitSwitch(), SensorConfig.getInstance().getShooterPot(),
-//					new CANMotor(augerIntakeMotor, false), new CANMotor(augerLifterMotor, false),
-//					SensorConfig.getInstance().getAugerBottomLimitSwitch(),
-//					SensorConfig.getInstance().getAugerTopLimitSwitch(), augerPotentiometer);
-//		}
 		
 		// Instantiate the lifter
-		lift = new Lifter(new DoubleSolenoid(new edu.wpi.first.wpilibj.DoubleSolenoid(2, 3)));
+		lift = new Lifter(new DoubleSolenoid(new edu.wpi.first.wpilibj.DoubleSolenoid(LIFTER_SOLENOID_PORT_A, LIFTER_SOLENOID_PORT_B)));
 		//TODO: MAKE LIFTER ACUTATOR CONFIG
 	}
 

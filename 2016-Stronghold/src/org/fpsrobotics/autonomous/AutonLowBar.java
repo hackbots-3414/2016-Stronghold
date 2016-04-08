@@ -34,14 +34,14 @@ public class AutonLowBar implements IAutonomousControl
 
 				SensorConfig.getInstance().getTimer().waitTimeInMillis(5000);
 
-				ActuatorConfig.getInstance().getDriveTrain().stop();
+				ActuatorConfig.getInstance().getDriveTrain().stopDrive();
 			} else
 			{
 				// Go under low bar
 				ActuatorConfig.getInstance().getDriveTrain().goForward(0.5, 130_000);
 			}
 
-			ActuatorConfig.getInstance().getDriveTrain().stop();
+			ActuatorConfig.getInstance().getDriveTrain().stopDrive();
 
 			break;
 		}

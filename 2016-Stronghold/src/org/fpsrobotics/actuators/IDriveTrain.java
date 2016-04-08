@@ -13,7 +13,7 @@ public interface IDriveTrain extends IPIDEnabledDevice
 	
 	public void setSpeed(double speed);
 
-	public void stop();
+	public void stopDrive();
 	
 	public void turnLeft(double speed);
 

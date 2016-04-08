@@ -1,3 +1,4 @@
+package org.fpsrobotics.actuators;
 //
 //package org.fpsrobotics.actuators;
 //
@@ -20,7 +21,7 @@
 // * being raised manually. The auger will detect if it is nearing the shooter or the ground, and slow down to a halt
 // * before it collides.
 // */
-//public class BetaLauncher implements ILauncher
+//public class AlphaLauncher implements ILauncher
 //{
 //	// Lifter Functions
 //	private double LINEAR_ACTUATOR_SPEED = 0.5; // intermediate speed to move
@@ -110,7 +111,7 @@
 //	 * @param topLimitAuger
 //	 * @param augerPot
 //	 */
-//	public BetaLauncher(ICANMotor leftShooterMotor, ICANMotor rightShooterMotor, ICANMotor shooterLifterMotor,
+//	public AlphaLauncher(ICANMotor leftShooterMotor, ICANMotor rightShooterMotor, ICANMotor shooterLifterMotor,
 //			ISolenoid shooterActuator, ILimitSwitch shooterBottomLimit, ILimitSwitch shooterTopLimit,
 //			IPIDFeedbackDevice shooterPot, ICANMotor augerIntakeMotor, ICANMotor augerLifterMotor,
 //			ILimitSwitch bottomLimitAuger, ILimitSwitch topLimitAuger, IPIDFeedbackDevice augerPot)
@@ -133,7 +134,7 @@
 //
 //		if (RobotStatus.isAlpha())
 //		{
-//			// TODO: BETA TUNE ALPHA
+//			// BETA TUNE ALPHA
 //			// Shooter
 //			TOP_LIMIT_POT_VALUE_SHOOTER = 588;
 //			BOTTOM_LIMIT_POT_VALUE_SHOOTER = 2100;
@@ -175,7 +176,8 @@
 //			AUGER_SHOOT_LOW_POT_VALUE = 1276;
 //		}
 //
-//		AUGER_WITHIN_RANGE_OF_HITTING_SOMETHING = BOTTOM_POT_LIMIT_AUGER + 120; // TODO: BETA Confirm this value with
+//		AUGER_WITHIN_RANGE_OF_HITTING_SOMETHING = BOTTOM_POT_LIMIT_AUGER + 120;
+//		// BETA Confirm this value with
 //																				// Presets
 //
 //		SmartDashboard.putNumber("Top Pot Limit Auger", TOP_POT_LIMIT_AUGER);
@@ -720,7 +722,7 @@
 //	{
 //		if (RobotStatus.isAlpha())
 //		{
-//			// ALPHA //TODO: BETA Tune Alpha for Shooter
+//			// ALPHA // BETA Tune Alpha for Shooter
 //			// Top Alpha: 588
 //			// Bottom Alpha: 2100
 //			switch (preset)
@@ -763,7 +765,7 @@
 //	{
 //		if (RobotStatus.isAlpha())
 //		{
-//			// ALPHA //TODO: BETA Tune Alpha for Auger
+//			// ALPHA //BETA Tune Alpha for Auger
 //			// Top Alpha 1622
 //			// Bottom Alpha 290
 //			switch (preset)

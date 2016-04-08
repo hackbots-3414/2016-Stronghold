@@ -62,7 +62,7 @@ public class DriveTrainAssist
 					;
 			}
 
-			driveTrain.stop();
+			driveTrain.stopDrive();
 		}
 	}
 

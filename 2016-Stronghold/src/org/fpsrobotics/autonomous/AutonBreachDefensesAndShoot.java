@@ -47,7 +47,7 @@ public class AutonBreachDefensesAndShoot implements IAutonomousControl
 				ActuatorConfig.getInstance().getDriveTrain().goForward(0.8, 90_000);
 			}
 
-			ActuatorConfig.getInstance().getDriveTrain().stop();
+			ActuatorConfig.getInstance().getDriveTrain().stopDrive();
 
 			if (!RobotStatus.isAuto())
 				break;

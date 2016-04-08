@@ -46,7 +46,7 @@ public class AutonBreachDefenses implements IAutonomousControl
 				ActuatorConfig.getInstance().getDriveTrain().goForward(0.8, 90_000);
 			}
 
-			ActuatorConfig.getInstance().getDriveTrain().stop();
+			ActuatorConfig.getInstance().getDriveTrain().stopDrive();
 
 			break;
 		}

@@ -9,9 +9,8 @@ import org.usfirst.frc.team3414.robot.RobotStatus;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 
 /**
- * Creates a drive train that has two double motors on either side with encoders
- * on each gearbox. It also has an optional gyroscope attached in order to
- * enable straight movement.
+ * Creates a drive train that has two double motors on either side with encoders on each gearbox. It also has an
+ * optional gyroscope attached in order to enable straight movement.
  *
  */
 public class TankDrive implements IDriveTrain
@@ -19,7 +18,7 @@ public class TankDrive implements IDriveTrain
 	private DoubleMotor motorLeft, motorRight;
 
 	private IGyroscope gyro;
-	
+
 	private boolean autoGyroDriveActivated;
 
 	public TankDrive(DoubleMotor motorLeft, DoubleMotor motorRight)
@@ -60,7 +59,7 @@ public class TankDrive implements IDriveTrain
 	}
 
 	@Override
-	public void stop()
+	public void stopDrive()
 	{
 		// Caution: May want to disable PID
 		autoGyroDriveActivated = false;
@@ -239,7 +238,7 @@ public class TankDrive implements IDriveTrain
 				}
 			}
 
-			stop();
+			stopDrive();
 
 			SensorConfig.getInstance().getTimer().waitTimeInMillis(200);
 		}
@@ -268,7 +267,7 @@ public class TankDrive implements IDriveTrain
 				}
 			}
 
-			stop();
+			stopDrive();
 
 			SensorConfig.getInstance().getTimer().waitTimeInMillis(200);
 		}
@@ -305,7 +304,7 @@ public class TankDrive implements IDriveTrain
 				drive(-speed, -gyro.getCount() * Kp);
 			}
 
-			stop();
+			stopDrive();
 
 			if (!PIDOverride.getInstance().isTeleopDisablePID())
 			{
@@ -332,7 +331,6 @@ public class TankDrive implements IDriveTrain
 		goForward(-speed, distance);
 	}
 
-
 	/**
 	 * Resets the gyro
 	 */
@@ -346,10 +344,14 @@ public class TankDrive implements IDriveTrain
 				disablePID();
 
 				gyro.resetCount();
+				System.out.println("Gyro Reset");
+
+//				 SensorConfig.getInstance().getTimer().waitTimeInMillis(300);
+				// TODO: Should driveStraight() wait 300 ms like driveForward() does?
 
 				autoGyroDriveActivated = true;
 			}
-			drive(-speed, -gyro.getCount() * Kp);
+			drive(speed, -gyro.getCount() * Kp);
 		} else
 		{
 			setSpeed(speed);

@@ -10,6 +10,15 @@ public class DualShockTwoController implements IGamepad
 {
 	private Joystick joy;
 	private static final double TOLERANCE = 0.05;
+	private static final double D_PAD_TOLERANCE = 0.20;
+	private static final int LEFT_HORIZONTAL = 1;
+	private static final int LEFT_VERTICAL = 2;
+	private static final int RIGHT_HORIZONTAL = 3;
+	private static final int RIGHT_VERTICAL = 4;
+	private static final int D_PAD_LEFT = 5;
+	private static final int D_PAD_RIGHT = 6;
+	private static final int D_PAD_UP = 7;
+	private static final int D_PAD_DOWN = 8;
 
 	public DualShockTwoController(Joystick joy)
 	{
@@ -25,61 +34,72 @@ public class DualShockTwoController implements IGamepad
 		switch (axis)
 		{
 		case LEFT_HORIZONTAL:
-			if (Math.abs(joy.getRawAxis(1)) < TOLERANCE)
+			if (Math.abs(joy.getRawAxis(LEFT_HORIZONTAL)) < TOLERANCE)
 			{
 				return 0.0;
 			} else
 			{
-				return joy.getRawAxis(1);
+				return joy.getRawAxis(LEFT_HORIZONTAL);
 			}
 		case LEFT_VERTICAL:
-			if (Math.abs(joy.getRawAxis(2)) < TOLERANCE)
+			if (Math.abs(joy.getRawAxis(LEFT_VERTICAL)) < TOLERANCE)
 			{
 				return 0.0;
 			} else
 			{
-				return joy.getRawAxis(2);
+				return joy.getRawAxis(LEFT_VERTICAL);
 			}
 		case RIGHT_HORIZONTAL:
-			if (Math.abs(joy.getRawAxis(3)) < TOLERANCE)
+			if (Math.abs(joy.getRawAxis(RIGHT_HORIZONTAL)) < TOLERANCE)
 			{
 				return 0.0;
 			} else
 			{
-				return joy.getRawAxis(3);
+				return joy.getRawAxis(RIGHT_HORIZONTAL);
 			}
 		case RIGHT_VERTICAL:
-			if (Math.abs(joy.getRawAxis(4)) < TOLERANCE)
+			if (Math.abs(joy.getRawAxis(RIGHT_VERTICAL)) < TOLERANCE)
 			{
 				return 0.0;
 			} else
 			{
-				return joy.getRawAxis(4);
+				return joy.getRawAxis(RIGHT_VERTICAL);
 			}
-
-		default:
+		case D_PAD_LEFT:
+			if (Math.abs(joy.getRawAxis(D_PAD_LEFT)) < D_PAD_TOLERANCE)
+			{
+				return 0.0;
+			} else
+			{
+				return joy.getRawAxis(D_PAD_LEFT);
+			}
+		case D_PAD_RIGHT:
+			if (Math.abs(joy.getRawAxis(D_PAD_RIGHT)) < D_PAD_TOLERANCE)
+			{
+				return 0.0;
+			} else
+			{
+				return joy.getRawAxis(D_PAD_RIGHT);
+			}
+		case D_PAD_UP: 
+			if (Math.abs(joy.getRawAxis(D_PAD_UP)) < D_PAD_TOLERANCE)
+			{
+				return 0.0;
+			} else
+			{
+				return joy.getRawAxis(D_PAD_UP);
+			}
+		case D_PAD_DOWN:
+			if (Math.abs(joy.getRawAxis(D_PAD_DOWN)) < D_PAD_TOLERANCE)
+			{
+				return 0.0;
+			} else
+			{
+				return joy.getRawAxis(D_PAD_DOWN);
+			}
+		default: 
 			return 0.0;
 		}
-
-		// switch (axis)
-		// {
-		// case LEFT_HORIZONTAL:
-		// return joy.getRawAxis(1);
-		//
-		// case LEFT_VERTICAL:
-		// return joy.getRawAxis(2);
-		//
-		// case RIGHT_HORIZONTAL:
-		//
-		// return joy.getRawAxis(3);
-		//
-		// case RIGHT_VERTICAL:
-		//
-		// return joy.getRawAxis(4);
-		//
-		// default:
-		// return 0.0;
-		// }
 	}
 
 	@Override

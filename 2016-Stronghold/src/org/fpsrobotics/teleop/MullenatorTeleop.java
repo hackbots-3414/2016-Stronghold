@@ -8,6 +8,7 @@ import org.fpsrobotics.actuators.EAugerPresets;
 import org.fpsrobotics.actuators.EShooterPresets;
 import org.fpsrobotics.actuators.IDriveTrain;
 import org.fpsrobotics.actuators.ILauncher;
+import org.fpsrobotics.sensors.EAnalogStickAxis;
 import org.fpsrobotics.sensors.EJoystickButtons;
 import org.fpsrobotics.sensors.IGamepad;
 import org.fpsrobotics.sensors.IJoystick;
@@ -37,15 +38,17 @@ public class MullenatorTeleop implements ITeleopControl
 	private boolean movedIntakeWheels = false;
 
 	// Lifter
-	private boolean isAugerReadyToLiftA = false; // do not delete
-	private boolean isAugerReadyToLiftB = false; // do not delete
-	
+	private boolean isAugerReadyToLift = false; // do not delete
+
 	// Instances
 	private ILauncher launcher;
 	private IGamepad gamepad;
 	private IDriveTrain driveTrain;
 	private IJoystick leftJoystick;
 	private IJoystick rightJoystick;
+
+	// Constants
+	private static final int END_GAME = 105;
 
 	public MullenatorTeleop()
 	{
@@ -106,7 +109,8 @@ public class MullenatorTeleop implements ITeleopControl
 				}
 
 				// Low bar
-				if ((rightJoystick.getButtonValue(EJoystickButtons.THREE) || leftJoystick.getButtonValue(EJoystickButtons.SEVEN)) && !shootingLockOut)
+				if ((rightJoystick.getButtonValue(EJoystickButtons.THREE)
+						|| leftJoystick.getButtonValue(EJoystickButtons.SEVEN)) && !shootingLockOut)
 				{
 					shootingLockOut = true;
 
@@ -115,7 +119,8 @@ public class MullenatorTeleop implements ITeleopControl
 				}
 
 				// Any Normal Defense
-				if ((rightJoystick.getButtonValue(EJoystickButtons.FOUR) || leftJoystick.getButtonValue(EJoystickButtons.EIGHT)) && !shootingLockOut)
+				if ((rightJoystick.getButtonValue(EJoystickButtons.FOUR)
+						|| leftJoystick.getButtonValue(EJoystickButtons.EIGHT)) && !shootingLockOut)
 				{
 					shootingLockOut = true;
 
@@ -155,59 +160,28 @@ public class MullenatorTeleop implements ITeleopControl
 					ActuatorConfig.getInstance().getLauncher().shootSequenceHigh();
 				}
 
-				// // Portcullis - So you have to hold Button Eleven
-				// TODO: Tune Portcullis auto action during teleop
-				// if (leftJoystick.getButtonValue(EJoystickButtons.ELEVEN) &&
-				// !shootingLockOut)
-				// {
-				// shootingLockOut = true;
-				// ActuatorConfig.getInstance().getDriveTrain().goBackward(0.2,
-				// 100);
-				// if (leftJoystick.getButtonValue(EJoystickButtons.ELEVEN))
-				// {
-				// ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.BOTTOM_LIMIT);
-				// }
-				// if (leftJoystick.getButtonValue(EJoystickButtons.ELEVEN))
-				// {
-				// ActuatorConfig.getInstance().getDriveTrain().goStraight(0.2,
-				// 400);
-				// }
-				// if (leftJoystick.getButtonValue(EJoystickButtons.ELEVEN))
-				// {
-				// ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.SHOOT);
-				// }
-				// if (leftJoystick.getButtonValue(EJoystickButtons.ELEVEN))
-				// {
-				// ActuatorConfig.getInstance().getDriveTrain().goStraight(0.2,
-				// 500);
-				// }
-				// }
-
 				// Lift Robot TODO: Lift Robot ONLY IF WE HAVE PISTONS ATTACHED
 
-				// if (Timer.getFPGATimestamp() > 120)
+				// if (Timer.getFPGATimestamp() > END_GAME)
 				// {
 				if (gamepad.getButtonValue(EJoystickButtons.NINE) && !shootingLockOut)
 				{
 					shootingLockOut = true;
 					// ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.TOP_LIMIT);
 					ActuatorConfig.getInstance().getLifter().lift();
-					// isAugerReadyToLiftA = true;
-					// isAugerReadyToLiftB = false;
+					isAugerReadyToLift = true;
 				}
 
-				// if (gamepad.getButtonValue(EJoystickButtons.TEN) && isAugerReadyToLiftA && !shootingLockOut)
-				if (gamepad.getButtonValue(EJoystickButtons.TEN) && isAugerReadyToLiftA && !shootingLockOut)
+				if (gamepad.getButtonValue(EJoystickButtons.TEN) && isAugerReadyToLift && !shootingLockOut)
 				{
 					shootingLockOut = true;
 					ActuatorConfig.getInstance().getLifter().retract();
 					// SensorConfig.getInstance().getTimer().waitTimeInMillis(1000);
 					// ActuatorConfig.getInstance().getLauncher().lowerAugerForEndGame();
-					// SensorConfig.getInstance().getTimer().waitTimeInMillis(1000);
+					// SensorConfig.getInstance().getTimer().waitTimeInMillis(3000);
 					// ActuatorConfig.getInstance().getLauncher().stopAugerLifter(false);
 
-//					isAugerReadyToLiftA = false;
-					 isAugerReadyToLiftB = true;
+					isAugerReadyToLift = false;
 				}
 				// }
 
@@ -298,7 +272,7 @@ public class MullenatorTeleop implements ITeleopControl
 			{
 				if (!deadZoned)
 				{
-					ActuatorConfig.getInstance().getDriveTrain().stop();
+					ActuatorConfig.getInstance().getDriveTrain().stopDrive();
 					deadZoned = true;
 				} else
 				{
@@ -311,6 +285,11 @@ public class MullenatorTeleop implements ITeleopControl
 		{
 
 			if (SensorConfig.getInstance().getRightJoystick().getButtonValue(EJoystickButtons.ONE))
+			{
+				ActuatorConfig.getInstance().getDriveTrain()
+						.driveStraight(SensorConfig.getInstance().getRightJoystick().getY() * speedMultiplier);
+				SmartDashboard.putBoolean("DRIVE TOGETHER", false);
+			} else if (SensorConfig.getInstance().getRightJoystick().getButtonValue(EJoystickButtons.TWO))
 			{
 				ActuatorConfig.getInstance().getDriveTrain()
 						.setSpeed(SensorConfig.getInstance().getRightJoystick().getY() * speedMultiplier);
@@ -377,7 +356,9 @@ public class MullenatorTeleop implements ITeleopControl
 			// Manual Auger
 			if (gamepad.getButtonValue(EJoystickButtons.FIVE))
 			{
-				if (gamepad.getButtonValue(EJoystickButtons.TEN) && isAugerReadyToLiftB)
+				// TODO: Make sure "Mode" light is off
+				if ((gamepad.getAnalogStickValue(EAnalogStickAxis.D_PAD_DOWN) > 0.30)
+						&& (Timer.getFPGATimestamp() > END_GAME))
 				{
 					launcher.lowerAugerForEndGame();
 				} else

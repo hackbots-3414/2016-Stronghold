@@ -31,9 +31,9 @@ public class LauncherWithPistons implements ILauncher
 	private double augerPrevValue;
 	private final int SLOW_AUGER_DISTANCE = 100;
 	private final double AUGER_SPEED_RAISE = 0.5;
-	private final double AUGER_SPEED_LOWER = 0.5;
+	private final double AUGER_SPEED_LOWER = 0.5; //TODO: 0.5
 	private final double HIGH_VALUE_AUGER_SPEED = 0.8;
-	private final double AUTO_AUGER_SPEED = 0.4;
+	private final double AUTO_AUGER_SPEED = 0.35;
 
 	// Fields
 	private ICANMotor leftShooterMotor, rightShooterMotor;
@@ -103,15 +103,15 @@ public class LauncherWithPistons implements ILauncher
 			BOTTOM_LIMIT_SHOOTER = 2100;
 			TOP_LIMIT_SHOOTER = 588;
 			// AUGER
-			TOP_LIMIT_AUGER = 1920;
-			BOTTOM_LIMIT_AUGER = 450;
-			LOW_BAR_AUGER_FOR_SHOOTER = 716; // must be just above highest collision point
+			TOP_LIMIT_AUGER = 1840; //1840
+			BOTTOM_LIMIT_AUGER = 350;
+			LOW_BAR_AUGER_FOR_SHOOTER = 575; // must be just above highest collision point
 			// Presets
 			LOW_BAR_SHOOTER = 1800; // must be just below lowest collision point
 			HIGH_VALUE_AUGER = 1400;
-			FOURTY_KAI = 1338; // used to be "shoot high"
-			STANDARD_DEFENSE_AUGER = 716; // used to be "shoot low"
-			INTAKE_AUGER = 550;
+			FOURTY_KAI = 1275; // used to be "shoot high"
+			STANDARD_DEFENSE_AUGER = 756; // used to be "shoot low"
+			INTAKE_AUGER = 420;
 		} else
 		{
 			// Shooter
@@ -399,6 +399,7 @@ public class LauncherWithPistons implements ILauncher
 	public void lowerAuger()
 	{
 		lowerAuger(AUGER_SPEED_LOWER);
+//		lowerAugerTest(AUGER_SPEED_LOWER);
 	}
 
 	@Override
@@ -408,6 +409,26 @@ public class LauncherWithPistons implements ILauncher
 	public void lowerAugerForEndGame()
 	{
 		lowerAuger(1.0);
+	}
+	
+	private void lowerAugerTest(double speed)
+	{
+		if (augerPot.getCount() < (BOTTOM_LIMIT_AUGER))
+		{
+			// Slow to a halt
+			stopAugerLifter(true);
+		} else
+		// If the shooter is safe from getting hit
+		{
+			// Travel normally
+			if (augerLifterMotor.getSpeed() < 0)
+			{
+				augerLifterMotor.setSpeed(-Math.abs(speed));
+			} else
+			{
+				rampUpMotor(-Math.abs(speed));
+			}
+		}
 	}
 
 	// if there is no desired position

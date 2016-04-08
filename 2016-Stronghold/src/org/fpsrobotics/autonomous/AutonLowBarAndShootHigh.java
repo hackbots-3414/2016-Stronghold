@@ -50,6 +50,12 @@ public class AutonLowBarAndShootHigh implements IAutonomousControl
 
 			ActuatorConfig.getInstance().getLauncher().shootSequenceHighAuto();
 
+			if (!RobotStatus.isAuto())
+				break;
+			
+//			ActuatorConfig.getInstance().getDriveTrainAssist().centerDriveTrain(0.3); 
+			//TODO: Do we want to center drive train after we shoot for autonomous
+			
 			break;
 		}
 	}

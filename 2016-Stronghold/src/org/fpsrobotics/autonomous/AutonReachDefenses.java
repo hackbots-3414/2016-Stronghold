@@ -38,7 +38,7 @@ public class AutonReachDefenses implements IAutonomousControl
 
 				SensorConfig.getInstance().getTimer().waitTimeInMillis(2700);
 
-				ActuatorConfig.getInstance().getDriveTrain().stop();
+				ActuatorConfig.getInstance().getDriveTrain().stopDrive();
 			} else
 			{
 				ActuatorConfig.getInstance().getDriveTrain().goForward(0.5, 40_000);
