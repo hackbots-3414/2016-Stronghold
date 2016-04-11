@@ -10,15 +10,10 @@ public class DualShockTwoController implements IGamepad
 {
 	private Joystick joy;
 	private static final double TOLERANCE = 0.05;
-	private static final double D_PAD_TOLERANCE = 0.20;
 	private static final int LEFT_HORIZONTAL = 1;
 	private static final int LEFT_VERTICAL = 2;
 	private static final int RIGHT_HORIZONTAL = 3;
 	private static final int RIGHT_VERTICAL = 4;
-	private static final int D_PAD_LEFT = 5;
-	private static final int D_PAD_RIGHT = 6;
-	private static final int D_PAD_UP = 7;
-	private static final int D_PAD_DOWN = 8;
 
 	public DualShockTwoController(Joystick joy)
 	{

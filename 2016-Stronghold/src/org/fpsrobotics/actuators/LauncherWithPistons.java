@@ -60,6 +60,7 @@ public class LauncherWithPistons implements ILauncher
 	private final int FOURTY_KAI;
 	private final int INTAKE_AUGER;
 	private final int STANDARD_DEFENSE_AUGER;
+	private final int END_GAME;
 
 	/**
 	 * 
@@ -103,7 +104,7 @@ public class LauncherWithPistons implements ILauncher
 			BOTTOM_LIMIT_SHOOTER = 2100;
 			TOP_LIMIT_SHOOTER = 588;
 			// AUGER
-			TOP_LIMIT_AUGER = 1840; // 1840
+			TOP_LIMIT_AUGER = 2000; // 1840
 			BOTTOM_LIMIT_AUGER = 350;
 			LOW_BAR_AUGER_FOR_SHOOTER = 600; // must be just above highest collision point
 			// Presets
@@ -112,6 +113,7 @@ public class LauncherWithPistons implements ILauncher
 			FOURTY_KAI = 1300; // used to be "shoot high"
 			STANDARD_DEFENSE_AUGER = 370; // should be above LOW_BAR_AUGER_FOR_SHOOTER // 601
 			INTAKE_AUGER = 420;
+			END_GAME = FOURTY_KAI;
 		} else
 		{
 			// Shooter
@@ -127,6 +129,7 @@ public class LauncherWithPistons implements ILauncher
 			FOURTY_KAI = 1650; // used to be "shoot high"
 			STANDARD_DEFENSE_AUGER = 1276; // used to be "shoot low"
 			INTAKE_AUGER = 1050;
+			END_GAME = FOURTY_KAI;
 		}
 
 		SmartDashboard.putNumber("Top Pot Limit Auger", TOP_LIMIT_AUGER);
@@ -723,7 +726,7 @@ public class LauncherWithPistons implements ILauncher
 			moveAugerToPosition(INTAKE_AUGER);
 			break;
 		case FOURTY_KAI_END_GAME:
-			moveAugerToPosition(FOURTY_KAI, 1.0);
+			moveAugerToPosition(END_GAME, 1.0);
 			break;
 		case STANDARD_DEFENSE_AUGER:
 			if (augerPot.getCount() < (STANDARD_DEFENSE_AUGER - 15))
