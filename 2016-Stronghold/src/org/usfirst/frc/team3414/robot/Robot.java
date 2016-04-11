@@ -22,17 +22,17 @@ public class Robot extends SampleRobot
 	public Robot()
 	{
 		RobotStatus.checkIsAlpha();
-		
+		SensorConfig.getInstance();
+		ActuatorConfig.getInstance();
+
 		teleop = new MullenatorTeleop();
-		executor = Executors.newFixedThreadPool(1);
+		executor = Executors.newFixedThreadPool(2);
 	}
 
 	public void robotInit()
 	{
 
 		makeAutoChooser();
-		SensorConfig.getInstance();
-		ActuatorConfig.getInstance();
 	}
 
 	private void makeAutoChooser()
@@ -46,7 +46,8 @@ public class Robot extends SampleRobot
 		autoChooser.addObject("Low Bar and Shoot Low", new AutonLowBarAndShootLow());
 		autoChooser.addObject("Low Bar and Shoot High-PICK THIS ALMOST ALWAYS", new AutonLowBarAndShootHigh());
 		autoChooser.addObject("Fourty Kai", new FourtyKai());
-//		autoChooser.addDefault("Chevel De Friz", new AutonChevelDeFriz());	//Untested
+		// autoChooser.addDefault("Chevel De Friz", new AutonChevelDeFriz());
+		// //Untested
 
 		SmartDashboard.putData("Autonomous Chooser", autoChooser);
 	}
@@ -57,12 +58,26 @@ public class Robot extends SampleRobot
 		RobotStatus.setIsAuto(true);
 		RobotStatus.setIsTeleop(false);
 
-		//SensorConfig.getInstance().getGyro().resetCount();
-		
+		SensorConfig.getInstance().getGyro().resetCount();
+
+		executor.submit(() ->
+		{
+			while (RobotStatus.isAuto())
+			{
+				teleop.printToSmartDashboard();
+				
+				SensorConfig.getInstance().getTimer().waitTimeInMillis(50);
+			}
+		});
 		executor.submit(() ->
 		{
 			System.out.println("Auto Running");
 
+			ActuatorConfig.getInstance().getFrontLeftDriveMotor().enableBrakeMode(true);
+			ActuatorConfig.getInstance().getFrontRightDriveMotor().enableBrakeMode(true);
+			ActuatorConfig.getInstance().getBackLeftDriveMotor().enableBrakeMode(true);
+			ActuatorConfig.getInstance().getBackRightDriveMotor().enableBrakeMode(true);
+			
 			((IAutonomousControl) autoChooser.getSelected()).doAuto();
 		});
 	}
@@ -73,6 +88,11 @@ public class Robot extends SampleRobot
 		RobotStatus.setIsAuto(false);
 		RobotStatus.setIsTeleop(true);
 
+		ActuatorConfig.getInstance().getFrontLeftDriveMotor().enableBrakeMode(false);
+		ActuatorConfig.getInstance().getFrontRightDriveMotor().enableBrakeMode(false);
+		ActuatorConfig.getInstance().getBackLeftDriveMotor().enableBrakeMode(false);
+		ActuatorConfig.getInstance().getBackRightDriveMotor().enableBrakeMode(false);
+		
 		teleop.doTeleop();
 	}
 

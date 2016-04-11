@@ -31,7 +31,7 @@ public class LauncherWithPistons implements ILauncher
 	private double augerPrevValue;
 	private final int SLOW_AUGER_DISTANCE = 100;
 	private final double AUGER_SPEED_RAISE = 0.5;
-	private final double AUGER_SPEED_LOWER = 0.5; // TODO: 0.5
+	private final double AUGER_SPEED_LOWER = 0.5;
 	private final double HIGH_VALUE_AUGER_SPEED = 0.8;
 	private final double AUTO_AUGER_SPEED = 0.35;
 
@@ -117,7 +117,7 @@ public class LauncherWithPistons implements ILauncher
 		} else
 		{
 			// Shooter
-			BOTTOM_LIMIT_SHOOTER = 1300;
+			BOTTOM_LIMIT_SHOOTER = 1200;
 			TOP_LIMIT_SHOOTER = 190;
 			// AUGER
 			TOP_LIMIT_AUGER = 2200;
@@ -341,7 +341,6 @@ public class LauncherWithPistons implements ILauncher
 		{
 			if (augerLifterMotor.getSpeed() > 0)
 			{
-				System.out.println("Raising");
 				// If auger is nearing the VERY Top, slow down
 				if (augerPot.getCount() > (TOP_LIMIT_AUGER - 100))
 				{

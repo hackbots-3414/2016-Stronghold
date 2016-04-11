@@ -21,4 +21,6 @@ public interface IPIDFeedbackDevice
 	public double getRate();
 
 	public CANTalon.FeedbackDevice whatPIDDevice();
+
+	public double getDistance();
 }

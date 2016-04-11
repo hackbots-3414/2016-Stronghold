@@ -13,10 +13,28 @@ public class AutonBreachDefensesAndShoot implements IAutonomousControl
 {
 	private boolean timeBased = true;
 	private int SHOOT_ANGLE = 30;
+	private int shootPosition = 2;
 
 	public AutonBreachDefensesAndShoot()
 	{
-
+		switch (shootPosition)
+		{
+		case 1:
+			SHOOT_ANGLE = 30;
+			break;
+		case 2:
+			SHOOT_ANGLE = 30;
+			break;
+		case 3:
+			SHOOT_ANGLE = 30;
+			break;
+		case 4:
+			SHOOT_ANGLE = 30;
+			break;
+		case 5:
+			SHOOT_ANGLE = 30;
+			break;
+		}
 	}
 
 	@Override
@@ -41,10 +59,12 @@ public class AutonBreachDefensesAndShoot implements IAutonomousControl
 
 				SensorConfig.getInstance().getTimer().waitTimeInMillis(2700);
 
+				ActuatorConfig.getInstance().getDriveTrain().stopDrive();
+
 			} else
 			{
 				//Encoder Based
-				ActuatorConfig.getInstance().getDriveTrain().goForward(0.8, 90_000);
+				ActuatorConfig.getInstance().getDriveTrain().goForward(0.8, 90_000); //TODO: Use inches rather than encoder counts
 			}
 
 			ActuatorConfig.getInstance().getDriveTrain().stopDrive();
@@ -67,7 +87,6 @@ public class AutonBreachDefensesAndShoot implements IAutonomousControl
 			// Shoot high
 			ActuatorConfig.getInstance().getLauncher().shootSequenceLow();
 
-			
 			break;
 		}
 

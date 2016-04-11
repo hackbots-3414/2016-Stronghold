@@ -9,4 +9,6 @@ public interface IGamepad
 	public double getAnalogStickValue(EAnalogStickAxis axis);
 
 	public boolean getButtonValue(EJoystickButtons button);
+	
+	public int getPOV();
 }

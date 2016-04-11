@@ -27,7 +27,7 @@ public class AutonLowBarAndShootLow implements IAutonomousControl
 				break;
 
 			// Go under low bar
-			ActuatorConfig.getInstance().getDriveTrain().goForward(DRIVE_SPEED, DRIVE_DISTANCE);
+			ActuatorConfig.getInstance().getDriveTrain().goForward(DRIVE_SPEED, DRIVE_DISTANCE); //TODO: Use inches rather than encoder counts
 
 			if (!RobotStatus.isAuto())
 				break;

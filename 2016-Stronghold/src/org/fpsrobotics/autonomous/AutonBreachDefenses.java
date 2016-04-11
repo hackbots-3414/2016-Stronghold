@@ -8,7 +8,7 @@ import org.usfirst.frc.team3414.robot.RobotStatus;
 
 public class AutonBreachDefenses implements IAutonomousControl
 {
-	private boolean timeBased = true;
+	private boolean timeBased = false;
 
 	public AutonBreachDefenses()
 	{
@@ -31,7 +31,7 @@ public class AutonBreachDefenses implements IAutonomousControl
 			// Go over rock wall
 			if (timeBased)
 			{
-				//Time Based
+				// Time Based
 				ActuatorConfig.getInstance().getDriveTrain().disablePID();
 				ActuatorConfig.getInstance().getDriveTrain().setSpeed(-0.8);
 
@@ -40,13 +40,15 @@ public class AutonBreachDefenses implements IAutonomousControl
 
 				SensorConfig.getInstance().getTimer().waitTimeInMillis(4000);
 
+				ActuatorConfig.getInstance().getDriveTrain().stopDrive();
+
 			} else
 			{
-				//Encoder based
-				ActuatorConfig.getInstance().getDriveTrain().goForward(0.8, 90_000);
-			}
 
-			ActuatorConfig.getInstance().getDriveTrain().stopDrive();
+				// Encoder based
+				ActuatorConfig.getInstance().getDriveTrain().goForward(0.5, 39); // TODO: Use inches rather than encoder
+																					// counts
+			}
 
 			break;
 		}

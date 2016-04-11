@@ -129,6 +129,10 @@ public class ActuatorConfig
 		leftDoubleMotor = new DoubleMotor(leftFrontCANMotor, leftRearCANMotor);
 		rightDoubleMotor = new DoubleMotor(rightFrontCANMotor, rightRearCANMotor);
 
+
+		//rightDoubleMotor.getPIDFeedbackDevice().setDistancePerPulse(0.0012635); //0.0012635
+		//leftDoubleMotor.getPIDFeedbackDevice().setDistancePerPulse(0.0012800); // 0.00128
+		
 		// Create the whole drivetrain
 		driveTrain = new TankDrive(leftDoubleMotor, rightDoubleMotor, SensorConfig.getInstance().getGyro());
 		// driveTrain = new TankDrive(leftDoubleMotor, rightDoubleMotor);
@@ -214,6 +218,16 @@ public class ActuatorConfig
 	public CANTalon getFrontRightDriveMotor()
 	{
 		return rightFrontMotor;
+	}
+	
+	public CANTalon getBackLeftDriveMotor()
+	{
+		return leftRearMotor;
+	}
+	
+	public CANTalon getBackRightDriveMotor()
+	{
+		return rightRearMotor;
 	}
 
 	public ILauncher getLauncher()

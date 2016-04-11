@@ -12,19 +12,29 @@ import org.usfirst.frc.team3414.robot.RobotStatus;
 public class AutonChevelDeFriz implements IAutonomousControl
 {
 	private boolean timeBased = false;
-	private boolean shootPositionLeft = true;
+	private int shootPosition = 2;
 	
 	private int SHOOT_ANGLE;
 
 	public AutonChevelDeFriz()
 	{
-		if (shootPositionLeft)
+		switch (shootPosition)
 		{
+		case 1:
 			SHOOT_ANGLE = 30;
-		} else
-		// shootPositionRight
-		{
-			SHOOT_ANGLE = -30;
+			break;
+		case 2:
+			SHOOT_ANGLE = 30;
+			break;
+		case 3:
+			SHOOT_ANGLE = 30;
+			break;
+		case 4:
+			SHOOT_ANGLE = 30;
+			break;
+		case 5:
+			SHOOT_ANGLE = 30;
+			break;
 		}
 	}
 
@@ -97,7 +107,7 @@ public class AutonChevelDeFriz implements IAutonomousControl
 				// ENCODER BASED
 
 				// Drive to Cheval
-				ActuatorConfig.getInstance().getDriveTrain().goForward(0.5, 1000);
+				ActuatorConfig.getInstance().getDriveTrain().goForward(0.5, 1000); //TODO: Use inches rather than encoder counts
 
 				if (!RobotStatus.isAuto())
 					break;

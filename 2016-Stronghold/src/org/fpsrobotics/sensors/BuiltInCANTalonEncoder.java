@@ -81,5 +81,11 @@ public class BuiltInCANTalonEncoder implements IPIDFeedbackDevice
 			return 0;
 		}
 	}
+	
+	@Override
+	public double getDistance() //TODO: Measure the field before Competition
+	{
+		return (getCount() / 785.79);
+	}
 
 }

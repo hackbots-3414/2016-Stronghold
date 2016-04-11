@@ -41,7 +41,7 @@ public class AutonReachDefenses implements IAutonomousControl
 				ActuatorConfig.getInstance().getDriveTrain().stopDrive();
 			} else
 			{
-				ActuatorConfig.getInstance().getDriveTrain().goForward(0.5, 40_000);
+				ActuatorConfig.getInstance().getDriveTrain().goForward(0.5, 40_000); //TODO: Use inches rather than encoder counts
 			}
 
 			break;

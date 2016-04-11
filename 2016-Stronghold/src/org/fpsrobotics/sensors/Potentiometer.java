@@ -69,4 +69,16 @@ public class Potentiometer implements IPIDFeedbackDevice
 		return 0;
 	}
 
+	@Override
+	public double getDistance()
+	{
+		if (isEnabled)
+		{
+			return pot.getValue();
+		} else
+		{
+			return 0;
+		}
+	}
+
 }

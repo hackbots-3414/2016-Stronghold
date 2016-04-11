@@ -38,7 +38,7 @@ public class AutonLowBar implements IAutonomousControl
 			} else
 			{
 				// Go under low bar
-				ActuatorConfig.getInstance().getDriveTrain().goForward(0.5, 130_000);
+				ActuatorConfig.getInstance().getDriveTrain().goForward(0.5, 130_000); //TODO: Use inches rather than encoder counts
 			}
 
 			ActuatorConfig.getInstance().getDriveTrain().stopDrive();

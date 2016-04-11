@@ -25,12 +25,16 @@ public interface IDriveTrain extends IPIDEnabledDevice
 
 	public void goForward(double speed);
 
-	public void goForward(double speed, int distance);
+	public void goForward(double speed, double distance, boolean resetGyro);
 
 	public void goBackward(double speed);
 
-	public void goBackward(double speed, int distance);
+	public void goForward(double speed, double distance);
+	
+	public void goBackward(double speed, double distance, boolean resetGyro);
 
+	public void goBackward(double speed, double distance);
+	
 	public void driveLeft(double speed);
 
 	public void driveRight(double speed);
