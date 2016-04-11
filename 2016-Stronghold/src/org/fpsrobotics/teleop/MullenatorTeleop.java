@@ -95,6 +95,17 @@ public class MullenatorTeleop implements ITeleopControl {
 				// launcher.shootSequenceHigh();
 				// }
 
+				// Manual Intake
+				if (gamepad.getButtonValue(EJoystickButtons.THREE) && !movedIntakeWheels && !shootingLockOut) {
+					shootingLockOut = true;
+					movedIntakeWheels = true;
+					launcher.intakeBoulder();
+				}
+				if (!gamepad.getButtonValue(EJoystickButtons.THREE) && movedIntakeWheels) {
+					launcher.stopIntakeBoulder();
+					movedIntakeWheels = false;
+				}
+
 				// Shoot Low
 				if ((gamepad.getButtonValue(EJoystickButtons.ONE) && gamepad.getButtonValue(EJoystickButtons.SEVEN))
 						|| ((gamepad.getButtonValue(EJoystickButtons.ONE)
@@ -170,7 +181,8 @@ public class MullenatorTeleop implements ITeleopControl {
 				}
 				// }
 
-				if (!gamepad.getButtonValue(EJoystickButtons.SEVEN) && !gamepad.getButtonValue(EJoystickButtons.EIGHT)
+				if (!gamepad.getButtonValue(EJoystickButtons.THREE) && !gamepad.getButtonValue(EJoystickButtons.SEVEN)
+						&& !gamepad.getButtonValue(EJoystickButtons.EIGHT)
 						&& !gamepad.getButtonValue(EJoystickButtons.NINE)
 						&& !gamepad.getButtonValue(EJoystickButtons.TEN)
 						&& !rightJoystick.getButtonValue(EJoystickButtons.NINE)
@@ -321,15 +333,6 @@ public class MullenatorTeleop implements ITeleopControl {
 				movedAuger = false;
 			}
 
-			// Manual Intake
-			if (gamepad.getButtonValue(EJoystickButtons.THREE)) {
-				launcher.intakeBoulder();
-				movedIntakeWheels = true;
-			} else if (movedIntakeWheels) {
-				launcher.stopIntakeBoulder();
-				movedIntakeWheels = false;
-			}
-
 			// Reset Gyro
 			if ((rightJoystick.getButtonValue(EJoystickButtons.ELEVEN)
 					&& rightJoystick.getButtonValue(EJoystickButtons.TWELVE))) {
@@ -363,11 +366,9 @@ public class MullenatorTeleop implements ITeleopControl {
 		SmartDashboard.putBoolean("Shooter Lock out", shootingLockOut);
 
 		if ((-10 < SensorConfig.getInstance().getGyro().getCount())
-				&& ((SensorConfig.getInstance().getGyro().getCount() < 10))) 
-		{
+				&& ((SensorConfig.getInstance().getGyro().getCount() < 10))) {
 			SmartDashboard.putBoolean("Are we Straight? (+/- 10)", true);
-		} else
-		{
+		} else {
 			SmartDashboard.putBoolean("Are we Straight? (+/- 10)", false);
 		}
 	}
