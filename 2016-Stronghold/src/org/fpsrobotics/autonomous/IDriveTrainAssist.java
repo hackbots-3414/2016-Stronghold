@@ -13,4 +13,6 @@ public interface IDriveTrainAssist
 	public boolean isTiltGyro();
 	
 	public void doChevalAutoActivate();
+	
+	public void driveTrainCoast(boolean coast);
 }

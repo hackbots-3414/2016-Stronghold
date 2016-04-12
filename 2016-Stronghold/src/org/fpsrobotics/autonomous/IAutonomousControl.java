@@ -2,5 +2,5 @@ package org.fpsrobotics.autonomous;
 
 public interface IAutonomousControl 
 {
-	public void doAuto();
+	public void doAuto(EAutoPositions position);
 }

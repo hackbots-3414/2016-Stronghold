@@ -112,5 +112,13 @@ public class DriveTrainAssist implements IDriveTrainAssist
 		ActuatorConfig.getInstance().getDriveTrain().goForward(0.8, 90);
 		
 	}
+	
+	public void driveTrainCoast(boolean coast)
+	{
+		ActuatorConfig.getInstance().getFrontLeftDriveMotor().enableBrakeMode(!coast);
+		ActuatorConfig.getInstance().getFrontRightDriveMotor().enableBrakeMode(!coast);
+		ActuatorConfig.getInstance().getBackLeftDriveMotor().enableBrakeMode(!coast);
+		ActuatorConfig.getInstance().getBackRightDriveMotor().enableBrakeMode(!coast);
+	}
 
 }

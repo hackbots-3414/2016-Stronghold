@@ -12,45 +12,45 @@ import org.usfirst.frc.team3414.robot.RobotStatus;
 /**
  * UNTESTED
  */
-public class AutonChevelDeFriz implements IAutonomousControl
+public class AutonChevalDeFrise implements IAutonomousControl
 {
-	private boolean timeBased = false;
+//	private boolean timeBased = false;
 	private boolean shooting = false;
-	private int shootPosition = 2;
+//	private int shootPosition = 2;
 
 	ExecutorService executor;
 	
-	private int SHOOT_ANGLE;
+//	private int SHOOT_ANGLE;
 
-	public AutonChevelDeFriz()
+	public AutonChevalDeFrise()
 	{
 		executor = Executors.newFixedThreadPool(1);
 		
-		switch (shootPosition)
-		{
-		case 1:
-			SHOOT_ANGLE = 30;
-			break;
-		case 2:
-			SHOOT_ANGLE = 30;
-			break;
-		case 3:
-			SHOOT_ANGLE = 30;
-			break;
-		case 4:
-			SHOOT_ANGLE = 30;
-			break;
-		case 5:
-			SHOOT_ANGLE = 30;
-			break;
-		}
+//		switch (shootPosition)
+//		{
+//		case 1:
+//			SHOOT_ANGLE = 30;
+//			break;
+//		case 2:
+//			SHOOT_ANGLE = 30;
+//			break;
+//		case 3:
+//			SHOOT_ANGLE = 30;
+//			break;
+//		case 4:
+//			SHOOT_ANGLE = 30;
+//			break;
+//		case 5:
+//			SHOOT_ANGLE = 30;
+//			break;
+//		}
 	}
 
-	public void doAuto()
+	public void doAuto(EAutoPositions position)
 	{
 		while (RobotStatus.isAuto())
 		{
-			System.out.println("Doin it");
+			System.out.println("Doin' it");
 
 //			ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.STANDARD_DEFENSE_SHOOTER);
 			ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.FOURTY_KAI);
@@ -67,13 +67,20 @@ public class AutonChevelDeFriz implements IAutonomousControl
 			
 			ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.LOW_BAR);
 
-			ActuatorConfig.getInstance().getDriveTrain().goForward(0.8, 90);
+			ActuatorConfig.getInstance().getDriveTrain().goForward(0.8, 90); // TODO: Adjust where this ends up
 			
+			// might want to get rid of this...
 			executor.submit(() ->
 			{
 //				SensorConfig.getInstance().getTimer().waitTimeInMillis(250);
 				ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.STANDARD_DEFENSE_AUGER);
 			});
+			
+			// For shooting
+			if(shooting)
+			{
+				ActuatorConfig.getInstance().getAutoShot().shoot(position);
+			}
 			
 			System.out.println("Finish it");
 			

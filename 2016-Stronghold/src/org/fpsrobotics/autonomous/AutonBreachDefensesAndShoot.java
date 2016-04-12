@@ -12,33 +12,34 @@ import org.usfirst.frc.team3414.robot.RobotStatus;
 public class AutonBreachDefensesAndShoot implements IAutonomousControl
 {
 	private boolean timeBased = true;
-	private int SHOOT_ANGLE = 30;
-	private int shootPosition = 2;
+//	private int SHOOT_ANGLE = 30;
+//	private int shootPosition = 2;
+	private boolean shoot = true;
 
 	public AutonBreachDefensesAndShoot()
 	{
-		switch (shootPosition)
-		{
-		case 1:
-			SHOOT_ANGLE = 30;
-			break;
-		case 2:
-			SHOOT_ANGLE = 30;
-			break;
-		case 3:
-			SHOOT_ANGLE = 30;
-			break;
-		case 4:
-			SHOOT_ANGLE = 30;
-			break;
-		case 5:
-			SHOOT_ANGLE = 30;
-			break;
-		}
+//		switch (shootPosition)
+//		{
+//		case 1:
+//			SHOOT_ANGLE = 30;
+//			break;
+//		case 2:
+//			SHOOT_ANGLE = 30;
+//			break;
+//		case 3:
+//			SHOOT_ANGLE = 30;
+//			break;
+//		case 4:
+//			SHOOT_ANGLE = 30;
+//			break;
+//		case 5:
+//			SHOOT_ANGLE = 30;
+//			break;
+//		}
 	}
 
 	@Override
-	public void doAuto()
+	public void doAuto(EAutoPositions position)
 	{
 		while (RobotStatus.isAuto())
 		{
@@ -72,20 +73,27 @@ public class AutonBreachDefensesAndShoot implements IAutonomousControl
 			if (!RobotStatus.isAuto())
 				break;
 
+			
+			if(shoot)
+			{
+				ActuatorConfig.getInstance().getAutoShot().shoot(position);
+			}
+			
 			// Angle drive train toward goal
-			ActuatorConfig.getInstance().getDriveTrainAssist().turnToAngle(SHOOT_ANGLE, 0.2);
+//			ActuatorConfig.getInstance().getDriveTrainAssist().turnToAngle(SHOOT_ANGLE, 0.2);
 
-			if (!RobotStatus.isAuto())
-				break;
+
+//			if (!RobotStatus.isAuto())
+//				break;
 
 			// Shooter to Shoot Position
-			ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.LOW_BAR);
+//			ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.LOW_BAR);
 
-			if (!RobotStatus.isAuto())
-				break;
+//			if (!RobotStatus.isAuto())
+//				break;
 
 			// Shoot high
-			ActuatorConfig.getInstance().getLauncher().shootSequenceLow();
+//			ActuatorConfig.getInstance().getLauncher().shootSequenceLow();
 
 			break;
 		}

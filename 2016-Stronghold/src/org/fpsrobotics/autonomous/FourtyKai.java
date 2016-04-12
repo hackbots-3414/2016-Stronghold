@@ -11,7 +11,7 @@ public class FourtyKai implements IAutonomousControl
 	}
 
 	@Override
-	public void doAuto()
+	public void doAuto(EAutoPositions position)
 	{
 		// ActuatorConfig.getInstance().getLifter().retract();
 		ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.FOURTY_KAI);

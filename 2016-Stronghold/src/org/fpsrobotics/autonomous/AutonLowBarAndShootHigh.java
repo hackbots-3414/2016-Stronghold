@@ -27,7 +27,7 @@ public class AutonLowBarAndShootHigh implements IAutonomousControl
 	}
 
 	@Override
-	public void doAuto()
+	public void doAuto(EAutoPositions position)
 	{
 		while (RobotStatus.isAuto())
 		{

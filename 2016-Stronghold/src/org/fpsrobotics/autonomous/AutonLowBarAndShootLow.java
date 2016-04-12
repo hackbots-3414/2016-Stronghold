@@ -15,7 +15,7 @@ public class AutonLowBarAndShootLow implements IAutonomousControl
 	//used to be 122,000
 
 	@Override
-	public void doAuto()
+	public void doAuto(EAutoPositions position)
 	{
 		while (RobotStatus.isAuto())
 		{

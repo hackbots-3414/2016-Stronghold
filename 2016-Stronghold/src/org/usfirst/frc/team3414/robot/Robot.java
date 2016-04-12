@@ -18,6 +18,7 @@ public class Robot extends SampleRobot
 	private ITeleopControl teleop;
 	private ExecutorService executor;
 	private SendableChooser autoChooser;
+	private SendableChooser positionChooser;
 
 	public Robot()
 	{
@@ -33,6 +34,7 @@ public class Robot extends SampleRobot
 	{
 
 		makeAutoChooser();
+		makePositionChooser();
 	}
 
 	private void makeAutoChooser()
@@ -46,10 +48,23 @@ public class Robot extends SampleRobot
 		autoChooser.addObject("Low Bar and Shoot Low", new AutonLowBarAndShootLow());
 		autoChooser.addObject("Low Bar and Shoot High-PICK THIS ALMOST ALWAYS", new AutonLowBarAndShootHigh());
 		autoChooser.addObject("Fourty Kai", new FourtyKai());
-		 autoChooser.addObject("Chevel De Friz", new AutonChevelDeFriz());
-		// //Untested
-
+		autoChooser.addObject("Cheval De Frise", new AutonChevalDeFrise());
+		autoChooser.addObject("Portcullis", new AutonPortcullis());
+		
 		SmartDashboard.putData("Autonomous Chooser", autoChooser);
+	}
+	
+	private void makePositionChooser()
+	{
+		positionChooser = new SendableChooser();
+		
+		positionChooser.addObject("Position One (Low Bar)", EAutoPositions.ONE);
+		positionChooser.addObject("Position Two (Something Else)", EAutoPositions.TWO);
+		positionChooser.addObject("Position Three (Something Else)", EAutoPositions.THREE);
+		positionChooser.addObject("Position Four (Something Else)", EAutoPositions.FOUR);
+		positionChooser.addObject("Position Five (Something Else)", EAutoPositions.FIVE);
+		
+		SmartDashboard.putData("Autonomous Position Chooser", positionChooser);
 	}
 
 	public void autonomous()
@@ -73,12 +88,14 @@ public class Robot extends SampleRobot
 		{
 			System.out.println("Auto Running");
 
-			ActuatorConfig.getInstance().getFrontLeftDriveMotor().enableBrakeMode(true);
-			ActuatorConfig.getInstance().getFrontRightDriveMotor().enableBrakeMode(true);
-			ActuatorConfig.getInstance().getBackLeftDriveMotor().enableBrakeMode(true);
-			ActuatorConfig.getInstance().getBackRightDriveMotor().enableBrakeMode(true);
+			ActuatorConfig.getInstance().getDriveTrainAssist().driveTrainCoast(false); // Should do the same thing
 			
-			((IAutonomousControl) autoChooser.getSelected()).doAuto();
+//			ActuatorConfig.getInstance().getFrontLeftDriveMotor().enableBrakeMode(true);
+//			ActuatorConfig.getInstance().getFrontRightDriveMotor().enableBrakeMode(true);
+//			ActuatorConfig.getInstance().getBackLeftDriveMotor().enableBrakeMode(true);
+//			ActuatorConfig.getInstance().getBackRightDriveMotor().enableBrakeMode(true);
+			
+			((IAutonomousControl) autoChooser.getSelected()).doAuto((EAutoPositions)positionChooser.getSelected());
 		});
 	}
 
@@ -87,11 +104,8 @@ public class Robot extends SampleRobot
 		RobotStatus.setIsRunning(true);
 		RobotStatus.setIsAuto(false);
 		RobotStatus.setIsTeleop(true);
-
-		ActuatorConfig.getInstance().getFrontLeftDriveMotor().enableBrakeMode(false);
-		ActuatorConfig.getInstance().getFrontRightDriveMotor().enableBrakeMode(false);
-		ActuatorConfig.getInstance().getBackLeftDriveMotor().enableBrakeMode(false);
-		ActuatorConfig.getInstance().getBackRightDriveMotor().enableBrakeMode(false);
+		
+		ActuatorConfig.getInstance().getDriveTrainAssist().driveTrainCoast(true);
 		
 		teleop.doTeleop();
 	}

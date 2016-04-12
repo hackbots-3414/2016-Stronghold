@@ -1,6 +1,7 @@
 package org.fpsrobotics.actuators;
 
 import org.fpsrobotics.PID.IPIDFeedbackDevice;
+import org.fpsrobotics.autonomous.AutoShot;
 import org.fpsrobotics.autonomous.DriveTrainAssist;
 import org.fpsrobotics.autonomous.IDriveTrainAssist;
 import org.fpsrobotics.sensors.BuiltInCANTalonEncoder;
@@ -89,6 +90,9 @@ public class ActuatorConfig
 
 	//Lifter
 	private ILifter lift;
+	
+	// Auto Shot
+	private AutoShot autoShot;
 	
 	private ActuatorConfig()
 	{
@@ -194,6 +198,9 @@ public class ActuatorConfig
 		// Instantiate the lifter
 		lift = new Lifter(new DoubleSolenoid(new edu.wpi.first.wpilibj.DoubleSolenoid(LIFTER_SOLENOID_PORT_A, LIFTER_SOLENOID_PORT_B)));
 		//TODO: MAKE LIFTER ACUTATOR CONFIG
+		
+		// Auto Shots
+		autoShot = new AutoShot(launcher, driveTrain);
 	}
 
 	public static synchronized ActuatorConfig getInstance()
@@ -264,6 +271,11 @@ public class ActuatorConfig
 	public ILifter getLifter()
 	{
 		return lift;
+	}
+	
+	public AutoShot getAutoShot()
+	{
+		return autoShot;
 	}
 
 }

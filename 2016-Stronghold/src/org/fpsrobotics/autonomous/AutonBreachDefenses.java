@@ -16,7 +16,7 @@ public class AutonBreachDefenses implements IAutonomousControl
 	}
 
 	@Override
-	public void doAuto()
+	public void doAuto(EAutoPositions position)
 	{
 		while (RobotStatus.isAuto())
 		{
@@ -28,7 +28,7 @@ public class AutonBreachDefenses implements IAutonomousControl
 			if (!RobotStatus.isAuto())
 				break;
 
-			// Go over rock wall
+			// Go over standard defense
 			if (timeBased)
 			{
 				// Time Based
@@ -46,10 +46,9 @@ public class AutonBreachDefenses implements IAutonomousControl
 			{
 
 				// Encoder based
-				ActuatorConfig.getInstance().getDriveTrain().goForward(0.5, 39); // TODO: Use inches rather than encoder
-																					// counts
+				ActuatorConfig.getInstance().getDriveTrain().goForward(0.5, 39); // TODO: tune value (in inches)
 			}
-
+			
 			break;
 		}
 
