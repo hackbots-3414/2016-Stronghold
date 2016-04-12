@@ -465,36 +465,5 @@ public class MullenatorTeleop implements ITeleopControl
 		}
 	}
 
-	private void doChevalAutoActivate(EJoystickButtons button)
-	{
-		// Drive to Cheval
-		ActuatorConfig.getInstance().getDriveTrain().goBackward(0.5, 1000, true);
-
-		if (!leftJoystick.getButtonValue(button))
-			return;
-
-		// Move Auger to Bottom Limit
-		ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.LOW_BAR);
-		ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.LOW_BAR);
-
-		if (!leftJoystick.getButtonValue(button))
-			return;
-
-		// Go over half of chevel
-		ActuatorConfig.getInstance().getDriveTrain().goForward(0.5, 4000, true); // TODO: Use inches rather than encoder
-		// counts
-
-		if (!leftJoystick.getButtonValue(button))
-			return;
-
-		// Move Auger up
-		ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.STANDARD_DEFENSE_SHOOTER);
-		ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.FOURTY_KAI);
-
-		if (!leftJoystick.getButtonValue(button))
-			return;
-
-		// Keep Driving
-		ActuatorConfig.getInstance().getDriveTrain().goForward(0.5, 4000, true);
-	}
+	
 }

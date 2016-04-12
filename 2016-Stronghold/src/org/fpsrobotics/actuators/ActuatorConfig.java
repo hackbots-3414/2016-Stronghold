@@ -2,6 +2,7 @@ package org.fpsrobotics.actuators;
 
 import org.fpsrobotics.PID.IPIDFeedbackDevice;
 import org.fpsrobotics.autonomous.DriveTrainAssist;
+import org.fpsrobotics.autonomous.IDriveTrainAssist;
 import org.fpsrobotics.sensors.BuiltInCANTalonEncoder;
 import org.fpsrobotics.sensors.Potentiometer;
 import org.fpsrobotics.sensors.SensorConfig;
@@ -70,7 +71,7 @@ public class ActuatorConfig
 	private IDriveTrain driveTrain;
 
 	// Drive assist
-	private DriveTrainAssist driveAssist;
+	private IDriveTrainAssist driveAssist;
 
 	// Shooter motors
 	private CANTalon leftShooterMotor;
@@ -250,7 +251,7 @@ public class ActuatorConfig
 		return rightDriveEncoder;
 	}
 
-	public DriveTrainAssist getDriveTrainAssist()
+	public IDriveTrainAssist getDriveTrainAssist()
 	{
 		return driveAssist;
 	}
