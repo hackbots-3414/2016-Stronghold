@@ -121,13 +121,14 @@ public class LauncherWithPistons implements ILauncher
 			TOP_LIMIT_SHOOTER = 190;
 			// AUGER
 			TOP_LIMIT_AUGER = 2200;
-			BOTTOM_LIMIT_AUGER = 900;
-			LOW_BAR_AUGER_FOR_SHOOTER = 1176; // must be just above highest collision point
+			BOTTOM_LIMIT_AUGER = 825;
+			LOW_BAR_AUGER_FOR_SHOOTER = 0; // must be just above highest collision point 
+			//1176 with pistons
 			// Presets
 			LOW_BAR_SHOOTER = 1130; // must be just below lowest collision point
 			HIGH_VALUE_AUGER = 1200;
 			FOURTY_KAI = 1650; // used to be "shoot high"
-			STANDARD_DEFENSE_AUGER = 1276; // used to be "shoot low"
+			STANDARD_DEFENSE_AUGER = 1100; // used to be "shoot low"
 			INTAKE_AUGER = 1050;
 			END_GAME = FOURTY_KAI;
 		}

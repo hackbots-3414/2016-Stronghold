@@ -40,8 +40,9 @@ public class TankDrive implements IDriveTrain
 	 */
 	public void setSpeed(double leftSpeed, double rightSpeed)
 	{
-		SmartDashboard.putNumber("Left Encoder", motorLeft.getPIDFeedbackDevice().getDistance());
-		SmartDashboard.putNumber("Right Encoder", motorRight.getPIDFeedbackDevice().getDistance());
+		// TODO: Use Smart Dashboard to Tune Alpha
+		// SmartDashboard.putNumber("Left Encoder", motorLeft.getPIDFeedbackDevice().getDistance());
+		// SmartDashboard.putNumber("Right Encoder", motorRight.getPIDFeedbackDevice().getDistance());
 
 		// Caution: May want to disable PID
 		motorLeft.setSpeed(leftSpeed);

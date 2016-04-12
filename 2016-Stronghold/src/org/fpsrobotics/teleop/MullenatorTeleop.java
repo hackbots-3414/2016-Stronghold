@@ -149,6 +149,7 @@ public class MullenatorTeleop implements ITeleopControl
 						launcher.moveAugerToPreset(EAugerPresets.STANDARD_DEFENSE_AUGER);
 					}
 
+					// TODO: Cheval Auto Activate
 					// if (leftJoystick.getButtonValue(EJoystickButtons.NINE) && !shootingLockOut)
 					// {
 					// shootingLockOut = true;
@@ -284,7 +285,13 @@ public class MullenatorTeleop implements ITeleopControl
 
 				if (SensorConfig.getInstance().getRightJoystick().getButtonValue(EJoystickButtons.ONE))
 				{
-					ActuatorConfig.getInstance().getDriveTrain().setSpeed(correctedYRight * speedMultiplier);
+					if (rightJoystick.getButtonValue(EJoystickButtons.TWO))
+					{
+						ActuatorConfig.getInstance().getDriveTrain().setSpeed(-1.0);
+					} else
+					{
+						ActuatorConfig.getInstance().getDriveTrain().setSpeed(correctedYRight * speedMultiplier);
+					}
 					SmartDashboard.putBoolean("DRIVE TOGETHER", true);
 				} else
 				{
@@ -321,11 +328,15 @@ public class MullenatorTeleop implements ITeleopControl
 					autoGyroDriveActivated = true;
 				}
 
-				// ActuatorConfig.getInstance().getDriveTrain()
-				// .setSpeed(SensorConfig.getInstance().getRightJoystick().getY()
-				// * speedMultiplier);
-				ActuatorConfig.getInstance().getDriveTrain()
-						.driveStraight(SensorConfig.getInstance().getRightJoystick().getY());
+				if (rightJoystick.getButtonValue(EJoystickButtons.TWO))
+				{
+					ActuatorConfig.getInstance().getDriveTrain().driveStraight(-1.0);
+				} else
+				{
+					ActuatorConfig.getInstance().getDriveTrain()
+							.driveStraight(SensorConfig.getInstance().getRightJoystick().getY());
+
+				}
 				SmartDashboard.putBoolean("DRIVE TOGETHER", true);
 			} else
 			{
@@ -471,7 +482,7 @@ public class MullenatorTeleop implements ITeleopControl
 
 		// Go over half of chevel
 		ActuatorConfig.getInstance().getDriveTrain().goForward(0.5, 4000, true); // TODO: Use inches rather than encoder
-																			// counts
+		// counts
 
 		if (!leftJoystick.getButtonValue(button))
 			return;
