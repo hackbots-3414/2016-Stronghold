@@ -223,12 +223,12 @@ public class TankDrive implements IDriveTrain
 	{
 		if (gyro != null)
 		{
-			double initialGyro = gyro.getCount();
+			double initialGyro = gyro.getHardCount();
 			disablePID();
 
-			if ((initialGyro - degrees) < gyro.getCount())
+			if ((initialGyro - degrees) < gyro.getHardCount())
 			{
-				while (((initialGyro - degrees) < gyro.getCount()) && RobotStatus.isRunning())
+				while (((initialGyro - degrees) < gyro.getHardCount()) && RobotStatus.isRunning())
 				{
 					setSpeed(speed, -speed);
 				}
@@ -252,12 +252,12 @@ public class TankDrive implements IDriveTrain
 	{
 		if (gyro != null)
 		{
-			double initialGyro = gyro.getCount();
+			double initialGyro = gyro.getHardCount();
 			disablePID();
 
-			if ((initialGyro + degrees) > gyro.getCount())
+			if ((initialGyro + degrees) > gyro.getHardCount())
 			{
-				while ((initialGyro + degrees) > gyro.getCount() && RobotStatus.isRunning())
+				while ((initialGyro + degrees) > gyro.getHardCount() && RobotStatus.isRunning())
 				{
 					setSpeed(-speed, speed);
 				}
@@ -294,7 +294,7 @@ public class TankDrive implements IDriveTrain
 
 			if (resetGyro)
 			{
-				gyro.resetCount();
+				gyro.softResetCount();
 			}
 			SensorConfig.getInstance().getTimer().waitTimeInMillis(300);
 
@@ -308,10 +308,10 @@ public class TankDrive implements IDriveTrain
 				{
 					if (speed > 0)
 					{
-						drive(-speed, -gyro.getCount() * KpAuton);
+						drive(-speed, -gyro.getHardCount() * KpAuton);
 					} else
 					{
-						drive(-speed, gyro.getCount() * KpAuton);
+						drive(-speed, gyro.getHardCount() * KpAuton);
 					}
 
 					// drive(-speed, -gyro.getCount() * KpAuton);
@@ -326,10 +326,10 @@ public class TankDrive implements IDriveTrain
 				{
 					if (speed > 0)
 					{
-						drive(-speed, -gyro.getCount() * KpAuton);
+						drive(-speed, -gyro.getHardCount() * KpAuton);
 					} else
 					{
-						drive(-speed, gyro.getCount() * KpAuton);
+						drive(-speed, gyro.getHardCount() * KpAuton);
 					}
 
 					// drive(-speed, -gyro.getCount() * KpAuton);
@@ -388,10 +388,10 @@ public class TankDrive implements IDriveTrain
 
 			if (speed > 0)
 			{
-				drive(speed, gyro.getCount() * kpTeleop);
+				drive(speed, gyro.getHardCount() * kpTeleop);
 			} else
 			{
-				drive(speed, -gyro.getCount() * kpTeleop);
+				drive(speed, -gyro.getHardCount() * kpTeleop);
 			}
 
 		} else

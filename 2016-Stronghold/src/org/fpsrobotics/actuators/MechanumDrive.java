@@ -237,23 +237,23 @@ public class MechanumDrive
 	{
 		this.drive = drive;
 		this.gyro = gyro;
-		gyro.resetCount();
+		gyro.softResetCount();
 		this.accel = accel;
 	}
 
 	public void rotateDegreesGyroBased(double degrees, boolean clockWise)
 	{
-		double currentAngle = gyro.getCount();
+		double currentAngle = gyro.getHardCount();
 
 		if (clockWise)
 		{
 			drive.mecanumDrive_Polar(0, 0, ROTATE_POWER_INTO_MOTORS);
-			while (gyro.getCount() < (currentAngle + degrees))
+			while (gyro.getHardCount() < (currentAngle + degrees))
 				;
 		} else
 		{
 			drive.mecanumDrive_Polar(0, 0, -ROTATE_POWER_INTO_MOTORS);
-			while (gyro.getCount() > (currentAngle - degrees))
+			while (gyro.getHardCount() > (currentAngle - degrees))
 				;
 		}
 		stop();

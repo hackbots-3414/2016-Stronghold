@@ -73,7 +73,7 @@ public class Robot extends SampleRobot
 		RobotStatus.setIsAuto(true);
 		RobotStatus.setIsTeleop(false);
 
-		SensorConfig.getInstance().getGyro().resetCount();
+		SensorConfig.getInstance().getGyro().hardResetCount();
 
 		executor.submit(() ->
 		{

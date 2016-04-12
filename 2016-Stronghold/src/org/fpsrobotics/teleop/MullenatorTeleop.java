@@ -150,11 +150,11 @@ public class MullenatorTeleop implements ITeleopControl
 					}
 
 					// TODO: Cheval Auto Activate
-					// if (leftJoystick.getButtonValue(EJoystickButtons.NINE) && !shootingLockOut)
-					// {
-					// shootingLockOut = true;
-					// doChevalAutoActivate(EJoystickButtons.NINE);
-					// }
+					if (leftJoystick.getButtonValue(EJoystickButtons.NINE) && !shootingLockOut)
+					{
+						shootingLockOut = true;
+						ActuatorConfig.getInstance().getDriveTrainAssist().doChevalAutoActivate();
+					}
 
 					// Center Shot preset
 					if (gamepad.getButtonValue(EJoystickButtons.SEVEN) && !shootingLockOut)
@@ -203,7 +203,7 @@ public class MullenatorTeleop implements ITeleopControl
 						{
 							shootingLockOut = true;
 							ActuatorConfig.getInstance().getLifter().retract();
-							SensorConfig.getInstance().getTimer().waitTimeInMillis(1750);
+							SensorConfig.getInstance().getTimer().waitTimeInMillis(1000); // 1750
 							ActuatorConfig.getInstance().getLauncher()
 									.moveAugerToPreset(EAugerPresets.FOURTY_KAI_END_GAME);
 
@@ -287,7 +287,15 @@ public class MullenatorTeleop implements ITeleopControl
 				{
 					if (rightJoystick.getButtonValue(EJoystickButtons.TWO))
 					{
-						ActuatorConfig.getInstance().getDriveTrain().setSpeed(-1.0);
+						if (SensorConfig.getInstance().getRightJoystick().getY() > 0)
+						{
+							ActuatorConfig.getInstance().getDriveTrain().driveStraight((4 / Math.PI) * 400); // Go
+																												// Forwards
+						} else
+						{
+							ActuatorConfig.getInstance().getDriveTrain().driveStraight(-(4 / Math.PI) * 400); // Go
+																												// Backwards
+						}
 					} else
 					{
 						ActuatorConfig.getInstance().getDriveTrain().setSpeed(correctedYRight * speedMultiplier);
@@ -323,19 +331,24 @@ public class MullenatorTeleop implements ITeleopControl
 				{
 					ActuatorConfig.getInstance().getDriveTrain().disablePID();
 
-					SensorConfig.getInstance().getGyro().resetCount();
+					SensorConfig.getInstance().getGyro().softResetCount();
 
 					autoGyroDriveActivated = true;
 				}
 
 				if (rightJoystick.getButtonValue(EJoystickButtons.TWO))
 				{
-					ActuatorConfig.getInstance().getDriveTrain().driveStraight(-1.0);
+					if (SensorConfig.getInstance().getRightJoystick().getY() > 0)
+					{
+						ActuatorConfig.getInstance().getDriveTrain().driveStraight(1.0); // Go Forwards
+					} else
+					{
+						ActuatorConfig.getInstance().getDriveTrain().driveStraight(-1.0); // Go Backwards
+					}
 				} else
 				{
 					ActuatorConfig.getInstance().getDriveTrain()
 							.driveStraight(SensorConfig.getInstance().getRightJoystick().getY());
-
 				}
 				SmartDashboard.putBoolean("DRIVE TOGETHER", true);
 			} else
@@ -381,6 +394,22 @@ public class MullenatorTeleop implements ITeleopControl
 					launcher.stopShooterLifter();
 					movedShooter = false;
 				}
+
+				// Auger move fast
+				if (gamepad.getButtonValue(EJoystickButtons.FIVE))
+				{
+					launcher.lowerAugerForEndGame();
+					movedAuger = true;
+				} else if (gamepad.getButtonValue(EJoystickButtons.SIX))
+				{
+					launcher.raiseAugerForEndGame();
+					movedAuger = true;
+				} else if (movedAuger)
+				{
+					launcher.stopAugerLifter(true);
+					movedAuger = false;
+				}
+
 			} else
 			{
 				// Shooter move Regular
@@ -397,34 +426,28 @@ public class MullenatorTeleop implements ITeleopControl
 					launcher.stopShooterLifter();
 					movedShooter = false;
 				}
-			}
 
-			// Manual Auger
-			if (gamepad.getButtonValue(EJoystickButtons.FIVE))
-			{
-				if (gamepad.getButtonValue(EJoystickButtons.TWELVE))
-				{
-					launcher.lowerAugerForEndGame();
-				} else
+				// Auger move regular
+				if (gamepad.getButtonValue(EJoystickButtons.FIVE))
 				{
 					launcher.lowerAuger();
+					movedAuger = true;
+				} else if (gamepad.getButtonValue(EJoystickButtons.SIX))
+				{
+					launcher.raiseAuger();
+					movedAuger = true;
+				} else if (movedAuger)
+				{
+					launcher.stopAugerLifter(true);
+					movedAuger = false;
 				}
-				movedAuger = true;
-			} else if (gamepad.getButtonValue(EJoystickButtons.SIX))
-			{
-				launcher.raiseAuger();
-				movedAuger = true;
-			} else if (movedAuger)
-			{
-				launcher.stopAugerLifter(true);
-				movedAuger = false;
 			}
 
 			// Reset Gyro
 			if ((rightJoystick.getButtonValue(EJoystickButtons.ELEVEN)
 					&& rightJoystick.getButtonValue(EJoystickButtons.TWELVE)))
 			{
-				SensorConfig.getInstance().getGyro().resetCount();
+				SensorConfig.getInstance().getGyro().hardResetCount();
 			}
 
 		}
@@ -450,13 +473,13 @@ public class MullenatorTeleop implements ITeleopControl
 				ActuatorConfig.getInstance().getDriveTrainAssist().shouldShooterBeRaised());
 
 		// Compass
-		SmartDashboard.putNumber("Yaw", SensorConfig.getInstance().getGyro().getCount());
+		SmartDashboard.putNumber("Yaw", SensorConfig.getInstance().getGyro().getSoftCount());
 
 		// Manual Shooter Lock Out
 		SmartDashboard.putBoolean("Shooter Lock out", shootingLockOut);
 
-		if ((-10 < SensorConfig.getInstance().getGyro().getCount())
-				&& ((SensorConfig.getInstance().getGyro().getCount() < 10)))
+		if ((-10 < SensorConfig.getInstance().getGyro().getSoftCount())
+				&& ((SensorConfig.getInstance().getGyro().getSoftCount() < 10)))
 		{
 			SmartDashboard.putBoolean("Are we Straight?", true);
 		} else
@@ -465,5 +488,4 @@ public class MullenatorTeleop implements ITeleopControl
 		}
 	}
 
-	
 }

@@ -65,6 +65,8 @@ public interface ILauncher
 	public void lowerAuger();
 	
 	public void lowerAugerForEndGame();
+	
+	public void raiseAugerForEndGame();
 
 	// private void lowerAuger(double speed)
 

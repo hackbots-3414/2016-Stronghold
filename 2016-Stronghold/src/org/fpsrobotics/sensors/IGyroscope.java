@@ -6,13 +6,17 @@ package org.fpsrobotics.sensors;
  */
 public interface IGyroscope
 {
-	public double getCount();
+	public double getHardCount();
+	
+	public double getSoftCount();
 
 	public void enable();
 
 	public void disable();
 
-	public void resetCount();
+	public void softResetCount();
+	
+	public void hardResetCount();
 	
 	public double getPitch();
 	

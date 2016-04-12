@@ -53,16 +53,16 @@ public class DriveTrainAssist implements IDriveTrainAssist
 		{
 			driveTrain.disablePID();
 
-			if (gyro.getCount() > desiredDegrees)
+			if (gyro.getHardCount() > desiredDegrees)
 			{
 				driveTrain.setSpeed(speed, -speed);
-				while ((gyro.getCount() > desiredDegrees) && RobotStatus.isRunning())
+				while ((gyro.getHardCount() > desiredDegrees) && RobotStatus.isRunning())
 					;
-			} else if (gyro.getCount() < desiredDegrees)
+			} else if (gyro.getHardCount() < desiredDegrees)
 			{
 
 				driveTrain.setSpeed(-speed, speed);
-				while ((gyro.getCount() < desiredDegrees) && RobotStatus.isRunning())
+				while ((gyro.getHardCount() < desiredDegrees) && RobotStatus.isRunning())
 					;
 			}
 
