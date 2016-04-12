@@ -44,6 +44,7 @@ public class SensorConfig
 	private final int GAMEPAD_CHANNEL = 2;
 	private IJoystick leftJoystick;
 	private IJoystick rightJoystick;
+	private IGamepad easyButton;
 	private IGamepad gamepad;
 
 	// Cool stuff
@@ -109,6 +110,8 @@ public class SensorConfig
 		cameraOne.enable();
 
 		accelNavX = new AccelerometerNavX(ahrs);
+		
+		easyButton = new DualShockTwoController(new Joystick(3));
 //		compassNavX = new CompassNavX(ahrs);
 	}
 
@@ -190,6 +193,11 @@ public class SensorConfig
 	public CompassNavX getCompass()
 	{
 		return compassNavX;
+	}
+	
+	public IGamepad getEasyButton()
+	{
+		return easyButton;
 	}
 
 //	public ICamera getCameraOne()

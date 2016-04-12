@@ -44,6 +44,7 @@ public class MullenatorTeleop implements ITeleopControl
 	// Instances
 	private ILauncher launcher;
 	private IGamepad gamepad;
+	private IGamepad easyButton;
 	private IDriveTrain driveTrain;
 	private IJoystick leftJoystick;
 	private IJoystick rightJoystick;
@@ -55,6 +56,7 @@ public class MullenatorTeleop implements ITeleopControl
 		// Instances
 		launcher = ActuatorConfig.getInstance().getLauncher();
 		gamepad = SensorConfig.getInstance().getGamepad();
+		easyButton = SensorConfig.getInstance().getEasyButton();
 		driveTrain = ActuatorConfig.getInstance().getDriveTrain();
 		leftJoystick = SensorConfig.getInstance().getLeftJoystick();
 		rightJoystick = SensorConfig.getInstance().getRightJoystick();
@@ -208,7 +210,7 @@ public class MullenatorTeleop implements ITeleopControl
 
 					if (RobotStatus.isAlpha())
 					{
-						if (gamepad.getButtonValue(EJoystickButtons.NINE) && !shootingLockOut)
+						if (gamepad.getButtonValue(EJoystickButtons.NINE)&& !shootingLockOut)
 						{
 							shootingLockOut = true;
 							// ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.TOP_LIMIT);
@@ -216,10 +218,12 @@ public class MullenatorTeleop implements ITeleopControl
 							isAugerReadyToLift = true;
 						}
 
-						if (gamepad.getButtonValue(EJoystickButtons.TEN) && !shootingLockOut)
+						if ((gamepad.getButtonValue(EJoystickButtons.TEN) || gamepad.getButtonValue(EJoystickButtons.ONE)) && !shootingLockOut)
 						// if (gamepad.getButtonValue(EJoystickButtons.TEN) &&
 						// isAugerReadyToLift && !shootingLockOut)
 						{
+							System.out.println("That was easy");
+							
 							shootingLockOut = true;
 							ActuatorConfig.getInstance().getLifter().retract();
 							SensorConfig.getInstance().getTimer().waitTimeInMillis(1000); // 1750
@@ -248,6 +252,7 @@ public class MullenatorTeleop implements ITeleopControl
 						shootingLockOut = false;
 					}
 				}
+				
 				SensorConfig.getInstance().getTimer().waitTimeInMillis(50);
 			}
 		});
