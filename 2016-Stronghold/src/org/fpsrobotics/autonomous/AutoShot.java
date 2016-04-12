@@ -35,8 +35,8 @@ public class AutoShot
 			case TWO:
 				System.out.println("Position Two");
 				// Might have to stop after defense in order to recalibrate gyro, test this.
-				driveTrain.goForward(DRIVE_SPEED, 100); // TODO: Tune value (in inches)
-				ActuatorConfig.getInstance().getDriveTrainAssist().turnToAngle(46, TURN_SPEED); // TODO: Adjust angle
+				driveTrain.goForward(DRIVE_SPEED, 120); // TODO: Tune value (in inches)
+				ActuatorConfig.getInstance().getDriveTrainAssist().turnToAngle(50, TURN_SPEED); // TODO: Adjust angle
 				ActuatorConfig.getInstance().getLauncher().moveShooterToPosition(SHOOTER_POSITION);
 				ActuatorConfig.getInstance().getLauncher().shootSequenceHighAuto();
 				break;

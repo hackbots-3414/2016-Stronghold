@@ -27,26 +27,6 @@ public class DriveTrainAssist implements IDriveTrainAssist
 		turnToAngle(0, speed);
 	}
 
-	public boolean shouldShooterBeRaised()
-	{
-		SmartDashboard.putNumber("Pitch", gyro.getPitch());
-		SmartDashboard.putNumber("Yaw", gyro.getRate());
-
-		if (gyro.getRate() < 10)
-		{
-			if (gyro.getPitch() > 2)
-			{
-				return true;
-			} else
-			{
-				return false;
-			}
-		} else
-		{
-			return false;
-		}
-	}
-
 	public void turnToAngle(double desiredDegrees, double speed)
 	{
 		if ((-180 <= desiredDegrees) && (desiredDegrees <= 180))
@@ -98,21 +78,7 @@ public class DriveTrainAssist implements IDriveTrainAssist
 			return false;
 		}
 	}
-	
-	public void doChevalAutoActivate()
-	{
-		ActuatorConfig.getInstance().getDriveTrain().goBackward(0.25, 6);
-		
-		ActuatorConfig.getInstance().getDriveTrain().stopDrive();
-		SensorConfig.getInstance().getTimer().waitTimeInMillis(250);
-		
-		ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.STANDARD_DEFENSE_SHOOTER);
-		ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.LOW_BAR);
 
-		ActuatorConfig.getInstance().getDriveTrain().goForward(0.8, 90);
-		
-	}
-	
 	public void driveTrainCoast(boolean coast)
 	{
 		ActuatorConfig.getInstance().getFrontLeftDriveMotor().enableBrakeMode(!coast);

@@ -115,7 +115,7 @@ public class LauncherWithPistons implements ILauncher
 			FOURTY_KAI = 1300; // used to be "shoot high"
 			STANDARD_DEFENSE_AUGER = 370; // should be above LOW_BAR_AUGER_FOR_SHOOTER // 601
 			INTAKE_AUGER = 420;
-			END_GAME = FOURTY_KAI;
+			END_GAME = FOURTY_KAI; 
 		} else
 		{
 			// Shooter
@@ -130,7 +130,7 @@ public class LauncherWithPistons implements ILauncher
 			LOW_BAR_SHOOTER = 1130; // must be just below lowest collision point
 			HIGH_VALUE_AUGER = 1200;
 			FOURTY_KAI = 1650; // used to be "shoot high"
-			STANDARD_DEFENSE_AUGER = 1100; // used to be "shoot low"
+			STANDARD_DEFENSE_AUGER = 1000; // used to be "shoot low"
 			INTAKE_AUGER = 1050;
 			END_GAME = FOURTY_KAI;
 		}

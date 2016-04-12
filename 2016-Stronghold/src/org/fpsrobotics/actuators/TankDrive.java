@@ -296,6 +296,7 @@ public class TankDrive implements IDriveTrain
 			{
 				gyro.softResetCount();
 			}
+			
 			SensorConfig.getInstance().getTimer().waitTimeInMillis(300);
 
 			if (RobotStatus.isAuto())

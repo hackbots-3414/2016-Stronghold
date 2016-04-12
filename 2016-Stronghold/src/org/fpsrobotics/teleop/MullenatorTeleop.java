@@ -26,8 +26,10 @@ public class MullenatorTeleop implements ITeleopControl
 	private boolean pidOn = false;
 	private boolean deadZoned = false;
 	private double speedMultiplier = 1.0;
-	private boolean toggleLockA = false;
-	private boolean toggleLockB = true;
+	private boolean toggleLockL5A = false;
+	private boolean toggleLockL5B = true;
+	private boolean toggleLockL9A = false;
+	private boolean toggleLockL9B = false;
 	private boolean autoGyroDriveActivated = false;
 
 	// Manual Shooter, Lifter, and Auger
@@ -48,7 +50,7 @@ public class MullenatorTeleop implements ITeleopControl
 
 	public MullenatorTeleop()
 	{
-		executor = Executors.newFixedThreadPool(3);
+		executor = Executors.newFixedThreadPool(4);
 
 		// Instances
 		launcher = ActuatorConfig.getInstance().getLauncher();
@@ -149,11 +151,28 @@ public class MullenatorTeleop implements ITeleopControl
 						launcher.moveAugerToPreset(EAugerPresets.STANDARD_DEFENSE_AUGER);
 					}
 
-					// TODO: Cheval Auto Activate
-					if (leftJoystick.getButtonValue(EJoystickButtons.NINE) && !shootingLockOut)
+					//Auto Cheval De Frise
+					while (leftJoystick.getButtonValue(EJoystickButtons.NINE) && !shootingLockOut)
 					{
 						shootingLockOut = true;
-						ActuatorConfig.getInstance().getDriveTrainAssist().doChevalAutoActivate();
+						if (!SensorConfig.getInstance().getLeftJoystick().getButtonValue(EJoystickButtons.NINE))
+							break;
+						
+						ActuatorConfig.getInstance().getDriveTrain().goBackward(0.25, 3);
+
+						if (!SensorConfig.getInstance().getLeftJoystick().getButtonValue(EJoystickButtons.NINE))
+							break;
+						
+						ActuatorConfig.getInstance().getDriveTrain().stopDrive();
+						SensorConfig.getInstance().getTimer().waitTimeInMillis(250);
+
+						if (!SensorConfig.getInstance().getLeftJoystick().getButtonValue(EJoystickButtons.NINE))
+							break;
+						
+//						ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.STANDARD_DEFENSE_SHOOTER);
+						ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.LOW_BAR);
+
+						break;
 					}
 
 					// Center Shot preset
@@ -238,37 +257,37 @@ public class MullenatorTeleop implements ITeleopControl
 	private void doDriverFunctions()
 	{
 		// TOGGLE PID
-		if ((SensorConfig.getInstance().getLeftJoystick().getButtonValue(EJoystickButtons.FIVE)) && !toggleLockA
-				&& !toggleLockB)
+		if ((SensorConfig.getInstance().getLeftJoystick().getButtonValue(EJoystickButtons.FIVE)) && !toggleLockL5A
+				&& !toggleLockL5B)
 		{
-			toggleLockA = true;
+			toggleLockL5A = true;
 			// DO 1 - On Click
 			ActuatorConfig.getInstance().getDriveTrain().disablePID();
 			PIDOverride.getInstance().setTeleopDisablePID(true);
 			pidOn = false;
 		}
-		if ((!SensorConfig.getInstance().getLeftJoystick().getButtonValue(EJoystickButtons.FIVE)) && toggleLockA
-				&& !toggleLockB)
+		if ((!SensorConfig.getInstance().getLeftJoystick().getButtonValue(EJoystickButtons.FIVE)) && toggleLockL5A
+				&& !toggleLockL5B)
 		{
-			toggleLockA = false;
-			toggleLockB = true;
+			toggleLockL5A = false;
+			toggleLockL5B = true;
 			// DO 2 - On Release
 		}
-		if ((SensorConfig.getInstance().getLeftJoystick().getButtonValue(EJoystickButtons.FIVE)) && !toggleLockA
-				&& toggleLockB)
+		if ((SensorConfig.getInstance().getLeftJoystick().getButtonValue(EJoystickButtons.FIVE)) && !toggleLockL5A
+				&& toggleLockL5B)
 		{
-			toggleLockA = true;
+			toggleLockL5A = true;
 			// DO 3 - On Click
 			ActuatorConfig.getInstance().getDriveTrain().enablePID();
 			ActuatorConfig.getInstance().getDriveTrain().setControlMode(TalonControlMode.Speed);
 			PIDOverride.getInstance().setTeleopDisablePID(false);
 			pidOn = true;
 		}
-		if ((!SensorConfig.getInstance().getLeftJoystick().getButtonValue(EJoystickButtons.FIVE)) && toggleLockA
-				&& toggleLockB)
+		if ((!SensorConfig.getInstance().getLeftJoystick().getButtonValue(EJoystickButtons.FIVE)) && toggleLockL5A
+				&& toggleLockL5B)
 		{
-			toggleLockA = false;
-			toggleLockB = false;
+			toggleLockL5A = false;
+			toggleLockL5B = false;
 			// DO 4 - On Release
 		}
 
@@ -467,10 +486,6 @@ public class MullenatorTeleop implements ITeleopControl
 
 		// Auger Pot Value
 		SmartDashboard.putNumber("Auger Pot", ActuatorConfig.getInstance().getAugerPotentiometer().getCount());
-
-		// Should we raise value
-		SmartDashboard.putBoolean("Should we raise",
-				ActuatorConfig.getInstance().getDriveTrainAssist().shouldShooterBeRaised());
 
 		// Compass
 		SmartDashboard.putNumber("Yaw", SensorConfig.getInstance().getGyro().getSoftCount());

@@ -13,7 +13,7 @@ public class AutonLowBarAndShootHigh implements IAutonomousControl
 	private double DRIVE_SPEED = 0.80;
 	private double DRIVE_DISTANCE;
 
-	private boolean centerDriveAndGoBack = false;
+	private boolean centerDriveAndGoBack = true;
 
 	public AutonLowBarAndShootHigh()
 	{

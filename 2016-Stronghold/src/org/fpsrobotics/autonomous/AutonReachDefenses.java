@@ -22,7 +22,7 @@ public class AutonReachDefenses implements IAutonomousControl
 		while (RobotStatus.isAuto())
 		{
 			// Shooter to rock wall position
-			ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.STANDARD_DEFENSE_SHOOTER);
+			//ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.STANDARD_DEFENSE_SHOOTER);
 			ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.STANDARD_DEFENSE_AUGER);
 
 			if (!RobotStatus.isAuto())
@@ -41,7 +41,7 @@ public class AutonReachDefenses implements IAutonomousControl
 				ActuatorConfig.getInstance().getDriveTrain().stopDrive();
 			} else
 			{
-				ActuatorConfig.getInstance().getDriveTrain().goForward(0.5, 40_000); //TODO: Use inches rather than encoder counts
+				ActuatorConfig.getInstance().getDriveTrain().goForward(0.5, 55);
 			}
 
 			break;

@@ -18,15 +18,15 @@ public class AutonBreachDefenses implements IAutonomousControl
 	@Override
 	public void doAuto(EAutoPositions position)
 	{
-		while (RobotStatus.isAuto())
+		if (RobotStatus.isAuto())
 		{
 
 			// Move shooter to rock wall
-			ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.STANDARD_DEFENSE_SHOOTER);
+			//ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.STANDARD_DEFENSE_SHOOTER);
 			ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.STANDARD_DEFENSE_AUGER);
 
 			if (!RobotStatus.isAuto())
-				break;
+				return;
 
 			// Go over standard defense
 			if (timeBased)
@@ -36,7 +36,7 @@ public class AutonBreachDefenses implements IAutonomousControl
 				ActuatorConfig.getInstance().getDriveTrain().setSpeed(-0.8);
 
 				if (!RobotStatus.isAuto())
-					break;
+					return;
 
 				SensorConfig.getInstance().getTimer().waitTimeInMillis(4000);
 
@@ -46,10 +46,9 @@ public class AutonBreachDefenses implements IAutonomousControl
 			{
 
 				// Encoder based
-				ActuatorConfig.getInstance().getDriveTrain().goForward(0.5, 39); // TODO: tune value (in inches)
+				ActuatorConfig.getInstance().getDriveTrain().goForward(0.8, 130); // TODO: tune value (in inches)
 			}
 			
-			break;
 		}
 
 	}

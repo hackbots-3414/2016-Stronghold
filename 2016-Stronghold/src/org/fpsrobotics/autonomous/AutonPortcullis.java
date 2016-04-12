@@ -15,7 +15,7 @@ import org.usfirst.frc.team3414.robot.RobotStatus;
 public class AutonPortcullis implements IAutonomousControl
 {
 //	private boolean timeBased = false;
-	private boolean shooting = false;
+	private boolean shooting = true;
 //	private int shootPosition = 2;
 
 	ExecutorService executor;
@@ -48,31 +48,43 @@ public class AutonPortcullis implements IAutonomousControl
 
 	public void doAuto(EAutoPositions position)
 	{
-		while (RobotStatus.isAuto())
+		if (RobotStatus.isAuto())
 		{
 			System.out.println("Doin' it");
 
 //			ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.STANDARD_DEFENSE_SHOOTER);
-			ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.FOURTY_KAI);
+			ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.LOW_BAR);
 			
 			ActuatorConfig.getInstance().getDriveTrain().goForward(0.5, 60);
 			
-			ActuatorConfig.getInstance().getDriveTrain().stopDrive();
-			SensorConfig.getInstance().getTimer().waitTimeInMillis(250);
-			
-			ActuatorConfig.getInstance().getDriveTrain().goBackward(0.25, 4);
+			if (!RobotStatus.isAuto())
+				return;
 			
 			ActuatorConfig.getInstance().getDriveTrain().stopDrive();
 			SensorConfig.getInstance().getTimer().waitTimeInMillis(250);
 			
-			ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.FOURTY_KAI);
+			if (!RobotStatus.isAuto())
+				return;
+			
+			ActuatorConfig.getInstance().getDriveTrain().goBackward(0.25, 2);
+			
+			if (!RobotStatus.isAuto())
+				return;
+			
+			ActuatorConfig.getInstance().getDriveTrain().stopDrive();
+			SensorConfig.getInstance().getTimer().waitTimeInMillis(250);
 
 			executor.submit(() ->
 			{
-				ActuatorConfig.getInstance().getDriveTrain().goForward(0.5, 90); // TODO: Adjust where this ends up
+				ActuatorConfig.getInstance().getDriveTrain().goForward(0.3, 40); // TODO: Adjust where this ends up
 			});
 			
-			SensorConfig.getInstance().getTimer().waitTimeInMillis(1000); // TODO: Adjust time in order to delay the auto shoot sequence from taking over.
+			ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.FOURTY_KAI);
+			
+			SensorConfig.getInstance().getTimer().waitTimeInMillis(3000); // TODO: Adjust time in order to delay the auto shoot sequence from taking over.
+			
+			if (!RobotStatus.isAuto())
+				return;
 			
 			// For shooting
 			if(shooting)
