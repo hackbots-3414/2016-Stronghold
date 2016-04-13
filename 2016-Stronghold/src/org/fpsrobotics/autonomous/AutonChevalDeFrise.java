@@ -15,7 +15,7 @@ import org.usfirst.frc.team3414.robot.RobotStatus;
 public class AutonChevalDeFrise implements IAutonomousControl
 {
 //	private boolean timeBased = false;
-	private boolean shooting = false;
+	private boolean shooting = false; // TODO: Make shooting work for cheval
 //	private int shootPosition = 2;
 
 	ExecutorService executor;
@@ -52,7 +52,7 @@ public class AutonChevalDeFrise implements IAutonomousControl
 		{
 			System.out.println("Doin' it");
 
-//			ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.STANDARD_DEFENSE_SHOOTER);
+			ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.STANDARD_DEFENSE_SHOOTER);
 			ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.FOURTY_KAI);
 			
 			ActuatorConfig.getInstance().getDriveTrain().goForward(0.5, 60);

@@ -16,12 +16,13 @@ public class AutonPortcullis implements IAutonomousControl
 {
 //	private boolean timeBased = false;
 	private boolean shooting = true;
+	private boolean doneWithGoThrough = false;
 //	private int shootPosition = 2;
 
 	ExecutorService executor;
 	
 //	private int SHOOT_ANGLE;
-
+	
 	public AutonPortcullis()
 	{
 		executor = Executors.newFixedThreadPool(1);
@@ -52,7 +53,7 @@ public class AutonPortcullis implements IAutonomousControl
 		{
 			System.out.println("Doin' it");
 
-//			ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.STANDARD_DEFENSE_SHOOTER);
+			ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.STANDARD_DEFENSE_SHOOTER);
 			ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.LOW_BAR);
 			
 			ActuatorConfig.getInstance().getDriveTrain().goForward(0.5, 60);
@@ -77,11 +78,18 @@ public class AutonPortcullis implements IAutonomousControl
 			executor.submit(() ->
 			{
 				ActuatorConfig.getInstance().getDriveTrain().goForward(0.3, 40); // TODO: Adjust where this ends up
+				
+				doneWithGoThrough = true;
 			});
 			
 			ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.FOURTY_KAI);
 			
-			SensorConfig.getInstance().getTimer().waitTimeInMillis(3000); // TODO: Adjust time in order to delay the auto shoot sequence from taking over.
+			while(!doneWithGoThrough) // TODO: Make sure this works, thread conflicts might be a thing
+			{
+				System.out.println("Going through Portcullis"); // Testing
+			}
+			
+			SensorConfig.getInstance().getTimer().waitTimeInMillis(250); // TODO: Do we need this?
 			
 			if (!RobotStatus.isAuto())
 				return;

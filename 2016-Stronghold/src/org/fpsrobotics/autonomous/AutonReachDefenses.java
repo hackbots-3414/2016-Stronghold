@@ -22,7 +22,7 @@ public class AutonReachDefenses implements IAutonomousControl
 		while (RobotStatus.isAuto())
 		{
 			// Shooter to rock wall position
-			//ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.STANDARD_DEFENSE_SHOOTER);
+			ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.STANDARD_DEFENSE_SHOOTER);
 			ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.STANDARD_DEFENSE_AUGER);
 
 			if (!RobotStatus.isAuto())

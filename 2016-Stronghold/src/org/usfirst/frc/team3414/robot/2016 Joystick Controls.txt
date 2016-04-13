@@ -23,5 +23,6 @@ Gamepad
 6 - Auger Up
 7 - Shoot High
 8 - Shoot Low
+Easy Button - Lifter Retract
 (DISABLED) 9 - Lifter
 (DISABLED) 10 - Lifter Retract

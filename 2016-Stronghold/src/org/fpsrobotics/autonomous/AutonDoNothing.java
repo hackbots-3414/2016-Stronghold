@@ -14,7 +14,7 @@ public class AutonDoNothing implements IAutonomousControl
 	{
 		System.out.println("Didn't know how to do it -Raul");
 		
-		ActuatorConfig.getInstance().getAutoShot().shoot(position);
+		ActuatorConfig.getInstance().getAutoShot().shoot(position); // TODO: Get shooting to work, do nothing doesn't actually do nothing
 	}
 
 }

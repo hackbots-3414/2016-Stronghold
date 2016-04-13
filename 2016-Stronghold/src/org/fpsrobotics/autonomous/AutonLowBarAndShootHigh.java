@@ -93,8 +93,7 @@ public class AutonLowBarAndShootHigh implements IAutonomousControl
 
 				SensorConfig.getInstance().getTimer().waitTimeInMillis(500);
 
-				ActuatorConfig.getInstance().getDriveTrain().goBackward((DRIVE_SPEED / 5), 20, false);
-				// TODO: TUNE THIS DISTANCE
+				ActuatorConfig.getInstance().getDriveTrain().goBackward((DRIVE_SPEED / 5), 20, false); // TODO: TUNE THIS DISTANCE
 				
 				ActuatorConfig.getInstance().getDriveTrain().goBackward(DRIVE_SPEED, 20, true); //TODO: TUNE THIS DISTANCE
 
