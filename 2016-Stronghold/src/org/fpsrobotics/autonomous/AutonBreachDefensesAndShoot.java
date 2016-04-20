@@ -11,16 +11,15 @@ import org.usfirst.frc.team3414.robot.RobotStatus;
  */
 public class AutonBreachDefensesAndShoot implements IAutonomousControl
 {
-	private boolean timeBased = true;
-	private int SHOOT_ANGLE = 30;
+	// private boolean timeBased = false;
+	private boolean shoot = true;
 
 	public AutonBreachDefensesAndShoot()
 	{
-
 	}
 
 	@Override
-	public void doAuto()
+	public void doAuto(EAutoPositions position)
 	{
 		while (RobotStatus.isAuto())
 		{
@@ -29,45 +28,46 @@ public class AutonBreachDefensesAndShoot implements IAutonomousControl
 			ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.STANDARD_DEFENSE_SHOOTER);
 			ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.STANDARD_DEFENSE_AUGER);
 
-			if (!RobotStatus.isAuto())
-				break;
-
 			// Go over rock wall
-			if (timeBased)
-			{
-				//Time Based
-				ActuatorConfig.getInstance().getDriveTrain().disablePID();
-				ActuatorConfig.getInstance().getDriveTrain().setSpeed(-0.8);
-
-				SensorConfig.getInstance().getTimer().waitTimeInMillis(2700);
-
-			} else
-			{
-				//Encoder Based
-				ActuatorConfig.getInstance().getDriveTrain().goForward(0.8, 90_000);
-			}
+			// if (timeBased)
+			// {
+			// //Time Based
+			// ActuatorConfig.getInstance().getDriveTrain().disablePID();
+			// ActuatorConfig.getInstance().getDriveTrain().setSpeed(-1.0);
+			//
+			// SensorConfig.getInstance().getTimer().waitTimeInMillis(8000);
+			//
+			// ActuatorConfig.getInstance().getDriveTrain().stopDrive();
+			//
+			// } else
+			// {
+			// Encoder Based
+			ActuatorConfig.getInstance().getDriveTrain().goForward(1.0, 130); //130
+			// }
 
 			ActuatorConfig.getInstance().getDriveTrain().stopDrive();
 
-			if (!RobotStatus.isAuto())
-				break;
+			ActuatorConfig.getInstance().getDriveTrainAssist().centerDriveTrain(0.3);
+			// if(shoot)
+			// {
+			ActuatorConfig.getInstance().getAutoShot().shoot(position);
+			// }
 
 			// Angle drive train toward goal
-			ActuatorConfig.getInstance().getDriveTrainAssist().turnToAngle(SHOOT_ANGLE, 0.2);
+			// ActuatorConfig.getInstance().getDriveTrainAssist().turnToAngle(SHOOT_ANGLE, 0.2);
 
-			if (!RobotStatus.isAuto())
-				break;
+			// if (!RobotStatus.isAuto())
+			// break;
 
 			// Shooter to Shoot Position
-			ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.LOW_BAR);
+			// ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.LOW_BAR);
 
-			if (!RobotStatus.isAuto())
-				break;
+			// if (!RobotStatus.isAuto())
+			// break;
 
 			// Shoot high
-			ActuatorConfig.getInstance().getLauncher().shootSequenceLow();
+			// ActuatorConfig.getInstance().getLauncher().shootSequenceLow();
 
-			
 			break;
 		}
 

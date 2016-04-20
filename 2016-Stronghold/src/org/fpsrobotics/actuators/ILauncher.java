@@ -65,6 +65,8 @@ public interface ILauncher
 	public void lowerAuger();
 	
 	public void lowerAugerForEndGame();
+	
+	public void raiseAugerForEndGame();
 
 	// private void lowerAuger(double speed)
 
@@ -84,7 +86,7 @@ public interface ILauncher
 
 	public void moveAugerToPosition(int position);
 	
-	public void moveAugerToPosition(int position, double lowerSpeed);
+//	public void moveAugerToPosition(int position, double lowerSpeed);
 
 	// Sequences
 
@@ -99,5 +101,36 @@ public interface ILauncher
 	public void shootSequenceLowAuto();
 
 	public void shootSequenceHighAuto();
+	
+	public void moveAugerToPosition(int desiredPosition, double lowerSpeed);
+	
+	/**
+	 * 
+	 * @param desiredShooter
+	 * @param desiredAuger
+	 */
+	public void moveShooterAndAugerToPreset(EShooterPresets desiredShooter, EAugerPresets desiredAuger);
+	
+	/**
+	 * 
+	 * @param desiredShooter
+	 * @param desiredAuger
+	 */
+	void moveShooterAndAugerToPosition(int desiredShooter, int desiredAuger);
+
+	/**
+	 * 
+	 * @param desiredShooter
+	 * @param desiredAuger
+	 */
+	void moveShooterToPresetAndAugerToPosition(EShooterPresets desiredShooter, int desiredAuger);
+
+	/**
+	 * 
+	 * @param desiredShooter
+	 * @param desiredAuger
+	 */
+	void moveShooterToPositionAndAugerToPreset(int desiredShooter, EAugerPresets desiredAuger);
+
 
 }

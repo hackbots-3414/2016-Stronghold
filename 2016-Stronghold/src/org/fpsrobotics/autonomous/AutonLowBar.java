@@ -16,17 +16,13 @@ public class AutonLowBar implements IAutonomousControl
 	}
 
 	@Override
-	public void doAuto()
+	public void doAuto(EAutoPositions position)
 	{
 		while (RobotStatus.isAuto())
 		{
 			// Move shooter to low bar
 			ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.LOW_BAR);
 			ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.LOW_BAR);
-
-			if (!RobotStatus.isAuto())
-				break;
-
 			if (timeBased)
 			{
 				ActuatorConfig.getInstance().getDriveTrain().disablePID();
@@ -38,7 +34,7 @@ public class AutonLowBar implements IAutonomousControl
 			} else
 			{
 				// Go under low bar
-				ActuatorConfig.getInstance().getDriveTrain().goForward(0.5, 130_000);
+				ActuatorConfig.getInstance().getDriveTrain().goForward(0.5, 140_000);
 			}
 
 			ActuatorConfig.getInstance().getDriveTrain().stopDrive();

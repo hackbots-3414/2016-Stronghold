@@ -8,7 +8,7 @@ import org.usfirst.frc.team3414.robot.RobotStatus;
 
 public class AutonBreachDefenses implements IAutonomousControl
 {
-	private boolean timeBased = true;
+	private boolean timeBased = false;
 
 	public AutonBreachDefenses()
 	{
@@ -16,39 +16,32 @@ public class AutonBreachDefenses implements IAutonomousControl
 	}
 
 	@Override
-	public void doAuto()
+	public void doAuto(EAutoPositions position)
 	{
-		while (RobotStatus.isAuto())
+		if (RobotStatus.isAuto())
 		{
 
 			// Move shooter to rock wall
 			ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.STANDARD_DEFENSE_SHOOTER);
 			ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.STANDARD_DEFENSE_AUGER);
 
-			if (!RobotStatus.isAuto())
-				break;
-
-			// Go over rock wall
+			// Go over standard defense
 			if (timeBased)
 			{
-				//Time Based
+				// Time Based
 				ActuatorConfig.getInstance().getDriveTrain().disablePID();
 				ActuatorConfig.getInstance().getDriveTrain().setSpeed(-0.8);
 
-				if (!RobotStatus.isAuto())
-					break;
-
 				SensorConfig.getInstance().getTimer().waitTimeInMillis(4000);
+
+				ActuatorConfig.getInstance().getDriveTrain().stopDrive();
 
 			} else
 			{
-				//Encoder based
-				ActuatorConfig.getInstance().getDriveTrain().goForward(0.8, 90_000);
+				// Encoder based
+				ActuatorConfig.getInstance().getDriveTrain().goForward(0.8, 160); // Used to be 130
 			}
-
-			ActuatorConfig.getInstance().getDriveTrain().stopDrive();
-
-			break;
+			
 		}
 
 	}

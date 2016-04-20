@@ -1,13 +1,13 @@
 package org.fpsrobotics.sensors;
 
 import org.fpsrobotics.PID.IPIDFeedbackDevice;
+import org.usfirst.frc.team3414.robot.RobotStatus;
 
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 
 /**
- * A class that implements the encoder connected to directly to the CAN Talon
- * motor controller.
+ * A class that implements the encoder connected to directly to the CAN Talon motor controller.
  */
 public class BuiltInCANTalonEncoder implements IPIDFeedbackDevice
 {
@@ -79,6 +79,18 @@ public class BuiltInCANTalonEncoder implements IPIDFeedbackDevice
 		{
 			System.out.println("Encoder not mounted somewhere, proceed with caution");
 			return 0;
+		}
+	}
+
+	@Override
+	public double getDistance() // TODO: This is where we Tune Encoder for Alpha
+	{
+		if (RobotStatus.isAlpha())
+		{
+			return (getCount() / 785.79);
+		} else
+		{
+			return (getCount() / 785.79);
 		}
 	}
 

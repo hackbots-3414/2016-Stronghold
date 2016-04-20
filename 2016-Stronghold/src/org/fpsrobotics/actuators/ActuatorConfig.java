@@ -1,7 +1,9 @@
 package org.fpsrobotics.actuators;
 
 import org.fpsrobotics.PID.IPIDFeedbackDevice;
+import org.fpsrobotics.autonomous.AutoShot;
 import org.fpsrobotics.autonomous.DriveTrainAssist;
+import org.fpsrobotics.autonomous.IDriveTrainAssist;
 import org.fpsrobotics.sensors.BuiltInCANTalonEncoder;
 import org.fpsrobotics.sensors.Potentiometer;
 import org.fpsrobotics.sensors.SensorConfig;
@@ -70,7 +72,7 @@ public class ActuatorConfig
 	private IDriveTrain driveTrain;
 
 	// Drive assist
-	private DriveTrainAssist driveAssist;
+	private IDriveTrainAssist driveAssist;
 
 	// Shooter motors
 	private CANTalon leftShooterMotor;
@@ -88,6 +90,9 @@ public class ActuatorConfig
 
 	//Lifter
 	private ILifter lift;
+	
+	// Auto Shot
+	private AutoShot autoShot;
 	
 	private ActuatorConfig()
 	{
@@ -129,6 +134,10 @@ public class ActuatorConfig
 		leftDoubleMotor = new DoubleMotor(leftFrontCANMotor, leftRearCANMotor);
 		rightDoubleMotor = new DoubleMotor(rightFrontCANMotor, rightRearCANMotor);
 
+
+		//rightDoubleMotor.getPIDFeedbackDevice().setDistancePerPulse(0.0012635); //0.0012635
+		//leftDoubleMotor.getPIDFeedbackDevice().setDistancePerPulse(0.0012800); // 0.00128
+		
 		// Create the whole drivetrain
 		driveTrain = new TankDrive(leftDoubleMotor, rightDoubleMotor, SensorConfig.getInstance().getGyro());
 		// driveTrain = new TankDrive(leftDoubleMotor, rightDoubleMotor);
@@ -188,7 +197,10 @@ public class ActuatorConfig
 		
 		// Instantiate the lifter
 		lift = new Lifter(new DoubleSolenoid(new edu.wpi.first.wpilibj.DoubleSolenoid(LIFTER_SOLENOID_PORT_A, LIFTER_SOLENOID_PORT_B)));
-		//TODO: MAKE LIFTER ACUTATOR CONFIG
+
+		
+		// Auto Shots
+		autoShot = new AutoShot(launcher, driveTrain);
 	}
 
 	public static synchronized ActuatorConfig getInstance()
@@ -215,6 +227,16 @@ public class ActuatorConfig
 	{
 		return rightFrontMotor;
 	}
+	
+	public CANTalon getBackLeftDriveMotor()
+	{
+		return leftRearMotor;
+	}
+	
+	public CANTalon getBackRightDriveMotor()
+	{
+		return rightRearMotor;
+	}
 
 	public ILauncher getLauncher()
 	{
@@ -236,7 +258,7 @@ public class ActuatorConfig
 		return rightDriveEncoder;
 	}
 
-	public DriveTrainAssist getDriveTrainAssist()
+	public IDriveTrainAssist getDriveTrainAssist()
 	{
 		return driveAssist;
 	}
@@ -249,6 +271,11 @@ public class ActuatorConfig
 	public ILifter getLifter()
 	{
 		return lift;
+	}
+	
+	public AutoShot getAutoShot()
+	{
+		return autoShot;
 	}
 
 }

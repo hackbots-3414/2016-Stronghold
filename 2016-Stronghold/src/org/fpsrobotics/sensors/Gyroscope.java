@@ -10,6 +10,9 @@ public class Gyroscope implements IGyroscope
 	private AnalogGyro gyro;
 	private boolean isEnabled;
 
+	private double pastAngle = 0;
+	private double currentAngle = 0;
+
 	public Gyroscope(AnalogGyro gyro)
 	{
 		this.gyro = gyro;
@@ -23,7 +26,7 @@ public class Gyroscope implements IGyroscope
 	/**
 	 * Returns values in between 0 and 0
 	 */
-	public double getCount()
+	public double getHardCount()
 	{
 		if (isEnabled)
 		{
@@ -32,6 +35,21 @@ public class Gyroscope implements IGyroscope
 		{
 			return 0;
 		}
+	}
+
+	@Override
+	public double getSoftCount()
+	{
+		currentAngle = pastAngle + gyro.getAngle();
+		if (currentAngle > 180)
+		{
+			currentAngle -= 360;
+		}
+		if (currentAngle < -180)
+		{
+			currentAngle += 360;
+		}
+		return currentAngle;
 	}
 
 	@Override
@@ -47,8 +65,18 @@ public class Gyroscope implements IGyroscope
 	}
 
 	@Override
-	public void resetCount()
+	public void softResetCount()
 	{
+		pastAngle += gyro.getAngle();
+		gyro.reset();
+	}
+	
+	@Override
+	public void hardResetCount()
+	{
+//		pastAngle = gyro.getAngle();
+		pastAngle = 0;
+		currentAngle = 0;
 		gyro.reset();
 	}
 

@@ -3,7 +3,7 @@ package org.fpsrobotics.sensors;
 import edu.wpi.first.wpilibj.Joystick;
 
 /**
- * A class that interfaces with the Logitech dual shock two controller.
+ * A class that interfaces with the Logitech dual shock two controller (Gamepad).
  *
  */
 public class DualShockTwoController implements IGamepad
@@ -98,6 +98,21 @@ public class DualShockTwoController implements IGamepad
 			return false;
 		}
 
+	}
+	
+	@Override
+	/**
+	 * Returns in Degrees
+	 * NOTHING = -1
+	 * UP = 0
+	 * UP-RIGHT = 45
+	 * RIGHT = 90
+	 * DOWN = 180
+	 * LEFT = 270
+	 */
+	public int getPOV()
+	{
+		return joy.getPOV();
 	}
 
 }

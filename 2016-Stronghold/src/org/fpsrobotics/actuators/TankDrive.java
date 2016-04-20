@@ -7,6 +7,7 @@ import org.fpsrobotics.teleop.PIDOverride;
 import org.usfirst.frc.team3414.robot.RobotStatus;
 
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Creates a drive train that has two double motors on either side with encoders on each gearbox. It also has an
@@ -19,7 +20,7 @@ public class TankDrive implements IDriveTrain
 
 	private IGyroscope gyro;
 
-	private boolean autoGyroDriveActivated;
+	private boolean driveBreaker = false;
 
 	public TankDrive(DoubleMotor motorLeft, DoubleMotor motorRight)
 	{
@@ -29,8 +30,7 @@ public class TankDrive implements IDriveTrain
 
 	public TankDrive(DoubleMotor motorLeft, DoubleMotor motorRight, IGyroscope gyro)
 	{
-		this.motorLeft = motorLeft;
-		this.motorRight = motorRight;
+		this(motorLeft, motorRight);
 		this.gyro = gyro;
 	}
 
@@ -40,8 +40,11 @@ public class TankDrive implements IDriveTrain
 	 */
 	public void setSpeed(double leftSpeed, double rightSpeed)
 	{
+		// TODO: Use Smart Dashboard to Tune Alpha: Encoder conversion (#Counts / 39 inches)
+		// SmartDashboard.putNumber("Left Encoder", motorLeft.getPIDFeedbackDevice().getDistance());
+		// SmartDashboard.putNumber("Right Encoder", motorRight.getPIDFeedbackDevice().getDistance());
+
 		// Caution: May want to disable PID
-		autoGyroDriveActivated = false;
 		motorLeft.setSpeed(leftSpeed);
 		motorRight.setSpeed(rightSpeed);
 	}
@@ -52,8 +55,8 @@ public class TankDrive implements IDriveTrain
 	 */
 	public void setSpeed(double speed)
 	{
+
 		// Caution: May want to disable PID
-		autoGyroDriveActivated = false;
 		motorLeft.setSpeed(speed);
 		motorRight.setSpeed(speed);
 	}
@@ -62,7 +65,6 @@ public class TankDrive implements IDriveTrain
 	public void stopDrive()
 	{
 		// Caution: May want to disable PID
-		autoGyroDriveActivated = false;
 		motorLeft.stop();
 		motorRight.stop();
 	}
@@ -74,7 +76,6 @@ public class TankDrive implements IDriveTrain
 	public void turnLeft(double speed)
 	{
 		// Caution: May want to disable PID
-		autoGyroDriveActivated = false;
 		motorLeft.setSpeed(speed);
 		motorRight.setSpeed(-speed);
 	}
@@ -86,7 +87,6 @@ public class TankDrive implements IDriveTrain
 	public void turnRight(double speed)
 	{
 		// Caution: May want to disable PID
-		autoGyroDriveActivated = false;
 		motorLeft.setSpeed(-speed);
 		motorRight.setSpeed(speed);
 	}
@@ -98,7 +98,6 @@ public class TankDrive implements IDriveTrain
 	public void goForward(double speed)
 	{
 		// Caution: May want to disable PID
-		autoGyroDriveActivated = false;
 		motorLeft.setSpeed(Math.abs(speed));
 		motorRight.setSpeed(Math.abs(speed));
 	}
@@ -110,7 +109,6 @@ public class TankDrive implements IDriveTrain
 	public void goBackward(double speed)
 	{
 		// Caution: May want to disable PID
-		autoGyroDriveActivated = false;
 		motorLeft.setSpeed(-Math.abs(speed));
 		motorRight.setSpeed(-Math.abs(speed));
 	}
@@ -121,8 +119,8 @@ public class TankDrive implements IDriveTrain
 	 */
 	public void driveLeft(double speed)
 	{
-		autoGyroDriveActivated = false;
-		turnLeft(speed, 90);
+		ActuatorConfig.getInstance().getDriveTrainAssist().turnToAngle(-90, speed);
+		// turnLeft(speed,90);
 		goForward(speed);
 	}
 
@@ -132,8 +130,8 @@ public class TankDrive implements IDriveTrain
 	 */
 	public void driveRight(double speed)
 	{
-		autoGyroDriveActivated = false;
-		turnRight(speed, 90);
+		ActuatorConfig.getInstance().getDriveTrainAssist().turnToAngle(90, speed);
+		// turnRight(speed, 90);
 		goForward(speed);
 	}
 
@@ -225,14 +223,15 @@ public class TankDrive implements IDriveTrain
 	 */
 	public void turnLeft(double speed, double degrees)
 	{
+		SmartDashboard.putNumber("Desired Position", degrees);
 		if (gyro != null)
 		{
-			double initialGyro = gyro.getCount();
+			double initialGyro = gyro.getHardCount();
 			disablePID();
 
-			if ((initialGyro - degrees) < gyro.getCount())
+			if ((initialGyro - degrees) < gyro.getHardCount())
 			{
-				while (((initialGyro - degrees) < gyro.getCount()) && RobotStatus.isRunning())
+				while (((initialGyro - degrees) < gyro.getHardCount()) && RobotStatus.isRunning())
 				{
 					setSpeed(speed, -speed);
 				}
@@ -254,14 +253,15 @@ public class TankDrive implements IDriveTrain
 	 */
 	public void turnRight(double speed, double degrees)
 	{
+		SmartDashboard.putNumber("Desired Position", degrees);
 		if (gyro != null)
 		{
-			double initialGyro = gyro.getCount();
+			double initialGyro = gyro.getHardCount();
 			disablePID();
 
-			if ((initialGyro + degrees) > gyro.getCount())
+			if ((initialGyro + degrees) > gyro.getHardCount())
 			{
-				while ((initialGyro + degrees) > gyro.getCount() && RobotStatus.isRunning())
+				while ((initialGyro + degrees) > gyro.getHardCount() && RobotStatus.isRunning())
 				{
 					setSpeed(-speed, speed);
 				}
@@ -277,32 +277,70 @@ public class TankDrive implements IDriveTrain
 		}
 	}
 
-	private final double Kp = 0.005; // used to be .01
+	private final double KpAuton = 0.005; // used to be .01
 
 	@Override
 	/**
 	 * Use in Autonomous Mode (Uses while loop)
+	 * 
+	 * @Param int distance: in inches
 	 */
-	public void goForward(double speed, int distance)
+	public void goForward(double speed, double distance, boolean resetGyro)
 	{
-		double initialCountRight = motorRight.getCANMotorOne().getPIDFeedbackDevice().getCount();
-		double initialCountLeft = motorLeft.getCANMotorOne().getPIDFeedbackDevice().getCount();
+		// double initialCountRight = motorRight.getCANMotorOne().getPIDFeedbackDevice().getCount();
+		// double initialCountLeft = motorLeft.getCANMotorOne().getPIDFeedbackDevice().getCount();
+		double initialCountRight = motorRight.getCANMotorOne().getPIDFeedbackDevice().getDistance();
+		double initialCountLeft = motorLeft.getCANMotorOne().getPIDFeedbackDevice().getDistance();
 
 		if (gyro != null)
 		{
 			disablePID();
 
-			gyro.resetCount();
+			if (resetGyro)
+			{
+				gyro.softResetCount();
+			}
 
 			SensorConfig.getInstance().getTimer().waitTimeInMillis(300);
 
-			while (RobotStatus.isRunning()
-					&& ((motorLeft.getCANMotorOne().getPIDFeedbackDevice().getCount() - initialCountLeft) >= -distance)
-					&& ((motorRight.getCANMotorOne().getPIDFeedbackDevice().getCount()
+			// if (RobotStatus.isAuto())
+			// {
+			// while (RobotStatus.isRunning() && RobotStatus.isAuto() && !driveBreaker
+			// && ((motorLeft.getCANMotorOne().getPIDFeedbackDevice().getDistance()
+			// - initialCountLeft) >= -distance)
+			// && ((motorRight.getCANMotorOne().getPIDFeedbackDevice().getDistance()
+			// - initialCountRight) >= -distance))
+			// {
+			// if (speed > 0)
+			// {
+			// drive(-speed, -gyro.getHardCount() * KpAuton);
+			// } else
+			// {
+			// drive(-speed, gyro.getHardCount() * KpAuton);
+			// }
+			//
+			// // drive(-speed, -gyro.getHardCount() * KpAuton);
+			// }
+			// } else
+			// {
+			while (RobotStatus.isRunning() && !driveBreaker
+					&& ((motorLeft.getCANMotorOne().getPIDFeedbackDevice().getDistance()
+							- initialCountLeft) >= -distance)
+					&& ((motorRight.getCANMotorOne().getPIDFeedbackDevice().getDistance()
 							- initialCountRight) >= -distance))
 			{
-				drive(-speed, -gyro.getCount() * Kp);
+				if (speed > 0)
+				{
+					drive(-speed, -gyro.getHardCount() * KpAuton);
+				} else
+				{
+					drive(-speed, gyro.getHardCount() * KpAuton);
+				}
+
+				// drive(-speed, -gyro.getHardCount() * KpAuton);
+				// }
 			}
+			driveBreaker = false;
 
 			stopDrive();
 
@@ -324,34 +362,53 @@ public class TankDrive implements IDriveTrain
 
 	@Override
 	/**
-	 * Use in Autonomous Mode (Uses while loop)
+	 * True - means you CANNOT use the goForward or goBackward methods False - means you CAN use the goForward or
+	 * goBackward methods
 	 */
-	public void goBackward(double speed, int distance)
+	public void setDriveForwardBreak(boolean driveBreaker)
 	{
-		goForward(-speed, distance);
+		SmartDashboard.putBoolean("Drive Breaker", driveBreaker);
+		this.driveBreaker = driveBreaker;
 	}
 
+	@Override
+	public void goForward(double speed, double distance)
+	{
+		goForward(speed, distance, true);
+	}
+
+	@Override
 	/**
-	 * Resets the gyro
+	 * Use in Autonomous Mode (Uses while loop)
+	 */
+	public void goBackward(double speed, double distance, boolean resetGyro)
+	{
+		goForward(-Math.abs(speed), distance, resetGyro);
+	}
+
+	@Override
+	public void goBackward(double speed, double distance)
+	{
+		goBackward(speed, distance, true);
+	}
+
+	private final double kpTeleop = 0.003; // 0.00425, 0.0040
+
+	/**
+	 * Soft Resets the gyro Used for teleop
 	 */
 	@Override
 	public void driveStraight(double speed)
 	{
 		if (gyro != null)
 		{
-			if (!autoGyroDriveActivated)
+			if (speed > 0)
 			{
-				disablePID();
-
-				gyro.resetCount();
-				System.out.println("Gyro Reset");
-
-//				 SensorConfig.getInstance().getTimer().waitTimeInMillis(300);
-				// TODO: Should driveStraight() wait 300 ms like driveForward() does?
-
-				autoGyroDriveActivated = true;
+				drive(speed, gyro.getHardCount() * kpTeleop);
+			} else
+			{
+				drive(speed, -gyro.getHardCount() * kpTeleop);
 			}
-			drive(speed, -gyro.getCount() * Kp);
 		} else
 		{
 			setSpeed(speed);

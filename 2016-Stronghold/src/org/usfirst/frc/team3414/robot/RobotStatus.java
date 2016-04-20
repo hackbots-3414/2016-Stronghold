@@ -42,16 +42,19 @@ public class RobotStatus
 	protected static void setIsRunning(boolean isRunning)
 	{
 		RobotStatus.isRunning = isRunning;
+		System.out.println("Set Is Running: " + isRunning);
 	}
 
 	protected static void setIsAuto(boolean isRunning)
 	{
 		RobotStatus.isAuto = isRunning;
+		System.out.println("Set Is Auto: " + isRunning);
 	}
 
 	protected static void setIsTeleop(boolean isRunning)
 	{
 		RobotStatus.isTeleop = isRunning;
+		System.out.println("Set Is Teleop: " + isRunning);
 	}
 
 	protected static void checkIsAlpha()

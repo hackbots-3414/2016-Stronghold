@@ -2,6 +2,7 @@ package org.fpsrobotics.autonomous;
 
 import org.fpsrobotics.actuators.ActuatorConfig;
 import org.fpsrobotics.actuators.EAugerPresets;
+import org.fpsrobotics.actuators.EShooterPresets;
 
 public class FourtyKai implements IAutonomousControl
 {
@@ -11,10 +12,12 @@ public class FourtyKai implements IAutonomousControl
 	}
 
 	@Override
-	public void doAuto()
+	public void doAuto(EAutoPositions position)
 	{
-		// ActuatorConfig.getInstance().getLifter().retract(); //TODO: Retract the lifter when declaring "FOURTY_KAI"
-		ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.FOURTY_KAI);
+		// ActuatorConfig.getInstance().getLifter().retract();
+		ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.FOURTY_KAI); // Kai Kai Fourty Kai
+		ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.LOW_BAR); // So we don't waste time
+		
 		System.out.println("Fourty Kai'd");
 	}
 

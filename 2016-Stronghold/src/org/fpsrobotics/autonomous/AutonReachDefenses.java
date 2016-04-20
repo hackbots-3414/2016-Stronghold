@@ -17,16 +17,13 @@ public class AutonReachDefenses implements IAutonomousControl
 	}
 
 	@Override
-	public void doAuto()
+	public void doAuto(EAutoPositions position)
 	{
 		while (RobotStatus.isAuto())
 		{
 			// Shooter to rock wall position
 			ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.STANDARD_DEFENSE_SHOOTER);
 			ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.STANDARD_DEFENSE_AUGER);
-
-			if (!RobotStatus.isAuto())
-				break;
 
 			// Go to defenses
 			if (timeBased)
@@ -41,7 +38,7 @@ public class AutonReachDefenses implements IAutonomousControl
 				ActuatorConfig.getInstance().getDriveTrain().stopDrive();
 			} else
 			{
-				ActuatorConfig.getInstance().getDriveTrain().goForward(0.5, 40_000);
+				ActuatorConfig.getInstance().getDriveTrain().goForward(0.5, 80); //was 75
 			}
 
 			break;

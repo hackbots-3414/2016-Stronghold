@@ -1,5 +1,8 @@
 package org.fpsrobotics.actuators;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import org.fpsrobotics.PID.IPIDFeedbackDevice;
 import org.fpsrobotics.sensors.EJoystickButtons;
 import org.fpsrobotics.sensors.ILimitSwitch;
@@ -28,10 +31,12 @@ public class LauncherWithPistons implements ILauncher
 	private boolean manualLowerAuger = false;
 	private boolean autoRaiseAuger = false;
 	private final int RAMP_RATE = 3;
+	private final int STALL_RATE = 3;
 	private double augerPrevValue;
 	private final int SLOW_AUGER_DISTANCE = 100;
 	private final double AUGER_SPEED_RAISE = 0.5;
-	private final double AUGER_SPEED_LOWER = 0.5; // TODO: 0.5
+	private final double AUGER_SPEED_LOWER = 0.5;
+	private final double FULL_SPEED = 1.0;
 	private final double HIGH_VALUE_AUGER_SPEED = 0.8;
 	private final double AUTO_AUGER_SPEED = 0.35;
 
@@ -56,11 +61,20 @@ public class LauncherWithPistons implements ILauncher
 	private final int LOW_BAR_AUGER_FOR_SHOOTER;
 	// Presets
 	private final int LOW_BAR_SHOOTER;
+	private final int STANDARD_DEFENSE_SHOOTER;
 	private final int HIGH_VALUE_AUGER;
 	private final int FOURTY_KAI;
+	private final int PORTCULLIS_TELEOP_ACTION;
 	private final int INTAKE_AUGER;
 	private final int STANDARD_DEFENSE_AUGER;
 	private final int END_GAME;
+	private final int LOW_SHOT_AUTO;
+
+	// For moveShooterAndAuger
+	private ExecutorService executor;
+	private boolean isAugerAtPreset = false;
+	private int SHOOTER_POSITION_AT_POSITION_FIVE;
+	private int SHOOTER_POSITION_AT_POSITION_TWO;
 
 	/**
 	 * 
@@ -100,37 +114,79 @@ public class LauncherWithPistons implements ILauncher
 
 		if (RobotStatus.isAlpha())
 		{
+//			// Shooter
+//			BOTTOM_LIMIT_SHOOTER = 2100;
+//			TOP_LIMIT_SHOOTER = 588;
+//			// AUGER
+//			TOP_LIMIT_AUGER = 2000; // 1840
+//			BOTTOM_LIMIT_AUGER = 350;
+//			LOW_BAR_AUGER_FOR_SHOOTER = 700; // position where auger must be to not collide with the shooter when up
+//												// must be just above highest collision point //600
+//			// Presets
+//			LOW_BAR_SHOOTER = 1800; // position where shooter must be to not collide with the auger when down
+//									// must be just below lowest collision point
+//			STANDARD_DEFENSE_SHOOTER = 1390;
+//			HIGH_VALUE_AUGER = 1400;
+//			FOURTY_KAI = 1300; // Used for High Shot Auto
+//			STANDARD_DEFENSE_AUGER = 600; // should be above LOW_BAR_AUGER_FOR_SHOOTER // 601, 370
+//			INTAKE_AUGER = 420;// 420
+//
+//			// Other
+//			END_GAME = BOTTOM_LIMIT_AUGER; // 500, 1300
+//			PORTCULLIS_TELEOP_ACTION = FOURTY_KAI;
+//			LOW_SHOT_AUTO = 600;
+//			SHOOTER_POSITION_AT_POSITION_FIVE = 758;
+//			SHOOTER_POSITION_AT_POSITION_TWO = 800;
+			
 			// Shooter
-			BOTTOM_LIMIT_SHOOTER = 2100;
-			TOP_LIMIT_SHOOTER = 588;
-			// AUGER
-			TOP_LIMIT_AUGER = 2000; // 1840
-			BOTTOM_LIMIT_AUGER = 350;
-			LOW_BAR_AUGER_FOR_SHOOTER = 600; // must be just above highest collision point
-			// Presets
-			LOW_BAR_SHOOTER = 1800; // must be just below lowest collision point
-			HIGH_VALUE_AUGER = 1400;
-			FOURTY_KAI = 1300; // used to be "shoot high"
-			STANDARD_DEFENSE_AUGER = 370; // should be above LOW_BAR_AUGER_FOR_SHOOTER // 601
-			INTAKE_AUGER = 420;
-			END_GAME = FOURTY_KAI;
+					BOTTOM_LIMIT_SHOOTER = 2100;
+					TOP_LIMIT_SHOOTER = 588;
+						// AUGER
+					TOP_LIMIT_AUGER = 1800;
+					BOTTOM_LIMIT_AUGER = 546;
+					LOW_BAR_AUGER_FOR_SHOOTER = 670; // position where auger must be to not collide with the shooter when up
+															// must be just above highest collision point
+						// Presets
+					LOW_BAR_SHOOTER = 1800; // position where shooter must be to not collide with the auger when down
+												// must be just below lowest collision point
+					STANDARD_DEFENSE_SHOOTER = 1390;
+					HIGH_VALUE_AUGER = 1300;
+					FOURTY_KAI = 1400; // Used for High Shot Auto
+					STANDARD_DEFENSE_AUGER = 740; // should be above LOW_BAR_AUGER_FOR_SHOOTER
+					INTAKE_AUGER = 690;
+
+						// Other
+					END_GAME = BOTTOM_LIMIT_AUGER;
+					PORTCULLIS_TELEOP_ACTION = FOURTY_KAI;
+					LOW_SHOT_AUTO = 830;
+					SHOOTER_POSITION_AT_POSITION_FIVE = 758;
+					SHOOTER_POSITION_AT_POSITION_TWO = 800;
 		} else
 		{
 			// Shooter
-			BOTTOM_LIMIT_SHOOTER = 1300;
-			TOP_LIMIT_SHOOTER = 190;
+			BOTTOM_LIMIT_SHOOTER = 1200;
+			TOP_LIMIT_SHOOTER = 150;
 			// AUGER
 			TOP_LIMIT_AUGER = 2200;
-			BOTTOM_LIMIT_AUGER = 900;
-			LOW_BAR_AUGER_FOR_SHOOTER = 1176; // must be just above highest collision point
+			BOTTOM_LIMIT_AUGER = 825;
+			LOW_BAR_AUGER_FOR_SHOOTER = 1090; // must be just above highest collision point
+			// 1176 with pistons
 			// Presets
 			LOW_BAR_SHOOTER = 1130; // must be just below lowest collision point
+			STANDARD_DEFENSE_SHOOTER = 800;
 			HIGH_VALUE_AUGER = 1200;
 			FOURTY_KAI = 1650; // used to be "shoot high"
-			STANDARD_DEFENSE_AUGER = 1276; // used to be "shoot low"
+			STANDARD_DEFENSE_AUGER = 1000; // used to be "shoot low"
 			INTAKE_AUGER = 1050;
+			//TODO: Tune Beta
 			END_GAME = FOURTY_KAI;
+			PORTCULLIS_TELEOP_ACTION = FOURTY_KAI;
+			LOW_SHOT_AUTO = 600;
+			SHOOTER_POSITION_AT_POSITION_FIVE = 758;
+			SHOOTER_POSITION_AT_POSITION_TWO = 800;
 		}
+
+		executor = Executors.newFixedThreadPool(1);
 
 		SmartDashboard.putNumber("Top Pot Limit Auger", TOP_LIMIT_AUGER);
 		SmartDashboard.putNumber("Bottom Pot Limit Auger", BOTTOM_LIMIT_AUGER);
@@ -210,7 +266,7 @@ public class LauncherWithPistons implements ILauncher
 
 	private boolean isShooterAtTopLimit()
 	{
-		// if shooter is above top limit pot value, or top limit is hit
+		// if shooter is ABOVE top limit pot value, or top limit is hit
 		if ((shooterPot.getCount() <= TOP_LIMIT_SHOOTER) || topLimitShooter.isHit())
 		{
 			return true;
@@ -222,7 +278,7 @@ public class LauncherWithPistons implements ILauncher
 
 	private boolean isShooterAtBottomLimit()
 	{
-		// if shooter is below bottom limit pot value, or bottom limit is hit
+		// if shooter is BELOW bottom limit pot value, or bottom limit is hit
 		if ((shooterPot.getCount() >= BOTTOM_LIMIT_SHOOTER) || bottomLimitShooter.isHit())
 		{
 			return true;
@@ -261,15 +317,13 @@ public class LauncherWithPistons implements ILauncher
 	@Override
 	public void intakeBoulder()
 	{
-
 		if (!isAugerAtIntake)
 		{
-
 			rightShooterMotor.setSpeed(INTAKE_SHOOTER_SPEED);
 			leftShooterMotor.setSpeed(INTAKE_SHOOTER_SPEED);
 
 			augerIntakeMotor.setSpeed(INTAKE_AUGER_SPEED);
-			
+
 			moveShooterToPreset(EShooterPresets.INTAKE);
 			moveAugerToPreset(EAugerPresets.INTAKE);
 
@@ -341,7 +395,6 @@ public class LauncherWithPistons implements ILauncher
 		{
 			if (augerLifterMotor.getSpeed() > 0)
 			{
-				System.out.println("Raising");
 				// If auger is nearing the VERY Top, slow down
 				if (augerPot.getCount() > (TOP_LIMIT_AUGER - 100))
 				{
@@ -413,17 +466,23 @@ public class LauncherWithPistons implements ILauncher
 	 */
 	public void lowerAugerForEndGame()
 	{
-		lowerAuger(1.0);
+		lowerAuger(FULL_SPEED);
+	}
+
+	@Override
+	public void raiseAugerForEndGame()
+	{
+		raiseAuger(FULL_SPEED);
 	}
 
 	private void lowerAugerTest(double speed)
 	{
+		// If auger is lower than the bottom limit
 		if (augerPot.getCount() < (BOTTOM_LIMIT_AUGER))
 		{
 			// Slow to a halt
 			stopAugerLifter(true);
 		} else
-		// If the shooter is safe from getting hit
 		{
 			// Travel normally
 			if (augerLifterMotor.getSpeed() < 0)
@@ -436,21 +495,21 @@ public class LauncherWithPistons implements ILauncher
 		}
 	}
 
-	// if there is no desired position
+	// if there is no desired position, accounting for shooter and bottom only
 	private void lowerAuger(double speed)
 	{
 		if (!autoRaiseAuger)
 		{
 			manualLowerAuger = true;
-			// If shooter is above "Low Bar Preset," within range of getting hit
+			// If shooter is below "Low Bar Preset," safe from getting hit
 			if ((shooterPot.getCount() > LOW_BAR_SHOOTER))
 			{
 				// if auger is nearing the bottom limit
-//				if (augerPot.getCount() < (BOTTOM_LIMIT_AUGER + SLOW_AUGER_DISTANCE))
+				// if (augerPot.getCount() < (BOTTOM_LIMIT_AUGER + SLOW_AUGER_DISTANCE))
 				if (augerPot.getCount() < (BOTTOM_LIMIT_AUGER))
 				{
 					// Slow to a halt
-//					stopAugerLifter(true);
+					// stopAugerLifter(true);
 					stopAugerLifter(false);
 				} else
 				// If the shooter is safe from getting hit
@@ -465,13 +524,14 @@ public class LauncherWithPistons implements ILauncher
 					}
 				}
 			} else
+			// If shooter is above "Low Bar Preset," within range of getting hit
 			{
 				// if auger is nearing the collision point
-//				if (augerPot.getCount() < (LOW_BAR_AUGER_FOR_SHOOTER + SLOW_AUGER_DISTANCE))
+				// if (augerPot.getCount() < (LOW_BAR_AUGER_FOR_SHOOTER + SLOW_AUGER_DISTANCE))
 				if (augerPot.getCount() < (LOW_BAR_AUGER_FOR_SHOOTER))
 				{
 					// Slow to a halt
-//					stopAugerLifter(true);
+					// stopAugerLifter(true);
 					stopAugerLifter(false);
 				} else
 				{
@@ -488,44 +548,40 @@ public class LauncherWithPistons implements ILauncher
 		}
 	}
 
-	/**
-	 * Used for moveAugerToPosition()
-	 * 
-	 * @param speed
-	 * @param setPoint
-	 */
+	// Used if there IS a desired position
+	// If desired position is below shooter, accounting for shooter and bottom only (see above)
 	private void lowerAuger(double speed, int desiredPosition)
-	{
+	{ // Todo: Why did we get rid of this??
 		// If you are still going to hit the shooter before you hit your destination
-//		if (desiredPosition < LOW_BAR_AUGER_FOR_SHOOTER)
-//		{
-//			lowerAuger(speed);
-//		} else
-//		// If you are still going to hit your destination before you hit the shooter
-//		{
-			if (!autoRaiseAuger)
-			{
-				manualLowerAuger = true;
+		// if (desiredPosition < LOW_BAR_AUGER_FOR_SHOOTER)
+		// {
+		// lowerAuger(speed);
+		// } else
+		// // If you are still going to hit your destination before you hit the shooter
+		// {
+		if (!autoRaiseAuger)
+		{
+			manualLowerAuger = true;
 
-				// if auger is nearing the collision point
-//				if (augerPot.getCount() < (desiredPosition + SLOW_AUGER_DISTANCE))
-				if (augerPot.getCount() < (desiredPosition))
+			// if auger is nearing the collision point
+			// if (augerPot.getCount() < (desiredPosition + SLOW_AUGER_DISTANCE))
+			if (augerPot.getCount() < (desiredPosition))
+			{
+				// Slow to a halt
+				// stopAugerLifter(true);
+				stopAugerLifter(false);
+			} else
+			{
+				// Else, travel normally
+				if (augerLifterMotor.getSpeed() < 0)
 				{
-					// Slow to a halt
-//					stopAugerLifter(true);
-					stopAugerLifter(false);
+					augerLifterMotor.setSpeed(-Math.abs(speed));
 				} else
 				{
-					// Travel normally
-					if (augerLifterMotor.getSpeed() < 0)
-					{
-						augerLifterMotor.setSpeed(-Math.abs(speed));
-					} else
-					{
-						rampUpMotor(-Math.abs(speed));
-					}
+					rampUpMotor(-Math.abs(speed));
 				}
-//			}
+			}
+			// }
 		}
 	}
 
@@ -587,7 +643,7 @@ public class LauncherWithPistons implements ILauncher
 	private void lowerAugerToBottomLimit()
 	{
 		augerPrevValue = augerPot.getCount();
-		
+
 		while (!isAugerAtBottomLimit() && (augerPot.getCount() > BOTTOM_LIMIT_AUGER) && (RobotStatus.isRunning()))
 		{
 			lowerAuger(AUGER_SPEED_LOWER, BOTTOM_LIMIT_AUGER);
@@ -596,7 +652,7 @@ public class LauncherWithPistons implements ILauncher
 			SensorConfig.getInstance().getTimer().waitTimeInMillis(50);
 
 			// If it gets stalled then stop
-			if (augerPot.getCount() >= (augerPrevValue - 5))
+			if (augerPot.getCount() >= (augerPrevValue - STALL_RATE))
 			{
 				System.out.println("Auger Stalled");
 				stopAugerLifter(false);
@@ -629,10 +685,10 @@ public class LauncherWithPistons implements ILauncher
 		}
 
 	}
-	
+
 	@Override
 	/**
-	 * ALWAYS MOVE SHOOTER TO POSITION BEFORE AUGER
+	 * - ALWAYS MOVE SHOOTER TO POSITION BEFORE AUGER - Auger designed to OVERSHOOT
 	 */
 	public void moveAugerToPosition(int desiredPosition)
 	{
@@ -640,49 +696,56 @@ public class LauncherWithPistons implements ILauncher
 	}
 
 	@Override
-	//USed for endgame
+	// Used for endgame
 	public void moveAugerToPosition(int desiredPosition, double lowerSpeed)
 	{
 		augerPrevValue = augerPot.getCount();
 
 		if ((augerPot.getCount() < (desiredPosition - 10)) || (augerPot.getCount() > (desiredPosition + 10)))
 		{
+			// if (augerPot.getCount() > desiredPosition){ //TODO
 			// if the auger is higher than the position
 			while (!isAugerAtBottomLimit() && (augerPot.getCount() > desiredPosition) && (RobotStatus.isRunning()))
 			{
+				// Lower Auger
 				lowerAuger(lowerSpeed, desiredPosition);
 
 				// Wait for thread
 				SensorConfig.getInstance().getTimer().waitTimeInMillis(50);
 
 				// If it gets stalled then stop
-				if (augerPot.getCount() >= (augerPrevValue - 5))
+				if (augerPot.getCount() >= (augerPrevValue - STALL_RATE))
 				{
-					System.out.println("Auger Stalled");
+					System.out.println("Auger Stalled Going Down");
 					stopAugerLifter(false);
 					return;
 				}
 				augerPrevValue = augerPot.getCount();
 			}
-
+//		} else if (augerPot.getCount() < desiredPosition)
+//		{
 			while (!isAugerAtTopLimit() && (augerPot.getCount() < desiredPosition) && (RobotStatus.isRunning()))
 			{
+				// Raise Auger
 				raiseAuger();
 
 				// Wait for thread
 				SensorConfig.getInstance().getTimer().waitTimeInMillis(50);
 
 				// if it gets stalled then stop
-				if (augerPot.getCount() <= (augerPrevValue + 5))
+				if (augerPot.getCount() <= (augerPrevValue + STALL_RATE))
 				{
-					System.out.println("Auger Stalled");
+					System.out.println("Auger Stalled Going Up");
 					stopAugerLifter(false);
 					return;
 				}
 				augerPrevValue = augerPot.getCount();
 			}
-		}
-		stopAugerLifter(false);
+//		}
+	}
+
+	// Stop Auger when at desired position
+	stopAugerLifter(false);
 	}
 
 	// Sequences
@@ -702,8 +765,17 @@ public class LauncherWithPistons implements ILauncher
 			moveShooterToPosition(LOW_BAR_SHOOTER);
 			break;
 		case STANDARD_DEFENSE_SHOOTER:
-			moveShooterToPosition(1390);
+			moveShooterToPosition(STANDARD_DEFENSE_SHOOTER);
 			break;
+//		case STANDARD_DEFENSE_SHOOTER_AUTO:
+//			if (shooterPot.getCount() > STANDARD_DEFENSE_SHOOTER) // if ShooterPot is LOWER than desired position
+//			{
+//				moveShooterToPosition(STANDARD_DEFENSE_SHOOTER);
+//			}
+		case SHOOTER_POSITION_AT_DEFENSE_TWO:
+			moveShooterToPosition(SHOOTER_POSITION_AT_POSITION_TWO);
+		case SHOOTER_POSITION_AT_DEFENSE_FIVE:
+			moveShooterToPosition(SHOOTER_POSITION_AT_POSITION_FIVE);
 		default:
 			// Do Nothing
 		}
@@ -725,13 +797,19 @@ public class LauncherWithPistons implements ILauncher
 		case INTAKE:
 			moveAugerToPosition(INTAKE_AUGER);
 			break;
-		case FOURTY_KAI_END_GAME:
+		case END_GAME:
 			moveAugerToPosition(END_GAME, 1.0);
 			break;
 		case STANDARD_DEFENSE_AUGER:
-			if (augerPot.getCount() < (STANDARD_DEFENSE_AUGER - 15))
+			moveAugerToPosition(STANDARD_DEFENSE_AUGER);
+			break;
+		case PORTCULLIS:
+			moveAugerToPosition(FOURTY_KAI);
+			break;
+		case FOURTY_KAI_AUTO:
+			if (augerPot.getCount() < FOURTY_KAI)
 			{
-				moveAugerToPosition(STANDARD_DEFENSE_AUGER); //TODO: Is this auger condition Okay???
+				moveAugerToPosition(FOURTY_KAI);
 			}
 			break;
 		default:
@@ -746,19 +824,6 @@ public class LauncherWithPistons implements ILauncher
 	public void shootSequenceHigh()
 	{
 		spinShooterWheels(SHOOT_SPEED_HIGH);
-
-		// // To avoid the wait if possible
-		// if (augerPot.getCount() < (FOURTY_KAI - 50))
-		// {
-		// moveAugerToPosition(FOURTY_KAI);
-		// } else if (augerPot.getCount() < FOURTY_KAI)
-		// {
-		// moveAugerToPosition(FOURTY_KAI);
-		// SensorConfig.getInstance().getTimer().waitTimeInMillis(500);
-		// } else
-		// {
-		// SensorConfig.getInstance().getTimer().waitTimeInMillis(500);
-		// }
 
 		SensorConfig.getInstance().getTimer().waitTimeInMillis(500);
 
@@ -781,18 +846,6 @@ public class LauncherWithPistons implements ILauncher
 	{
 		spinShooterWheels(SHOOT_SPEED_LOW);
 
-		// // To avoid the wait if possible
-		// if (augerPot.getCount() < (STANDARD_DEFENSE_AUGER - 50))
-		// {
-		// moveAugerToPosition(STANDARD_DEFENSE_AUGER);
-		// } else if (augerPot.getCount() < STANDARD_DEFENSE_AUGER)
-		// {
-		// moveAugerToPosition(STANDARD_DEFENSE_AUGER);
-		// SensorConfig.getInstance().getTimer().waitTimeInMillis(500);
-		// } else
-		// {
-		// SensorConfig.getInstance().getTimer().waitTimeInMillis(500);
-		// }
 		SensorConfig.getInstance().getTimer().waitTimeInMillis(500);
 
 		if (!SensorConfig.getInstance().getRightJoystick().getButtonValue(EJoystickButtons.SEVEN)
@@ -811,23 +864,19 @@ public class LauncherWithPistons implements ILauncher
 	@Override
 	public void shootSequenceHighAuto()
 	{
-
 		spinShooterWheels(SHOOT_SPEED_HIGH);
 
-		// To avoid the wait if possible
-		if (augerPot.getCount() < (FOURTY_KAI - 50))
+		if (augerPot.getCount() < FOURTY_KAI)
 		{
-			moveAugerToPosition(FOURTY_KAI);
-		} else if (augerPot.getCount() < FOURTY_KAI)
+			moveAugerToPosition(FOURTY_KAI); // Don't trust me
+		}
+		SensorConfig.getInstance().getTimer().waitTimeInMillis(500);
+
+		if (augerPot.getCount() >= (FOURTY_KAI - 100))
 		{
-			moveAugerToPosition(FOURTY_KAI);
-			SensorConfig.getInstance().getTimer().waitTimeInMillis(500);
-		} else
-		{
-			SensorConfig.getInstance().getTimer().waitTimeInMillis(500);
+			launchBoulder();
 		}
 
-		launchBoulder();
 	}
 
 	/**
@@ -838,19 +887,80 @@ public class LauncherWithPistons implements ILauncher
 	{
 		spinShooterWheels(SHOOT_SPEED_LOW_AUTO);
 
-		// To avoid the wait if possible
-		if (augerPot.getCount() < (STANDARD_DEFENSE_AUGER - 50))
+		if (augerPot.getCount() < LOW_SHOT_AUTO)
 		{
-			moveAugerToPosition(STANDARD_DEFENSE_AUGER);
-		} else if (augerPot.getCount() < STANDARD_DEFENSE_AUGER)
-		{
-			moveAugerToPosition(STANDARD_DEFENSE_AUGER);
-			SensorConfig.getInstance().getTimer().waitTimeInMillis(500);
-		} else
-		{
-			SensorConfig.getInstance().getTimer().waitTimeInMillis(500);
+			moveAugerToPosition(LOW_SHOT_AUTO);
 		}
+		SensorConfig.getInstance().getTimer().waitTimeInMillis(500);
 
 		launchBoulder();
+	}
+
+	@Override
+	public void moveShooterAndAugerToPreset(EShooterPresets desiredShooter, EAugerPresets desiredAuger)
+	{
+		isAugerAtPreset = false;
+
+		executor.submit(() ->
+		{
+			moveAugerToPreset(desiredAuger);
+			isAugerAtPreset = true;
+		});
+
+		moveShooterToPreset(desiredShooter);
+
+		while (!isAugerAtPreset)
+			;
+	}
+
+	@Override
+	public void moveShooterAndAugerToPosition(int desiredShooter, int desiredAuger)
+	{
+		isAugerAtPreset = false;
+
+		executor.submit(() ->
+		{
+			moveAugerToPosition(desiredAuger);
+			isAugerAtPreset = true;
+		});
+
+		moveShooterToPosition(desiredShooter);
+
+		while (!isAugerAtPreset)
+			;
+	}
+
+	@Override
+	public void moveShooterToPresetAndAugerToPosition(EShooterPresets desiredShooter, int desiredAuger)
+	{
+		isAugerAtPreset = false;
+
+		executor.submit(() ->
+		{
+			moveAugerToPosition(desiredAuger);
+			isAugerAtPreset = true;
+		});
+
+		moveShooterToPreset(desiredShooter);
+
+		while (!isAugerAtPreset)
+			;
+	}
+
+	@Override
+	public void moveShooterToPositionAndAugerToPreset(int desiredShooter, EAugerPresets desiredAuger)
+	{
+		isAugerAtPreset = false;
+
+		executor.submit(() ->
+		{
+			moveAugerToPreset(desiredAuger);
+			isAugerAtPreset = true;
+		});
+
+		moveShooterToPosition(desiredShooter);
+
+		while (!isAugerAtPreset)
+			;
 	}
 }

@@ -74,5 +74,17 @@ public class QuadEncoder implements IPIDFeedbackDevice
 			return 0.0;
 		}
 	}
+	
+	@Override
+	public double getDistance()
+	{
+		if (isEnabled)
+		{
+			return encoder.getDistance();
+		} else
+		{
+			return 0;
+		}
+	}
 
 }
