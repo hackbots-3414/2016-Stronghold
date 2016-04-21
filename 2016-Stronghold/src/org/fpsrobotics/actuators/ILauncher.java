@@ -116,21 +116,23 @@ public interface ILauncher
 	 * @param desiredShooter
 	 * @param desiredAuger
 	 */
-	void moveShooterAndAugerToPosition(int desiredShooter, int desiredAuger);
+	public void moveShooterAndAugerToPreset(int desiredShooter, int desiredAuger);
 
 	/**
 	 * 
 	 * @param desiredShooter
 	 * @param desiredAuger
 	 */
-	void moveShooterToPresetAndAugerToPosition(EShooterPresets desiredShooter, int desiredAuger);
+	public void moveShooterAndAugerToPreset(EShooterPresets desiredShooter, int desiredAuger);
 
 	/**
 	 * 
 	 * @param desiredShooter
 	 * @param desiredAuger
 	 */
-	void moveShooterToPositionAndAugerToPreset(int desiredShooter, EAugerPresets desiredAuger);
+	public void moveShooterAndAugerToPreset(int desiredShooter, EAugerPresets desiredAuger);
+
+	public void setDriveForwardBreak(boolean launcherAndShooterOverride);
 
 
 }

@@ -8,6 +8,7 @@ import org.fpsrobotics.actuators.EAugerPresets;
 import org.fpsrobotics.actuators.EShooterPresets;
 import org.fpsrobotics.actuators.IDriveTrain;
 import org.fpsrobotics.actuators.ILauncher;
+import org.fpsrobotics.autonomous.IDriveTrainAssist;
 import org.fpsrobotics.sensors.EJoystickButtons;
 import org.fpsrobotics.sensors.IGamepad;
 import org.fpsrobotics.sensors.IJoystick;
@@ -42,6 +43,7 @@ public class MullenatorTeleop implements ITeleopControl
 	private IGamepad gamepad;
 	private IGamepad easyButton;
 	private IDriveTrain driveTrain;
+	private IDriveTrainAssist driveTrainAssist;
 	private IJoystick leftJoystick;
 	private IJoystick rightJoystick;
 
@@ -50,13 +52,15 @@ public class MullenatorTeleop implements ITeleopControl
 
 	public MullenatorTeleop()
 	{
-		executor = Executors.newFixedThreadPool(7);
+		executor = Executors.newFixedThreadPool(3);
+		// executor = Executors.newFixedThreadPool(7);
 
 		// Instances
 		launcher = ActuatorConfig.getInstance().getLauncher();
 		gamepad = SensorConfig.getInstance().getGamepad();
 		easyButton = SensorConfig.getInstance().getEasyButton();
 		driveTrain = ActuatorConfig.getInstance().getDriveTrain();
+		driveTrainAssist = ActuatorConfig.getInstance().getDriveTrainAssist();
 		leftJoystick = SensorConfig.getInstance().getLeftJoystick();
 		rightJoystick = SensorConfig.getInstance().getRightJoystick();
 	}
@@ -84,11 +88,12 @@ public class MullenatorTeleop implements ITeleopControl
 						doDriverFunctions();
 					}
 				}
-				if (SensorConfig.getInstance().getRightJoystick().getButtonValue(EJoystickButtons.SEVEN)
-						&& SensorConfig.getInstance().getRightJoystick().getButtonValue(EJoystickButtons.EIGHT))
+				if (rightJoystick.getButtonValue(EJoystickButtons.SEVEN)
+						&& rightJoystick.getButtonValue(EJoystickButtons.EIGHT))
 				{
-					ActuatorConfig.getInstance().getDriveTrain().setDriveForwardBreak(true);
-					ActuatorConfig.getInstance().getDriveTrainAssist().setDriveForwardBreak(true);
+					launcher.setDriveForwardBreak(true);
+					driveTrain.setDriveForwardBreak(true);
+					driveTrainAssist.setDriveForwardBreak(true);
 				}
 
 				// PRINT SMARTDASHBAORD VALUES
@@ -148,8 +153,10 @@ public class MullenatorTeleop implements ITeleopControl
 					{
 						shootingLockOut = true;
 
-						launcher.moveShooterToPreset(EShooterPresets.LOW_BAR);
-						launcher.moveAugerToPreset(EAugerPresets.LOW_BAR);
+						ActuatorConfig.getInstance().getLauncher().moveShooterAndAugerToPreset(EShooterPresets.LOW_BAR,
+								EAugerPresets.LOW_BAR);
+						// launcher.moveShooterToPreset(EShooterPresets.LOW_BAR);
+						// launcher.moveAugerToPreset(EAugerPresets.LOW_BAR);
 					}
 
 					// Any Normal Defense
@@ -157,9 +164,10 @@ public class MullenatorTeleop implements ITeleopControl
 							|| leftJoystick.getButtonValue(EJoystickButtons.EIGHT)) && !shootingLockOut)
 					{
 						shootingLockOut = true;
-
-						launcher.moveShooterToPreset(EShooterPresets.STANDARD_DEFENSE_SHOOTER);
-						launcher.moveAugerToPreset(EAugerPresets.STANDARD_DEFENSE_AUGER);
+						launcher.moveShooterAndAugerToPreset(EShooterPresets.STANDARD_DEFENSE_SHOOTER,
+								EAugerPresets.STANDARD_DEFENSE_AUGER);
+						// launcher.moveShooterToPreset(EShooterPresets.STANDARD_DEFENSE_SHOOTER);
+						// launcher.moveAugerToPreset(EAugerPresets.STANDARD_DEFENSE_AUGER);
 					}
 
 					// Auto Cheval De Frise
@@ -170,88 +178,89 @@ public class MullenatorTeleop implements ITeleopControl
 						shootingLockOut = true;
 						driverLockOut = true;
 
-						if (SensorConfig.getInstance().getRightJoystick().getButtonValue(EJoystickButtons.SEVEN)
-								&& SensorConfig.getInstance().getRightJoystick().getButtonValue(EJoystickButtons.EIGHT))
+						if (rightJoystick.getButtonValue(EJoystickButtons.SEVEN)
+								&& rightJoystick.getButtonValue(EJoystickButtons.EIGHT))
 						{
 							break;
 						}
 
-						ActuatorConfig.getInstance().getDriveTrain().goBackward(0.25, 6);
+						driveTrain.goBackward(0.25, 6);
 
-						if (SensorConfig.getInstance().getRightJoystick().getButtonValue(EJoystickButtons.SEVEN)
-								&& SensorConfig.getInstance().getRightJoystick().getButtonValue(EJoystickButtons.EIGHT))
+						if (rightJoystick.getButtonValue(EJoystickButtons.SEVEN)
+								&& rightJoystick.getButtonValue(EJoystickButtons.EIGHT))
 						{
 							break;
 						}
 
-						ActuatorConfig.getInstance().getDriveTrain().stopDrive();
+						driveTrain.stopDrive();
 						SensorConfig.getInstance().getTimer().waitTimeInMillis(250);
 
-						if (SensorConfig.getInstance().getRightJoystick().getButtonValue(EJoystickButtons.SEVEN)
-								&& SensorConfig.getInstance().getRightJoystick().getButtonValue(EJoystickButtons.EIGHT))
+						if (rightJoystick.getButtonValue(EJoystickButtons.SEVEN)
+								&& rightJoystick.getButtonValue(EJoystickButtons.EIGHT))
 						{
 							break;
 						}
 
-						ActuatorConfig.getInstance().getLauncher()
-								.moveShooterToPreset(EShooterPresets.STANDARD_DEFENSE_SHOOTER);
-						ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.LOW_BAR);
+						launcher.moveShooterAndAugerToPreset(EShooterPresets.STANDARD_DEFENSE_SHOOTER,
+								EAugerPresets.LOW_BAR);
+						// launcher.moveShooterToPreset(EShooterPresets.STANDARD_DEFENSE_SHOOTER);
+						// launcher.moveAugerToPreset(EAugerPresets.LOW_BAR);
 
-						if (SensorConfig.getInstance().getRightJoystick().getButtonValue(EJoystickButtons.SEVEN)
-								&& SensorConfig.getInstance().getRightJoystick().getButtonValue(EJoystickButtons.EIGHT))
+						if (rightJoystick.getButtonValue(EJoystickButtons.SEVEN)
+								&& rightJoystick.getButtonValue(EJoystickButtons.EIGHT))
 						{
 							break;
 						}
 
-						ActuatorConfig.getInstance().getDriveTrain().goForward(1.0, 80);
+						driveTrain.goForward(1.0, 80);
 						break; // DO NOT DELETE
 					}
 
-					// TODO: NOT USING PORTCULLIS-ACTION
-					while (leftJoystick.getButtonValue(EJoystickButtons.TEN) && !shootingLockOut)
-					{
-
-						doneWithPortcullisAutoAction = false;
-
-						// go backwards
-						ActuatorConfig.getInstance().getDriveTrain().goBackward(0.25, 4);
-
-						if (SensorConfig.getInstance().getRightJoystick().getButtonValue(EJoystickButtons.SEVEN)
-								&& SensorConfig.getInstance().getRightJoystick().getButtonValue(EJoystickButtons.EIGHT))
-						{
-							break;
-						}
-
-						// stop
-						ActuatorConfig.getInstance().getDriveTrain().stopDrive();
-						SensorConfig.getInstance().getTimer().waitTimeInMillis(250);
-
-						if (SensorConfig.getInstance().getRightJoystick().getButtonValue(EJoystickButtons.SEVEN)
-								&& SensorConfig.getInstance().getRightJoystick().getButtonValue(EJoystickButtons.EIGHT))
-						{
-							break;
-						}
-						// drive forward
-						executor.submit(() ->
-						{
-							SensorConfig.getInstance().getTimer().waitTimeInMillis(250);
-							ActuatorConfig.getInstance().getDriveTrain().goForward(0.25, 40, false); // 0.3
-							ActuatorConfig.getInstance().getDriveTrain().goForward(0.7, 40, false);
-							doneWithPortcullisAutoAction = true;
-						});
-
-						// auger raise
-						ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.PORTCULLIS);
-
-						while (!doneWithPortcullisAutoAction && !(SensorConfig.getInstance().getRightJoystick()
-								.getButtonValue(EJoystickButtons.SEVEN)
-								&& SensorConfig.getInstance().getRightJoystick()
-										.getButtonValue(EJoystickButtons.EIGHT)))
-						{
-							System.out.println("Going through Portcullis");
-						}
-						break; // DO NOT DELETE
-					}
+					// // TODO: PORTCULLIS-ACTION
+					// while (leftJoystick.getButtonValue(EJoystickButtons.TEN) && !shootingLockOut)
+					// {
+					//
+					// doneWithPortcullisAutoAction = false;
+					//
+					// // go backwards
+					// ActuatorConfig.getInstance().getDriveTrain().goBackward(0.25, 4);
+					//
+					// if (SensorConfig.getInstance().getRightJoystick().getButtonValue(EJoystickButtons.SEVEN)
+					// && SensorConfig.getInstance().getRightJoystick().getButtonValue(EJoystickButtons.EIGHT))
+					// {
+					// break;
+					// }
+					//
+					// // stop
+					// ActuatorConfig.getInstance().getDriveTrain().stopDrive();
+					// SensorConfig.getInstance().getTimer().waitTimeInMillis(250);
+					//
+					// if (SensorConfig.getInstance().getRightJoystick().getButtonValue(EJoystickButtons.SEVEN)
+					// && SensorConfig.getInstance().getRightJoystick().getButtonValue(EJoystickButtons.EIGHT))
+					// {
+					// break;
+					// }
+					// // drive forward
+					// executor.submit(() ->
+					// {
+					// SensorConfig.getInstance().getTimer().waitTimeInMillis(250);
+					// ActuatorConfig.getInstance().getDriveTrain().goForward(0.25, 40, false); // 0.3
+					// ActuatorConfig.getInstance().getDriveTrain().goForward(0.7, 40, false);
+					// doneWithPortcullisAutoAction = true;
+					// });
+					//
+					// // auger raise
+					// ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.PORTCULLIS);
+					//
+					// while (!doneWithPortcullisAutoAction && !(SensorConfig.getInstance().getRightJoystick()
+					// .getButtonValue(EJoystickButtons.SEVEN)
+					// && SensorConfig.getInstance().getRightJoystick()
+					// .getButtonValue(EJoystickButtons.EIGHT)))
+					// {
+					// System.out.println("Going through Portcullis");
+					// }
+					// break; // DO NOT DELETE
+					// }
 
 					// Center Shot preset
 					if (gamepad.getButtonValue(EJoystickButtons.SEVEN) && !shootingLockOut)
@@ -260,20 +269,21 @@ public class MullenatorTeleop implements ITeleopControl
 						if (RobotStatus.isAlpha())
 						{
 							// To raise shooter, lower values
-							ActuatorConfig.getInstance().getLauncher().moveShooterToPosition(600); // was 640
+							launcher.moveShooterToPosition(600); // was 640
 							// top is 588
 						} else
 						{
 							// Beta
-							ActuatorConfig.getInstance().getLauncher().moveShooterToPosition(290);
+							launcher.moveShooterToPosition(290);
 						}
-						ActuatorConfig.getInstance().getLauncher().shootSequenceHigh();
+						launcher.shootSequenceHigh();
 					}
-					
-					if(gamepad.getPOV() == 90 && gamepad.getButtonValue(EJoystickButtons.ONE))
+
+					if (gamepad.getPOV() == 90 && gamepad.getButtonValue(EJoystickButtons.ONE) && !shootingLockOut)
 					{
 						shootingLockOut = true;
-						ActuatorConfig.getInstance().getLauncher().shootSequenceHigh();
+						System.out.println("Shoot High Manual");
+						launcher.shootSequenceHigh();
 					}
 
 					// Side/ corner shot preset
@@ -282,17 +292,18 @@ public class MullenatorTeleop implements ITeleopControl
 						shootingLockOut = true;
 						if (RobotStatus.isAlpha())
 						{
-							ActuatorConfig.getInstance().getLauncher().moveShooterToPosition(635);
+							launcher.moveShooterToPosition(635);
 						} else
 						{
 							// Beta
-							ActuatorConfig.getInstance().getLauncher().moveShooterToPosition(285);
+							launcher.moveShooterToPosition(285);
 						}
-						ActuatorConfig.getInstance().getLauncher().shootSequenceHigh();
+						launcher.shootSequenceHigh();
 					}
 
 					// Center the drive train
-					if (leftJoystick.getButtonValue(EJoystickButtons.ELEVEN))
+					if (leftJoystick.getButtonValue(EJoystickButtons.ELEVEN)
+							|| rightJoystick.getButtonValue(EJoystickButtons.FIVE))
 					{
 						driverLockOut = true;
 						ActuatorConfig.getInstance().getDriveTrainAssist().centerDriveTrain(0.4);
@@ -318,62 +329,63 @@ public class MullenatorTeleop implements ITeleopControl
 							shootingLockOut = true;
 							ActuatorConfig.getInstance().getLifter().retract();
 							SensorConfig.getInstance().getTimer().waitTimeInMillis(1750); // 1750
-							
+
 							ActuatorConfig.getInstance().getLauncher().moveAugerToPosition(1587, 1.0);
-							ActuatorConfig.getInstance().getLauncher().moveAugerToPosition(1175, 1.0);							
+							ActuatorConfig.getInstance().getLauncher().moveAugerToPosition(1175, 1.0);
 							ActuatorConfig.getInstance().getLauncher().moveAugerToPosition(762, 1.0);
 							ActuatorConfig.getInstance().getLauncher().moveAugerToPosition(350, 1.0);
-							
-							//ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.END_GAME);
+
+							// ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.END_GAME);
 						}
 					}
-					
-					if (rightJoystick.getButtonValue(EJoystickButtons.ELEVEN)
-							&& leftJoystick.getButtonValue(EJoystickButtons.ELEVEN)
-							&& gamepad.getButtonValue(EJoystickButtons.ELEVEN))
-					{
-						executor.submit(() ->
-						{
-							while (true)
-							{
-								System.out.println("BUTTON ELEVEN");
-								ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.LOW_BAR);
-								SensorConfig.getInstance().getTimer().waitTimeInMillis(3000);
-								ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.TOP_LIMIT);
-								SensorConfig.getInstance().getTimer().waitTimeInMillis(3000);
-							}
-						});
-						executor.submit(() ->
-						{
-							while (true)
-							{
-								ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.INTAKE);
-								SensorConfig.getInstance().getTimer().waitTimeInMillis(3000);
-								ActuatorConfig.getInstance().getLauncher()
-										.moveShooterToPreset(EShooterPresets.STANDARD_DEFENSE_SHOOTER);
-								SensorConfig.getInstance().getTimer().waitTimeInMillis(3000);
-							}
-						});
-						executor.submit(() ->
-						{
-							while (true)
-							{
-								ActuatorConfig.getInstance().getLauncher().shootSequenceHigh();
-								SensorConfig.getInstance().getTimer().waitTimeInMillis(3000);
-								ActuatorConfig.getInstance().getLauncher().intakeBoulder();
-								SensorConfig.getInstance().getTimer().waitTimeInMillis(5000);
-								ActuatorConfig.getInstance().getLauncher().stopIntakeBoulder();
-								SensorConfig.getInstance().getTimer().waitTimeInMillis(2000);
-							}
-						});
-						while (true)
-						{
-							ActuatorConfig.getInstance().getDriveTrain().turnRight(0.8);
-							SensorConfig.getInstance().getTimer().waitTimeInSeconds(10);
-							ActuatorConfig.getInstance().getDriveTrain().turnLeft(0.8);
-							SensorConfig.getInstance().getTimer().waitTimeInSeconds(10);
-						}
-					}
+
+					// TODO: BUTTON ELEVEN
+					// if (rightJoystick.getButtonValue(EJoystickButtons.ELEVEN)
+					// && leftJoystick.getButtonValue(EJoystickButtons.ELEVEN)
+					// && gamepad.getButtonValue(EJoystickButtons.ELEVEN))
+					// {
+					// executor.submit(() ->
+					// {
+					// while (true)
+					// {
+					// System.out.println("BUTTON ELEVEN");
+					// ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.LOW_BAR);
+					// SensorConfig.getInstance().getTimer().waitTimeInMillis(3000);
+					// ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.TOP_LIMIT);
+					// SensorConfig.getInstance().getTimer().waitTimeInMillis(3000);
+					// }
+					// });
+					// executor.submit(() ->
+					// {
+					// while (true)
+					// {
+					// ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.INTAKE);
+					// SensorConfig.getInstance().getTimer().waitTimeInMillis(3000);
+					// ActuatorConfig.getInstance().getLauncher()
+					// .moveShooterToPreset(EShooterPresets.STANDARD_DEFENSE_SHOOTER);
+					// SensorConfig.getInstance().getTimer().waitTimeInMillis(3000);
+					// }
+					// });
+					// executor.submit(() ->
+					// {
+					// while (true)
+					// {
+					// ActuatorConfig.getInstance().getLauncher().shootSequenceHigh();
+					// SensorConfig.getInstance().getTimer().waitTimeInMillis(3000);
+					// ActuatorConfig.getInstance().getLauncher().intakeBoulder();
+					// SensorConfig.getInstance().getTimer().waitTimeInMillis(5000);
+					// ActuatorConfig.getInstance().getLauncher().stopIntakeBoulder();
+					// SensorConfig.getInstance().getTimer().waitTimeInMillis(2000);
+					// }
+					// });
+					// while (true)
+					// {
+					// ActuatorConfig.getInstance().getDriveTrain().turnRight(0.8);
+					// SensorConfig.getInstance().getTimer().waitTimeInSeconds(10);
+					// ActuatorConfig.getInstance().getDriveTrain().turnLeft(0.8);
+					// SensorConfig.getInstance().getTimer().waitTimeInSeconds(10);
+					// }
+					// }
 
 					// Once commands finish, if all buttons are not pressed,
 					// then we may continue
@@ -382,6 +394,7 @@ public class MullenatorTeleop implements ITeleopControl
 							&& !gamepad.getButtonValue(EJoystickButtons.EIGHT)
 							&& !gamepad.getButtonValue(EJoystickButtons.NINE)
 							&& !gamepad.getButtonValue(EJoystickButtons.TEN)
+							&& !rightJoystick.getButtonValue(EJoystickButtons.FIVE)
 							&& !rightJoystick.getButtonValue(EJoystickButtons.SEVEN)
 							&& !rightJoystick.getButtonValue(EJoystickButtons.EIGHT)
 							&& !rightJoystick.getButtonValue(EJoystickButtons.NINE)
@@ -395,8 +408,9 @@ public class MullenatorTeleop implements ITeleopControl
 							&& !leftJoystick.getButtonValue(EJoystickButtons.ELEVEN)
 							&& !leftJoystick.getButtonValue(EJoystickButtons.TWELVE))
 					{
-						ActuatorConfig.getInstance().getDriveTrain().setDriveForwardBreak(false);
-						ActuatorConfig.getInstance().getDriveTrainAssist().setDriveForwardBreak(false);
+						launcher.setDriveForwardBreak(false);
+						driveTrain.setDriveForwardBreak(false);
+						driveTrainAssist.setDriveForwardBreak(false);
 						shootingLockOut = false;
 						driverLockOut = false;
 					}
@@ -407,8 +421,6 @@ public class MullenatorTeleop implements ITeleopControl
 		});
 
 	}
-	
-	
 
 	private void doDriverFunctions()
 	{
@@ -465,11 +477,11 @@ public class MullenatorTeleop implements ITeleopControl
 						if (rightJoystick.getY() > 0)
 						{
 							driveTrain.driveStraight((4 / Math.PI) * 400); // Go
-																												// Forwards
+																			// Forwards
 						} else
 						{
 							driveTrain.driveStraight(-(4 / Math.PI) * 400); // Go
-																												// Backwards
+																			// Backwards
 						}
 					} else
 					{
@@ -478,8 +490,7 @@ public class MullenatorTeleop implements ITeleopControl
 					SmartDashboard.putBoolean("DRIVE TOGETHER", true);
 				} else
 				{
-					driveTrain.setSpeed(correctedYLeft * speedMultiplier,
-							correctedYRight * speedMultiplier);
+					driveTrain.setSpeed(correctedYLeft * speedMultiplier, correctedYRight * speedMultiplier);
 					SmartDashboard.putBoolean("DRIVE TOGETHER", false);
 				}
 

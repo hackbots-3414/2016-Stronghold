@@ -38,7 +38,7 @@ public interface IDriveTrainAssist
 	 * @param desiredShooter
 	 * @param desiredAuger
 	 */
-	void turnToAngleAndMoveShooterToPositionAndAugerToPreset(double desiredDegrees, double speed,
+	void turnToAngleAndMoveShooterAndAugerToPreset(double desiredDegrees, double speed,
 			int desiredShooter, EAugerPresets desiredAuger);
 
 	/**
@@ -48,7 +48,7 @@ public interface IDriveTrainAssist
 	 * @param desiredShooter
 	 * @param desiredAuger
 	 */
-	void turnToAngleAndMoveShooterToPresetAndAugerToPosition(double desiredDegrees, double speed,
+	void turnToAngleAndMoveShooterAndAugerToPreset(double desiredDegrees, double speed,
 			EShooterPresets desiredShooter, int desiredAuger);
 
 	/**
@@ -58,6 +58,6 @@ public interface IDriveTrainAssist
 	 * @param desiredShooter
 	 * @param desiredAuger
 	 */
-	void turnToAngleAndMoveShooterAndAugerToPosition(double desiredDegrees, double speed, int desiredShooter,
+	void turnToAngleAndMoveShooterAndAugerToPreset(double desiredDegrees, double speed, int desiredShooter,
 			int desiredAuger);
 }

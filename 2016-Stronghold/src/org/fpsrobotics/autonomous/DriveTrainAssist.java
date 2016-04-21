@@ -79,30 +79,7 @@ public class DriveTrainAssist implements IDriveTrainAssist
 	 */
 	public void turnToAngle(double desiredDegrees, double speed)
 	{
-		// if ((-180 <= desiredDegrees) && (desiredDegrees <= 180))
-		// {
-		// driveTrain.disablePID();
-		//
-		// if (gyro.getHardCount() > desiredDegrees)
-		// {
-		// driveTrain.setSpeed(speed, -speed); //Turn Right
-		// while ((gyro.getHardCount() > desiredDegrees) && RobotStatus.isRunning())
-		// ;
-		// } else if (gyro.getHardCount() < desiredDegrees)
-		// {
-		// driveTrain.setSpeed(-speed, speed); //Turn Left
-		// while ((gyro.getHardCount() < desiredDegrees) && RobotStatus.isRunning())
-		// ;
-		// }
-		//
-		// driveTrain.stopDrive();
-		//
-		// // if (!PIDOverride.getInstance().isTeleopDisablePID())
-		// // {
-		// // driveTrain.enablePID();
-		// // }
-		// }
-
+		
 		SmartDashboard.putNumber("Desired Position", desiredDegrees);
 
 		if ((-180 <= desiredDegrees) && (desiredDegrees <= 180))
@@ -217,14 +194,14 @@ public class DriveTrainAssist implements IDriveTrainAssist
 	}
 	
 	@Override
-	public void turnToAngleAndMoveShooterToPositionAndAugerToPreset(double desiredDegrees, double speed,
+	public void turnToAngleAndMoveShooterAndAugerToPreset(double desiredDegrees, double speed,
 			int desiredShooter, EAugerPresets desiredAuger)
 	{
 		isAugerAndShooterAtPreset = false;
 
 		executor.submit(() ->
 		{
-			ActuatorConfig.getInstance().getLauncher().moveShooterToPositionAndAugerToPreset(desiredShooter, desiredAuger);
+			ActuatorConfig.getInstance().getLauncher().moveShooterAndAugerToPreset(desiredShooter, desiredAuger);
 			isAugerAndShooterAtPreset = true;
 		});
 
@@ -236,14 +213,14 @@ public class DriveTrainAssist implements IDriveTrainAssist
 	}
 	
 	@Override
-	public void turnToAngleAndMoveShooterToPresetAndAugerToPosition(double desiredDegrees, double speed,
+	public void turnToAngleAndMoveShooterAndAugerToPreset(double desiredDegrees, double speed,
 			EShooterPresets desiredShooter, int desiredAuger)
 	{
 		isAugerAndShooterAtPreset = false;
 
 		executor.submit(() ->
 		{
-			ActuatorConfig.getInstance().getLauncher().moveShooterToPresetAndAugerToPosition(desiredShooter, desiredAuger);
+			ActuatorConfig.getInstance().getLauncher().moveShooterAndAugerToPreset(desiredShooter, desiredAuger);
 			isAugerAndShooterAtPreset = true;
 		});
 
@@ -255,14 +232,14 @@ public class DriveTrainAssist implements IDriveTrainAssist
 	}
 	
 	@Override
-	public void turnToAngleAndMoveShooterAndAugerToPosition(double desiredDegrees, double speed,
+	public void turnToAngleAndMoveShooterAndAugerToPreset(double desiredDegrees, double speed,
 			int desiredShooter, int desiredAuger)
 	{
 		isAugerAndShooterAtPreset = false;
 
 		executor.submit(() ->
 		{
-			ActuatorConfig.getInstance().getLauncher().moveShooterAndAugerToPosition(desiredShooter, desiredAuger);
+			ActuatorConfig.getInstance().getLauncher().moveShooterAndAugerToPreset(desiredShooter, desiredAuger);
 			isAugerAndShooterAtPreset = true;
 		});
 

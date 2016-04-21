@@ -35,9 +35,9 @@ public class AutonPortcullis implements IAutonomousControl
 		{
 			System.out.println("Doin' it (This Just Goes)");
 
-			ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.STANDARD_DEFENSE_SHOOTER);
-			// TODO: Can this be low bar shooter??
-			ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.LOW_BAR);
+			ActuatorConfig.getInstance().getLauncher().moveShooterAndAugerToPreset(EShooterPresets.STANDARD_DEFENSE_SHOOTER, EAugerPresets.LOW_BAR);
+//			ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.STANDARD_DEFENSE_SHOOTER);
+//			ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.LOW_BAR);
 
 			ActuatorConfig.getInstance().getDriveTrain().goForward(0.8, 130);
 			
