@@ -1,0 +1,9 @@
+4_20_16 8:30pm
+
+- In moveAugerToPosition(): add if statements surrounding while loops
+- Make shooterAndLauncher override method in launcherWithPistons(): use in the same format as other override modes
+- Replace all instances with moveShooterAndAugerToPreset() when available
+- Make launcherWithoutPistons.java, from oldAlphaLauncher.java
+- Overload the names of the four methods describing moveShooterAndAugerToPreset
+- Make centerDriveTrain() work with rightJoystick Button 5
+

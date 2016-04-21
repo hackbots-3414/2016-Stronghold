@@ -59,8 +59,9 @@ public class AutoShot
 			System.out.println("Position Three (High Boy)");
 			// Might have to stop after defense in order to recalibrate gyro, test this.
 			driveTrain.goForward((DRIVE_SPEED / 5), 3);
-			ActuatorConfig.getInstance().getDriveTrain().turnRight(TURN_SPEED, 15); // 15
-			ActuatorConfig.getInstance().getLauncher().moveShooterToPosition(SHOOTER_POSITION);
+			ActuatorConfig.getInstance().getDriveTrainAssist().turnToAngleAndMoveShooterAndAugerToPreset(15, TURN_SPEED, SHOOTER_POSITION, EAugerPresets.FOURTY_KAI_AUTO);
+//			ActuatorConfig.getInstance().getDriveTrain().turnRight(TURN_SPEED, 15); // 15
+//			ActuatorConfig.getInstance().getLauncher().moveShooterToPosition(SHOOTER_POSITION);
 			// Auger already raises in shootSequenceHighAuto
 			ActuatorConfig.getInstance().getLauncher().shootSequenceHighAuto();
 			break;
@@ -70,8 +71,9 @@ public class AutoShot
 			System.out.println("Position Four (High Boy)");
 			// Might have to stop after defense in order to recalibrate gyro, test this.
 			driveTrain.goForward((DRIVE_SPEED / 5), 3);
-			ActuatorConfig.getInstance().getDriveTrain().turnLeft(TURN_SPEED, 5); // 7
-			ActuatorConfig.getInstance().getLauncher().moveShooterToPosition(SHOOTER_POSITION);
+			ActuatorConfig.getInstance().getDriveTrainAssist().turnToAngleAndMoveShooterAndAugerToPreset(-5, TURN_SPEED, SHOOTER_POSITION, EAugerPresets.FOURTY_KAI_AUTO);
+//			ActuatorConfig.getInstance().getDriveTrain().turnLeft(TURN_SPEED, 5); // 7
+//			ActuatorConfig.getInstance().getLauncher().moveShooterToPosition(SHOOTER_POSITION);
 			// Auger already raises in shootSequenceHighAuto
 			ActuatorConfig.getInstance().getLauncher().shootSequenceHighAuto();
 			break;
