@@ -91,7 +91,7 @@ public class MullenatorTeleop implements ITeleopControl
 				if (rightJoystick.getButtonValue(EJoystickButtons.SEVEN)
 						&& rightJoystick.getButtonValue(EJoystickButtons.EIGHT))
 				{
-					launcher.setDriveForwardBreak(true);
+					launcher.setLauncherAndShooterOverride(true);
 					driveTrain.setDriveForwardBreak(true);
 					driveTrainAssist.setDriveForwardBreak(true);
 				}
@@ -408,7 +408,7 @@ public class MullenatorTeleop implements ITeleopControl
 							&& !leftJoystick.getButtonValue(EJoystickButtons.ELEVEN)
 							&& !leftJoystick.getButtonValue(EJoystickButtons.TWELVE))
 					{
-						launcher.setDriveForwardBreak(false);
+						launcher.setLauncherAndShooterOverride(false);
 						driveTrain.setDriveForwardBreak(false);
 						driveTrainAssist.setDriveForwardBreak(false);
 						shootingLockOut = false;

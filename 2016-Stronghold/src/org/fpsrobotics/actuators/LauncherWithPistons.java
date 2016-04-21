@@ -875,7 +875,7 @@ public class LauncherWithPistons implements ILauncher
 	}
 	
 	@Override
-	public void setDriveForwardBreak(boolean launcherAndShooterOverride)
+	public void setLauncherAndShooterOverride(boolean launcherAndShooterOverride)
 	{
 		SmartDashboard.putBoolean("Launcher and Shooter Override", launcherAndShooterOverride);
 		this.launcherAndShooterOverride = launcherAndShooterOverride;

@@ -51,10 +51,12 @@ public class AutonLowBarAndShootHigh implements IAutonomousControl
 			if (RobotStatus.isAlpha())
 			{
 				// lower numbers to raise shooter
-				ActuatorConfig.getInstance().getLauncher().moveShooterToPosition(765);
+//				ActuatorConfig.getInstance().getLauncher().moveShooterToPosition(765);
+				ActuatorConfig.getInstance().getDriveTrainAssist().turnToAngleAndMoveShooterAndAugerToPreset(SHOOT_ANGLE, 0.3, 765, EAugerPresets.FOURTY_KAI_AUTO);
 			} else
 			{
-				ActuatorConfig.getInstance().getLauncher().moveShooterToPosition(300);
+				ActuatorConfig.getInstance().getDriveTrainAssist().turnToAngleAndMoveShooterAndAugerToPreset(SHOOT_ANGLE, 0.3, 300, EAugerPresets.FOURTY_KAI_AUTO);
+//				ActuatorConfig.getInstance().getLauncher().moveShooterToPosition(300);
 			}
 
 			//Raise Auger and Shoot

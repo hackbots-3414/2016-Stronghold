@@ -132,7 +132,7 @@ public interface ILauncher
 	 */
 	public void moveShooterAndAugerToPreset(int desiredShooter, EAugerPresets desiredAuger);
 
-	public void setDriveForwardBreak(boolean launcherAndShooterOverride);
+	public void setLauncherAndShooterOverride(boolean launcherAndShooterOverride);
 
 
 }
