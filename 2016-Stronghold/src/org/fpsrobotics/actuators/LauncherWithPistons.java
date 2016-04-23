@@ -77,7 +77,8 @@ public class LauncherWithPistons implements ILauncher
 	private int SHOOTER_POSITION_AT_POSITION_TWO;
 
 	// Override
-	private boolean launcherAndShooterOverride = false;
+	private boolean augerOverride = false;
+	private boolean shooterOverride = false;
 
 	/**
 	 * 
@@ -94,9 +95,10 @@ public class LauncherWithPistons implements ILauncher
 	 * @param topLimitAuger
 	 * @param augerPot
 	 */
-	public LauncherWithPistons(ICANMotor leftShooterMotor, ICANMotor rightShooterMotor, ICANMotor shooterLifterMotor, ISolenoid shooterActuator,
-			ILimitSwitch shooterBottomLimit, ILimitSwitch shooterTopLimit, IPIDFeedbackDevice shooterPot, ICANMotor augerIntakeMotor,
-			ICANMotor augerLifterMotor, ILimitSwitch bottomLimitAuger, ILimitSwitch topLimitAuger, IPIDFeedbackDevice augerPot)
+	public LauncherWithPistons(ICANMotor leftShooterMotor, ICANMotor rightShooterMotor, ICANMotor shooterLifterMotor,
+			ISolenoid shooterActuator, ILimitSwitch shooterBottomLimit, ILimitSwitch shooterTopLimit,
+			IPIDFeedbackDevice shooterPot, ICANMotor augerIntakeMotor, ICANMotor augerLifterMotor,
+			ILimitSwitch bottomLimitAuger, ILimitSwitch topLimitAuger, IPIDFeedbackDevice augerPot)
 	{
 
 		// Shooter
@@ -143,7 +145,7 @@ public class LauncherWithPistons implements ILauncher
 		{
 			// Shooter
 			BOTTOM_LIMIT_SHOOTER = 1200;
-			TOP_LIMIT_SHOOTER = 150;
+			TOP_LIMIT_SHOOTER = 250;
 			// AUGER
 			TOP_LIMIT_AUGER = 2200;
 			BOTTOM_LIMIT_AUGER = 825;
@@ -180,7 +182,8 @@ public class LauncherWithPistons implements ILauncher
 	{
 		if (!isShooterAtTopLimit())
 		{
-			if ((augerPot.getCount() < (LOW_BAR_AUGER_FOR_SHOOTER)) && (shooterPot.getCount() < LOW_BAR_SHOOTER) && (!manualLowerAuger))
+			if ((augerPot.getCount() < (LOW_BAR_AUGER_FOR_SHOOTER)) && (shooterPot.getCount() < LOW_BAR_SHOOTER)
+					&& (!manualLowerAuger))
 			{
 				raiseAuger(AUTO_AUGER_SPEED);
 				autoRaiseAuger = true;
@@ -273,21 +276,45 @@ public class LauncherWithPistons implements ILauncher
 	{
 		if ((shooterPot.getCount() < (desiredPosition - 50)) || (shooterPot.getCount() > (desiredPosition + 50)))
 		{
-			// while shooter is less than the desired position or we reach the top limit of travel
-			while (!isShooterAtTopLimit() && (shooterPot.getCount() > desiredPosition) && (RobotStatus.isRunning()) && !launcherAndShooterOverride)
-			{
-				SensorConfig.getInstance().getTimer().waitTimeInMillis(50);
-				raiseShooter(false);
-			}
+			if (SensorConfig.getInstance().getGamepad().getButtonValue(EJoystickButtons.THREE))
+			// If Intake, then if hold button three
+			{// while shooter is less than the desired position or we reach the top limit of travel
+				while (!isShooterAtTopLimit() && (shooterPot.getCount() > desiredPosition) && (RobotStatus.isRunning())
+						&& !shooterOverride
+						&& SensorConfig.getInstance().getGamepad().getButtonValue(EJoystickButtons.THREE))
+				{
+					SensorConfig.getInstance().getTimer().waitTimeInMillis(50);
+					raiseShooter(false);
+				}
 
-			// while shooter is greater than the desired position or we reach the bottom limit of our travel
-			while (!isShooterAtBottomLimit() && (shooterPot.getCount() < desiredPosition) && (RobotStatus.isRunning()) && !launcherAndShooterOverride)
+				// while shooter is greater than the desired position or we reach the bottom limit of our travel
+				while (!isShooterAtBottomLimit() && (shooterPot.getCount() < desiredPosition)
+						&& (RobotStatus.isRunning()) && !shooterOverride
+						&& SensorConfig.getInstance().getGamepad().getButtonValue(EJoystickButtons.THREE))
+				{
+					SensorConfig.getInstance().getTimer().waitTimeInMillis(50);
+					lowerShooter(false);
+				}
+			} else
 			{
-				SensorConfig.getInstance().getTimer().waitTimeInMillis(50);
-				lowerShooter(false);
+				// while shooter is less than the desired position or we reach the top limit of travel
+				while (!isShooterAtTopLimit() && (shooterPot.getCount() > desiredPosition) && (RobotStatus.isRunning())
+						&& !shooterOverride)
+				{
+					SensorConfig.getInstance().getTimer().waitTimeInMillis(50);
+					raiseShooter(false);
+				}
+
+				// while shooter is greater than the desired position or we reach the bottom limit of our travel
+				while (!isShooterAtBottomLimit() && (shooterPot.getCount() < desiredPosition)
+						&& (RobotStatus.isRunning()) && !shooterOverride)
+				{
+					SensorConfig.getInstance().getTimer().waitTimeInMillis(50);
+					lowerShooter(false);
+				}
 			}
 		}
-		launcherAndShooterOverride = false;
+		setShooterOverride(false);
 		stopShooterLifter();
 	}
 
@@ -623,7 +650,8 @@ public class LauncherWithPistons implements ILauncher
 	{
 		augerPrevValue = augerPot.getCount();
 
-		while (!isAugerAtBottomLimit() && (augerPot.getCount() > BOTTOM_LIMIT_AUGER) && (RobotStatus.isRunning()) && !launcherAndShooterOverride)
+		while (!isAugerAtBottomLimit() && (augerPot.getCount() > BOTTOM_LIMIT_AUGER) && (RobotStatus.isRunning())
+				&& !augerOverride)
 		{
 			lowerAuger(AUGER_SPEED_LOWER, BOTTOM_LIMIT_AUGER);
 
@@ -639,7 +667,7 @@ public class LauncherWithPistons implements ILauncher
 			}
 			augerPrevValue = augerPot.getCount();
 		}
-		setLauncherAndShooterOverride(false);
+		setAugerOverride(false);
 		stopAugerLifter(false);
 	}
 
@@ -681,50 +709,103 @@ public class LauncherWithPistons implements ILauncher
 	{
 		augerPrevValue = augerPot.getCount();
 
-		if ((augerPot.getCount() < (desiredPosition - 10)) || (augerPot.getCount() > (desiredPosition + 10)))
+		if ((augerPot.getCount() < (desiredPosition - 50)) || (augerPot.getCount() > (desiredPosition + 50)))
 		{
-			if (augerPot.getCount() > desiredPosition)
+			if (SensorConfig.getInstance().getGamepad().getButtonValue(EJoystickButtons.THREE))
+			// If Intake, then if hold button three
 			{
-				// if the auger is higher than the position
-				while (!isAugerAtBottomLimit() && (augerPot.getCount() > desiredPosition) && (RobotStatus.isRunning()) && !launcherAndShooterOverride)
+				if (augerPot.getCount() > desiredPosition)
 				{
-					// Lower Auger
-					lowerAuger(lowerSpeed, desiredPosition);
-
-					// Wait for thread
-					SensorConfig.getInstance().getTimer().waitTimeInMillis(50);
-
-					// If it gets stalled then stop
-					if (augerPot.getCount() >= (augerPrevValue - STALL_RATE))
+					// if the auger is higher than the position
+					while (!isAugerAtBottomLimit() && (augerPot.getCount() > desiredPosition)
+							&& (RobotStatus.isRunning()) && !augerOverride
+							&& SensorConfig.getInstance().getGamepad().getButtonValue(EJoystickButtons.THREE))
 					{
-						System.out.println("Auger Stalled Going Down");
-						stopAugerLifter(false);
-						return;
+						// Lower Auger
+						lowerAuger(lowerSpeed, desiredPosition);
+
+						// Wait for thread
+						SensorConfig.getInstance().getTimer().waitTimeInMillis(50);
+
+						// If it gets stalled then stop
+						if (augerPot.getCount() >= (augerPrevValue - STALL_RATE))
+						{
+							System.out.println("Auger Stalled Going Down");
+							stopAugerLifter(false);
+							return;
+						}
+						augerPrevValue = augerPot.getCount();
 					}
-					augerPrevValue = augerPot.getCount();
+				} else if (augerPot.getCount() < desiredPosition)
+				{
+					while (!isAugerAtTopLimit() && (augerPot.getCount() < desiredPosition) && (RobotStatus.isRunning())
+							&& !augerOverride
+							&& SensorConfig.getInstance().getGamepad().getButtonValue(EJoystickButtons.THREE))
+					{
+						// Raise Auger
+						raiseAuger();
+
+						// Wait for thread
+						SensorConfig.getInstance().getTimer().waitTimeInMillis(50);
+
+						// if it gets stalled then stop
+						if (augerPot.getCount() <= (augerPrevValue + STALL_RATE))
+						{
+							System.out.println("Auger Stalled Going Up");
+							stopAugerLifter(false);
+							return;
+						}
+						augerPrevValue = augerPot.getCount();
+					}
 				}
-			} else if (augerPot.getCount() < desiredPosition)
+			} else
 			{
-				while (!isAugerAtTopLimit() && (augerPot.getCount() < desiredPosition) && (RobotStatus.isRunning()) && !launcherAndShooterOverride)
+
+				if (augerPot.getCount() > desiredPosition)
 				{
-					// Raise Auger
-					raiseAuger();
-
-					// Wait for thread
-					SensorConfig.getInstance().getTimer().waitTimeInMillis(50);
-
-					// if it gets stalled then stop
-					if (augerPot.getCount() <= (augerPrevValue + STALL_RATE))
+					// if the auger is higher than the position
+					while (!isAugerAtBottomLimit() && (augerPot.getCount() > desiredPosition)
+							&& (RobotStatus.isRunning()) && !augerOverride)
 					{
-						System.out.println("Auger Stalled Going Up");
-						stopAugerLifter(false);
-						return;
+						// Lower Auger
+						lowerAuger(lowerSpeed, desiredPosition);
+
+						// Wait for thread
+						SensorConfig.getInstance().getTimer().waitTimeInMillis(50);
+
+						// If it gets stalled then stop
+						if (augerPot.getCount() >= (augerPrevValue - STALL_RATE))
+						{
+							System.out.println("Auger Stalled Going Down");
+							stopAugerLifter(false);
+							return;
+						}
+						augerPrevValue = augerPot.getCount();
 					}
-					augerPrevValue = augerPot.getCount();
+				} else if (augerPot.getCount() < desiredPosition)
+				{
+					while (!isAugerAtTopLimit() && (augerPot.getCount() < desiredPosition) && (RobotStatus.isRunning())
+							&& !augerOverride)
+					{
+						// Raise Auger
+						raiseAuger();
+
+						// Wait for thread
+						SensorConfig.getInstance().getTimer().waitTimeInMillis(50);
+
+						// if it gets stalled then stop
+						if (augerPot.getCount() <= (augerPrevValue + STALL_RATE))
+						{
+							System.out.println("Auger Stalled Going Up");
+							stopAugerLifter(false);
+							return;
+						}
+						augerPrevValue = augerPot.getCount();
+					}
 				}
 			}
 		}
-		setLauncherAndShooterOverride(false);
+		setAugerOverride(false);
 		// Stop Auger when at desired position
 		stopAugerLifter(false);
 	}
@@ -873,149 +954,93 @@ public class LauncherWithPistons implements ILauncher
 	}
 
 	@Override
-	public void setLauncherAndShooterOverride(boolean launcherAndShooterOverride)
+	public void setAugerOverride(boolean launcherAndShooterOverride)
 	{
-		SmartDashboard.putBoolean("Launcher and Shooter Override", launcherAndShooterOverride);
-		this.launcherAndShooterOverride = launcherAndShooterOverride;
+		SmartDashboard.putBoolean("Auger Override", launcherAndShooterOverride);
+		this.augerOverride = launcherAndShooterOverride;
+	}
+
+	@Override
+	public void setShooterOverride(boolean launcherAndShooterOverride)
+	{
+		SmartDashboard.putBoolean("Shooter Override", launcherAndShooterOverride);
+		this.shooterOverride = launcherAndShooterOverride;
 	}
 
 	@Override
 	public void moveShooterAndAugerToPreset(EShooterPresets desiredShooter, EAugerPresets desiredAuger)
 	{
-		// isAugerAtPreset = false;
-		//
-		// executor.submit(() ->
-		// {
-		// moveAugerToPreset(desiredAuger);
-		// isAugerAtPreset = true;
-		// });
-		//
-		// moveShooterToPreset(desiredShooter);
-		//
-		// while (!isAugerAtPreset)
-		// ;
-
 		isAugerAtPreset = false;
 
 		executor.submit(() ->
 		{
-			SmartDashboard.putString("moveShooterAndAugerToPreset State", "Pre-Pre Moving Auger");
 			moveAugerToPreset(desiredAuger);
 			isAugerAtPreset = true;
-			SmartDashboard.putString("moveShooterAndAugerToPreset State", "Pre-Pre Waiting For Shooter");
 		});
 
-		SmartDashboard.putString("moveShooterAndAugerToPreset State", "Pre-Pre Moving Auger and Shooter");
 		moveShooterToPreset(desiredShooter);
 
-		SmartDashboard.putString("moveShooterAndAugerToPreset State", "Pre-Pre Waiting For Auger");
-		while (!isAugerAtPreset)
-			;
-		SmartDashboard.putString("moveShooterAndAugerToPreset State", "Pre-Pre Done");
+		while (!isAugerAtPreset && RobotStatus.isRunning())
+		{
+			SensorConfig.getInstance().getTimer().waitTimeInMillis(50);
+		}
 	}
 
 	@Override
 	public void moveShooterAndAugerToPreset(int desiredShooter, int desiredAuger)
 	{
-		// isAugerAtPreset = false;
-		//
-		// executor.submit(() ->
-		// {
-		// moveAugerToPosition(desiredAuger);
-		// isAugerAtPreset = true;
-		// });
-		//
-		// moveShooterToPosition(desiredShooter);
-		//
-		// while (!isAugerAtPreset)
-		// ;
 		isAugerAtPreset = false;
-		SmartDashboard.putString("moveShooterAndAugerToPreset State", "Pos-Pos Start");
 
 		executor.submit(() ->
 		{
-			SmartDashboard.putString("moveShooterAndAugerToPreset State", "Pos-Pos Moving Auger");
 			moveAugerToPosition(desiredAuger);
 			isAugerAtPreset = true;
-			SmartDashboard.putString("moveShooterAndAugerToPreset State", "Pos-Pos Waiting For Shooter");
 		});
 
-		SmartDashboard.putString("moveShooterAndAugerToPreset State", "Pos-Pos Moving Auger and Shooter");
 		moveShooterToPosition(desiredShooter);
 
-		SmartDashboard.putString("moveShooterAndAugerToPreset State", "Pos-Pos Waiting For Auger");
-		while (!isAugerAtPreset)
-			;
-		SmartDashboard.putString("moveShooterAndAugerToPreset State", "Pos-Pos Done");
+		while (!isAugerAtPreset && RobotStatus.isRunning())
+		{
+			SensorConfig.getInstance().getTimer().waitTimeInMillis(50);
+		}
 	}
 
 	@Override
 	public void moveShooterAndAugerToPreset(EShooterPresets desiredShooter, int desiredAuger)
 	{
-		// isAugerAtPreset = false;
-		//
-		// executor.submit(() ->
-		// {
-		// moveAugerToPosition(desiredAuger);
-		// isAugerAtPreset = true;
-		// });
-		//
-		// moveShooterToPreset(desiredShooter);
-		//
-		// while (!isAugerAtPreset)
-		// ;
 		isAugerAtPreset = false;
-		SmartDashboard.putString("moveShooterAndAugerToPreset State", "Pre-Pos Start");
 
 		executor.submit(() ->
 		{
-			SmartDashboard.putString("moveShooterAndAugerToPreset State", "Pre-Pos Moving Auger");
 			moveAugerToPosition(desiredAuger);
 			isAugerAtPreset = true;
-			SmartDashboard.putString("moveShooterAndAugerToPreset State", "Pre-Pos Waiting For Shooter");
 		});
 
-		SmartDashboard.putString("moveShooterAndAugerToPreset State", "Pre-Pos Moving Auger and Shooter");
 		moveShooterToPreset(desiredShooter);
 
-		SmartDashboard.putString("moveShooterAndAugerToPreset State", "Pre-Pos Waiting For Auger");
-		while (!isAugerAtPreset)
-			;
-		SmartDashboard.putString("moveShooterAndAugerToPreset State", "Pre-Pos Done");
+		while (!isAugerAtPreset && RobotStatus.isRunning())
+		{
+			SensorConfig.getInstance().getTimer().waitTimeInMillis(50);
+		}
+
 	}
 
 	@Override
 	public void moveShooterAndAugerToPreset(int desiredShooter, EAugerPresets desiredAuger)
 	{
-		// isAugerAtPreset = false;
-		//
-		// executor.submit(() ->
-		// {
-		// moveAugerToPreset(desiredAuger);
-		// isAugerAtPreset = true;
-		// });
-		//
-		// moveShooterToPosition(desiredShooter);
-		//
-		// while (!isAugerAtPreset)
-		// ;
 		isAugerAtPreset = false;
-		SmartDashboard.putString("moveShooterAndAugerToPreset State", "Pos-Pre Start");
 
 		executor.submit(() ->
 		{
-			SmartDashboard.putString("moveShooterAndAugerToPreset State", "Pos-Pre Moving Auger");
 			moveAugerToPreset(desiredAuger);
 			isAugerAtPreset = true;
-			SmartDashboard.putString("moveShooterAndAugerToPreset State", "Pos-Pre Waiting For Shooter");
 		});
 
-		SmartDashboard.putString("moveShooterAndAugerToPreset State", "Pos-Pre Moving Auger and Shooter");
 		moveShooterToPosition(desiredShooter);
 
-		SmartDashboard.putString("moveShooterAndAugerToPreset State", "Pos-Pre Waiting For Auger");
-		while (!isAugerAtPreset)
-			;
-		SmartDashboard.putString("moveShooterAndAugerToPreset State", "Pos-Pre Done");
+		while (!isAugerAtPreset && RobotStatus.isRunning())
+		{
+			SensorConfig.getInstance().getTimer().waitTimeInMillis(50);
+		}
 	}
 }

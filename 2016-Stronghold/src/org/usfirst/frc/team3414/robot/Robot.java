@@ -19,6 +19,7 @@ public class Robot extends SampleRobot
 	private ExecutorService executor;
 	private SendableChooser autoChooser;
 	private SendableChooser positionChooser;
+	private boolean didAuto = false;
 
 	public Robot()
 	{
@@ -71,6 +72,7 @@ public class Robot extends SampleRobot
 		RobotStatus.setIsRunning(true);
 		RobotStatus.setIsAuto(true);
 		RobotStatus.setIsTeleop(false);
+		didAuto = true;
 
 		SensorConfig.getInstance().getGyro().hardResetCount();
 
@@ -124,6 +126,15 @@ public class Robot extends SampleRobot
 		ActuatorConfig.getInstance().getDriveTrainAssist().driveTrainCoast(true);
 		ActuatorConfig.getInstance().getDriveTrain().setDriveForwardBreak(false);
 
+		if (!didAuto)
+		{
+			SensorConfig.getInstance().getGyro().hardResetCount();
+			ActuatorConfig.getInstance().getLauncher().setAugerOverride(false);
+			ActuatorConfig.getInstance().getDriveTrain().setDriveForwardBreak(false);
+			ActuatorConfig.getInstance().getDriveTrainAssist().setDriveForwardBreak(false);
+			ActuatorConfig.getInstance().getLauncher().stopAugerWheels();
+			ActuatorConfig.getInstance().getLauncher().stopShooterWheels();
+		}
 		teleop.doTeleop();
 	}
 
@@ -131,11 +142,13 @@ public class Robot extends SampleRobot
 	{
 		System.out.println("Robot Disabled");
 
+		didAuto = false;
+		
 		RobotStatus.setIsRunning(false);
 		RobotStatus.setIsAuto(false);
 		RobotStatus.setIsTeleop(false);
 
-		ActuatorConfig.getInstance().getLauncher().setLauncherAndShooterOverride(false);
+		ActuatorConfig.getInstance().getLauncher().setAugerOverride(false);
 		ActuatorConfig.getInstance().getDriveTrain().setDriveForwardBreak(false);
 		ActuatorConfig.getInstance().getDriveTrainAssist().setDriveForwardBreak(false);
 		ActuatorConfig.getInstance().getLauncher().stopAugerWheels();

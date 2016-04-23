@@ -12,7 +12,7 @@ import org.usfirst.frc.team3414.robot.RobotStatus;
 public class AutonBreachDefensesAndShoot implements IAutonomousControl
 {
 	// private boolean timeBased = false;
-	private boolean shoot = true;
+//	private boolean shoot = true;
 
 	public AutonBreachDefensesAndShoot()
 	{
@@ -24,10 +24,24 @@ public class AutonBreachDefensesAndShoot implements IAutonomousControl
 		while (RobotStatus.isAuto())
 		{
 
-			// Move shooter to rock wall
-			ActuatorConfig.getInstance().getLauncher().moveShooterAndAugerToPreset(EShooterPresets.STANDARD_DEFENSE_SHOOTER, EAugerPresets.STANDARD_DEFENSE_AUGER);
-//			ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.STANDARD_DEFENSE_SHOOTER);
-//			ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.STANDARD_DEFENSE_AUGER);
+			ActuatorConfig.getInstance().getLauncher().moveShooterAndAugerToPreset(
+					EShooterPresets.STANDARD_DEFENSE_SHOOTER, EAugerPresets.STANDARD_DEFENSE_AUGER);
+			
+			ActuatorConfig.getInstance().getDriveTrain().goForward(1.0, 130); // 130
+
+			ActuatorConfig.getInstance().getDriveTrain().stopDrive();
+
+			ActuatorConfig.getInstance().getDriveTrainAssist().centerDriveTrain(0.3);
+			
+			ActuatorConfig.getInstance().getAutoShot().shoot(position);
+			
+			
+			
+			
+			
+			
+			// ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.STANDARD_DEFENSE_SHOOTER);
+			// ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.STANDARD_DEFENSE_AUGER);
 
 			// Go over rock wall
 			// if (timeBased)
@@ -42,16 +56,15 @@ public class AutonBreachDefensesAndShoot implements IAutonomousControl
 			//
 			// } else
 			// {
-			// Encoder Based
-			ActuatorConfig.getInstance().getDriveTrain().goForward(1.0, 130); //130
-			// }
-
-			ActuatorConfig.getInstance().getDriveTrain().stopDrive();
-
-			ActuatorConfig.getInstance().getDriveTrainAssist().centerDriveTrain(0.3);
-			// if(shoot)
-			// {
-			ActuatorConfig.getInstance().getAutoShot().shoot(position);
+//			 //Encoder Based
+//			ActuatorConfig.getInstance().getDriveTrain().goForward(1.0, 130); // 130
+//			// }
+//			ActuatorConfig.getInstance().getDriveTrain().stopDrive();
+//
+//			ActuatorConfig.getInstance().getDriveTrainAssist().centerDriveTrain(0.3);
+//			// if(shoot)
+//			// {
+//			ActuatorConfig.getInstance().getAutoShot().shoot(position);
 			// }
 
 			// Angle drive train toward goal

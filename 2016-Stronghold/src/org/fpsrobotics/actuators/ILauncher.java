@@ -132,7 +132,8 @@ public interface ILauncher
 	 */
 	public void moveShooterAndAugerToPreset(int desiredShooter, EAugerPresets desiredAuger);
 
-	public void setLauncherAndShooterOverride(boolean launcherAndShooterOverride);
+	public void setAugerOverride(boolean launcherAndShooterOverride);
+	public void setShooterOverride(boolean launcherAndShooterOverride);
 
 
 }

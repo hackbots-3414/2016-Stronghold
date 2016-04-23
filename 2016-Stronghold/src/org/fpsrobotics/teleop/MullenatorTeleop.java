@@ -48,7 +48,6 @@ public class MullenatorTeleop implements ITeleopControl
 	private IJoystick rightJoystick;
 
 	// Auto Teleop
-	private boolean doneWithPortcullisAutoAction = false;
 
 	public MullenatorTeleop()
 	{
@@ -88,11 +87,15 @@ public class MullenatorTeleop implements ITeleopControl
 						doDriverFunctions();
 					}
 				}
-				if (rightJoystick.getButtonValue(EJoystickButtons.SEVEN) && rightJoystick.getButtonValue(EJoystickButtons.EIGHT))
+				if (rightJoystick.getButtonValue(EJoystickButtons.SEVEN)
+						&& rightJoystick.getButtonValue(EJoystickButtons.EIGHT))
 				{
-					launcher.setLauncherAndShooterOverride(true);
+					launcher.setAugerOverride(true);
+					launcher.setShooterOverride(true);
 					driveTrain.setDriveForwardBreak(true);
 					driveTrainAssist.setDriveForwardBreak(true);
+					shootingLockOut = false;
+					driverLockOut = false;
 				}
 
 				// PRINT SMARTDASHBAORD VALUES
@@ -124,51 +127,48 @@ public class MullenatorTeleop implements ITeleopControl
 			{
 				if (RobotStatus.isTeleop())
 				{
+
 					// Intake
 					if (gamepad.getButtonValue(EJoystickButtons.THREE) && !movedIntakeWheels && !shootingLockOut)
 					{
-						System.out.println("Intake Start");
 						shootingLockOut = true;
 						movedIntakeWheels = true;
 						launcher.intakeBoulder();
 					}
 					if (!gamepad.getButtonValue(EJoystickButtons.THREE) && movedIntakeWheels)
 					{
-						System.out.println("Intake Stop");
 						launcher.stopIntakeBoulder();
 						movedIntakeWheels = false;
 					}
 
 					// Shoot Low
 					if ((gamepad.getButtonValue(EJoystickButtons.ONE) && gamepad.getButtonValue(EJoystickButtons.SEVEN))
-							|| ((gamepad.getButtonValue(EJoystickButtons.ONE) && gamepad.getButtonValue(EJoystickButtons.EIGHT)) && !shootingLockOut))
+							|| ((gamepad.getButtonValue(EJoystickButtons.ONE)
+									&& gamepad.getButtonValue(EJoystickButtons.EIGHT)) && !shootingLockOut))
 					{
-						System.out.println("Shoot Sequence Low Start");
 						shootingLockOut = true;
 						launcher.shootSequenceLow();
-						System.out.println("Shoot Sequence Low Stop");
 					}
 
 					// Low bar
-					if ((rightJoystick.getButtonValue(EJoystickButtons.THREE) || leftJoystick.getButtonValue(EJoystickButtons.SEVEN)) && !shootingLockOut)
+					if ((rightJoystick.getButtonValue(EJoystickButtons.THREE)
+							|| leftJoystick.getButtonValue(EJoystickButtons.SEVEN)) && !shootingLockOut)
 					{
 						shootingLockOut = true;
-						System.out.println("Low Bar Start");
 						launcher.moveShooterAndAugerToPreset(EShooterPresets.LOW_BAR, EAugerPresets.LOW_BAR);
 						// launcher.moveShooterToPreset(EShooterPresets.LOW_BAR);
 						// launcher.moveAugerToPreset(EAugerPresets.LOW_BAR);
-						System.out.println("Low Bar Stop");
 					}
 
 					// Any Normal Defense
-					if ((rightJoystick.getButtonValue(EJoystickButtons.FOUR) || leftJoystick.getButtonValue(EJoystickButtons.EIGHT)) && !shootingLockOut)
+					if ((rightJoystick.getButtonValue(EJoystickButtons.FOUR)
+							|| leftJoystick.getButtonValue(EJoystickButtons.EIGHT)) && !shootingLockOut)
 					{
 						shootingLockOut = true;
-						System.out.println("Standard Defense Start");
-						launcher.moveShooterAndAugerToPreset(EShooterPresets.STANDARD_DEFENSE_SHOOTER, EAugerPresets.STANDARD_DEFENSE_AUGER);
+						launcher.moveShooterAndAugerToPreset(EShooterPresets.STANDARD_DEFENSE_SHOOTER,
+								EAugerPresets.STANDARD_DEFENSE_AUGER);
 						// launcher.moveShooterToPreset(EShooterPresets.STANDARD_DEFENSE_SHOOTER);
 						// launcher.moveAugerToPreset(EAugerPresets.STANDARD_DEFENSE_AUGER);
-						System.out.println("Standard Defense Stop");
 					}
 
 					// Auto Cheval De Frise
@@ -181,7 +181,8 @@ public class MullenatorTeleop implements ITeleopControl
 
 						System.out.println("Cheval De Fris Action Start");
 
-						if (rightJoystick.getButtonValue(EJoystickButtons.SEVEN) && rightJoystick.getButtonValue(EJoystickButtons.EIGHT))
+						if (rightJoystick.getButtonValue(EJoystickButtons.SEVEN)
+								&& rightJoystick.getButtonValue(EJoystickButtons.EIGHT))
 						{
 							System.out.println("Cheval De Fris Action Stop");
 							break;
@@ -189,7 +190,8 @@ public class MullenatorTeleop implements ITeleopControl
 
 						driveTrain.goBackward(0.25, 6);
 
-						if (rightJoystick.getButtonValue(EJoystickButtons.SEVEN) && rightJoystick.getButtonValue(EJoystickButtons.EIGHT))
+						if (rightJoystick.getButtonValue(EJoystickButtons.SEVEN)
+								&& rightJoystick.getButtonValue(EJoystickButtons.EIGHT))
 						{
 							System.out.println("Cheval De Fris Action Stop");
 							break;
@@ -198,17 +200,20 @@ public class MullenatorTeleop implements ITeleopControl
 						driveTrain.stopDrive();
 						SensorConfig.getInstance().getTimer().waitTimeInMillis(250);
 
-						if (rightJoystick.getButtonValue(EJoystickButtons.SEVEN) && rightJoystick.getButtonValue(EJoystickButtons.EIGHT))
+						if (rightJoystick.getButtonValue(EJoystickButtons.SEVEN)
+								&& rightJoystick.getButtonValue(EJoystickButtons.EIGHT))
 						{
 							System.out.println("Cheval De Fris Action Stop");
 							break;
 						}
 
-						launcher.moveShooterAndAugerToPreset(EShooterPresets.STANDARD_DEFENSE_SHOOTER, EAugerPresets.LOW_BAR);
+						launcher.moveShooterAndAugerToPreset(EShooterPresets.STANDARD_DEFENSE_SHOOTER,
+								EAugerPresets.LOW_BAR);
 						// launcher.moveShooterToPreset(EShooterPresets.STANDARD_DEFENSE_SHOOTER);
 						// launcher.moveAugerToPreset(EAugerPresets.LOW_BAR);
 
-						if (rightJoystick.getButtonValue(EJoystickButtons.SEVEN) && rightJoystick.getButtonValue(EJoystickButtons.EIGHT))
+						if (rightJoystick.getButtonValue(EJoystickButtons.SEVEN)
+								&& rightJoystick.getButtonValue(EJoystickButtons.EIGHT))
 						{
 							System.out.println("Cheval De Fris Action Stop");
 							break;
@@ -219,57 +224,10 @@ public class MullenatorTeleop implements ITeleopControl
 						break; // DO NOT DELETE
 					}
 
-					// // TODO: PORTCULLIS-ACTION
-					// while (leftJoystick.getButtonValue(EJoystickButtons.TEN) && !shootingLockOut)
-					// {
-					//
-					// doneWithPortcullisAutoAction = false;
-					//
-					// // go backwards
-					// driveTrain.goBackward(0.25, 4);
-					//
-					// if (SensorConfig.getInstance().getRightJoystick().getButtonValue(EJoystickButtons.SEVEN)
-					// && SensorConfig.getInstance().getRightJoystick().getButtonValue(EJoystickButtons.EIGHT))
-					// {
-					// break;
-					// }
-					//
-					// // stop
-					// driveTrain.stopDrive();
-					// SensorConfig.getInstance().getTimer().waitTimeInMillis(250);
-					//
-					// if (SensorConfig.getInstance().getRightJoystick().getButtonValue(EJoystickButtons.SEVEN)
-					// && SensorConfig.getInstance().getRightJoystick().getButtonValue(EJoystickButtons.EIGHT))
-					// {
-					// break;
-					// }
-					// // drive forward
-					// executor.submit(() ->
-					// {
-					// SensorConfig.getInstance().getTimer().waitTimeInMillis(250);
-					// driveTrain.goForward(0.25, 40, false); // 0.3
-					// driveTrain.goForward(0.7, 40, false);
-					// doneWithPortcullisAutoAction = true;
-					// });
-					//
-					// // auger raise
-					// launcher.moveAugerToPreset(EAugerPresets.PORTCULLIS);
-					//
-					// while (!doneWithPortcullisAutoAction && !(SensorConfig.getInstance().getRightJoystick()
-					// .getButtonValue(EJoystickButtons.SEVEN)
-					// && SensorConfig.getInstance().getRightJoystick()
-					// .getButtonValue(EJoystickButtons.EIGHT)))
-					// {
-					// System.out.println("Going through Portcullis");
-					// }
-					// break; // DO NOT DELETE
-					// }
-
 					// Center Shot preset
 					if (gamepad.getButtonValue(EJoystickButtons.SEVEN) && !shootingLockOut)
 					{
 						shootingLockOut = true;
-						System.out.println("Center Shot Start");
 						if (RobotStatus.isAlpha())
 						{
 							// To raise shooter, lower values
@@ -278,44 +236,38 @@ public class MullenatorTeleop implements ITeleopControl
 						} else
 						{
 							// Beta
-							launcher.moveShooterToPosition(290);
+							launcher.moveShooterToPosition(250);
 						}
 						launcher.shootSequenceHigh();
-						System.out.println("Center Shot Stop");
 					}
 
 					if (gamepad.getPOV() == 90 && gamepad.getButtonValue(EJoystickButtons.ONE) && !shootingLockOut)
 					{
 						shootingLockOut = true;
-						System.out.println("Shoot High Manual Start");
 						launcher.shootSequenceHigh();
-						System.out.println("Shoot High Manual Stop");
 					}
 
 					// Side/ corner shot preset
 					if (gamepad.getButtonValue(EJoystickButtons.EIGHT) && !shootingLockOut)
 					{
 						shootingLockOut = true;
-						System.out.println("Corner Shot Start");
 						if (RobotStatus.isAlpha())
 						{
 							launcher.moveShooterToPosition(635);
 						} else
 						{
 							// Beta
-							launcher.moveShooterToPosition(285);
+							launcher.moveShooterToPosition(250);
 						}
 						launcher.shootSequenceHigh();
-						System.out.println("Corner Shot Stop");
 					}
 
 					// Center the drive train
-					if (leftJoystick.getButtonValue(EJoystickButtons.ELEVEN) || rightJoystick.getButtonValue(EJoystickButtons.FIVE))
+					if (leftJoystick.getButtonValue(EJoystickButtons.ELEVEN)
+							|| rightJoystick.getButtonValue(EJoystickButtons.FIVE))
 					{
 						driverLockOut = true;
-						System.out.println("Centering Drive Start");
 						driveTrainAssist.centerDriveTrain(0.4);
-						System.out.println("Centering Drive Stop");
 					}
 
 					if (RobotStatus.isAlpha())
@@ -329,7 +281,8 @@ public class MullenatorTeleop implements ITeleopControl
 						}
 
 						// TODO: Easy Button
-						if ((gamepad.getButtonValue(EJoystickButtons.TEN) || easyButton.getButtonValue(EJoystickButtons.ONE)) && !shootingLockOut)
+						if ((gamepad.getButtonValue(EJoystickButtons.TEN)
+								|| easyButton.getButtonValue(EJoystickButtons.ONE)) && !shootingLockOut)
 						// if (gamepad.getButtonValue(EJoystickButtons.TEN) &&
 						// isAugerReadyToLift && !shootingLockOut)
 						{
@@ -398,23 +351,33 @@ public class MullenatorTeleop implements ITeleopControl
 					// }
 					// }
 
-					// Once commands finish, if all buttons are not pressed,
-					// then we may continue
-					if (!gamepad.getButtonValue(EJoystickButtons.THREE) && !gamepad.getButtonValue(EJoystickButtons.SEVEN)
-							&& !gamepad.getButtonValue(EJoystickButtons.EIGHT) && !gamepad.getButtonValue(EJoystickButtons.NINE)
-							&& !gamepad.getButtonValue(EJoystickButtons.TEN) && !rightJoystick.getButtonValue(EJoystickButtons.THREE)
-							&& !rightJoystick.getButtonValue(EJoystickButtons.FOUR) && !rightJoystick.getButtonValue(EJoystickButtons.FIVE)
-							&& !rightJoystick.getButtonValue(EJoystickButtons.SEVEN) && !rightJoystick.getButtonValue(EJoystickButtons.EIGHT)
-							&& !rightJoystick.getButtonValue(EJoystickButtons.NINE) && !rightJoystick.getButtonValue(EJoystickButtons.TEN)
-							&& !leftJoystick.getButtonValue(EJoystickButtons.SEVEN) && !leftJoystick.getButtonValue(EJoystickButtons.EIGHT)
-							&& !leftJoystick.getButtonValue(EJoystickButtons.NINE) && !leftJoystick.getButtonValue(EJoystickButtons.TEN)
-							&& !leftJoystick.getButtonValue(EJoystickButtons.ELEVEN) && !leftJoystick.getButtonValue(EJoystickButtons.TWELVE))
+					// Once commands finish, if all buttons are not pressed, then we may continue
+					if (!gamepad.getButtonValue(EJoystickButtons.ONE) && !gamepad.getButtonValue(EJoystickButtons.THREE)
+							&& !gamepad.getButtonValue(EJoystickButtons.SEVEN)
+							&& !gamepad.getButtonValue(EJoystickButtons.EIGHT)
+							&& !gamepad.getButtonValue(EJoystickButtons.NINE)
+							&& !gamepad.getButtonValue(EJoystickButtons.TEN)
+							&& !rightJoystick.getButtonValue(EJoystickButtons.THREE)
+							&& !rightJoystick.getButtonValue(EJoystickButtons.FOUR)
+							&& !rightJoystick.getButtonValue(EJoystickButtons.FIVE)
+							&& !rightJoystick.getButtonValue(EJoystickButtons.SEVEN)
+							&& !rightJoystick.getButtonValue(EJoystickButtons.EIGHT)
+							&& !rightJoystick.getButtonValue(EJoystickButtons.NINE)
+							&& !rightJoystick.getButtonValue(EJoystickButtons.TEN)
+							&& !leftJoystick.getButtonValue(EJoystickButtons.SEVEN)
+							&& !leftJoystick.getButtonValue(EJoystickButtons.EIGHT)
+							&& !leftJoystick.getButtonValue(EJoystickButtons.NINE)
+							&& !leftJoystick.getButtonValue(EJoystickButtons.TEN)
+							&& !leftJoystick.getButtonValue(EJoystickButtons.ELEVEN)
+							&& !leftJoystick.getButtonValue(EJoystickButtons.TWELVE) 
+							)
 					{
 						if (shootingLockOut)
 						{
 							System.out.println("System Reset");
 						}
-						launcher.setLauncherAndShooterOverride(false);
+						launcher.setAugerOverride(false);
+						launcher.setShooterOverride(false);
 						driveTrain.setDriveForwardBreak(false);
 						driveTrainAssist.setDriveForwardBreak(false);
 						shootingLockOut = false;
@@ -431,7 +394,8 @@ public class MullenatorTeleop implements ITeleopControl
 	private void doDriverFunctions()
 	{
 		// TOGGLE PID
-		if ((SensorConfig.getInstance().getLeftJoystick().getButtonValue(EJoystickButtons.FIVE)) && !toggleLockL5A && !toggleLockL5B)
+		if ((SensorConfig.getInstance().getLeftJoystick().getButtonValue(EJoystickButtons.FIVE)) && !toggleLockL5A
+				&& !toggleLockL5B)
 		{
 			toggleLockL5A = true;
 			// DO 1 - On Click
@@ -439,13 +403,15 @@ public class MullenatorTeleop implements ITeleopControl
 			PIDOverride.getInstance().setTeleopDisablePID(true);
 			pidOn = false;
 		}
-		if ((!SensorConfig.getInstance().getLeftJoystick().getButtonValue(EJoystickButtons.FIVE)) && toggleLockL5A && !toggleLockL5B)
+		if ((!SensorConfig.getInstance().getLeftJoystick().getButtonValue(EJoystickButtons.FIVE)) && toggleLockL5A
+				&& !toggleLockL5B)
 		{
 			toggleLockL5A = false;
 			toggleLockL5B = true;
 			// DO 2 - On Release
 		}
-		if ((SensorConfig.getInstance().getLeftJoystick().getButtonValue(EJoystickButtons.FIVE)) && !toggleLockL5A && toggleLockL5B)
+		if ((SensorConfig.getInstance().getLeftJoystick().getButtonValue(EJoystickButtons.FIVE)) && !toggleLockL5A
+				&& toggleLockL5B)
 		{
 			toggleLockL5A = true;
 			// DO 3 - On Click
@@ -454,7 +420,8 @@ public class MullenatorTeleop implements ITeleopControl
 			PIDOverride.getInstance().setTeleopDisablePID(false);
 			pidOn = true;
 		}
-		if ((!SensorConfig.getInstance().getLeftJoystick().getButtonValue(EJoystickButtons.FIVE)) && toggleLockL5A && toggleLockL5B)
+		if ((!SensorConfig.getInstance().getLeftJoystick().getButtonValue(EJoystickButtons.FIVE)) && toggleLockL5A
+				&& toggleLockL5B)
 		{
 			toggleLockL5A = false;
 			toggleLockL5B = false;
@@ -635,7 +602,8 @@ public class MullenatorTeleop implements ITeleopControl
 			}
 
 			// Reset Gyro
-			if ((rightJoystick.getButtonValue(EJoystickButtons.ELEVEN) && rightJoystick.getButtonValue(EJoystickButtons.TWELVE)))
+			if ((rightJoystick.getButtonValue(EJoystickButtons.ELEVEN)
+					&& rightJoystick.getButtonValue(EJoystickButtons.TWELVE)))
 			{
 				SensorConfig.getInstance().getGyro().hardResetCount();
 			}
@@ -647,7 +615,8 @@ public class MullenatorTeleop implements ITeleopControl
 	{
 		SmartDashboard.putNumber("Shooter Pot", SensorConfig.getInstance().getShooterPot().getCount());
 
-		SmartDashboard.putBoolean("Bottom Limit Shooter", SensorConfig.getInstance().getShooterBottomLimitSwitch().isHit());
+		SmartDashboard.putBoolean("Bottom Limit Shooter",
+				SensorConfig.getInstance().getShooterBottomLimitSwitch().isHit());
 		SmartDashboard.putBoolean("Top Limit Shooter", SensorConfig.getInstance().getShooterTopLimitSwitch().isHit());
 
 		// Pressure sensor feedback
@@ -664,7 +633,8 @@ public class MullenatorTeleop implements ITeleopControl
 		SmartDashboard.putBoolean("Shooter Lock out", shootingLockOut);
 		SmartDashboard.putBoolean("Driver Lock out", driverLockOut);
 
-		if ((-10 < SensorConfig.getInstance().getGyro().getSoftCount()) && ((SensorConfig.getInstance().getGyro().getSoftCount() < 10)))
+		if ((-10 < SensorConfig.getInstance().getGyro().getSoftCount())
+				&& ((SensorConfig.getInstance().getGyro().getSoftCount() < 10)))
 		{
 			SmartDashboard.putBoolean("Are we Straight?", true);
 		} else

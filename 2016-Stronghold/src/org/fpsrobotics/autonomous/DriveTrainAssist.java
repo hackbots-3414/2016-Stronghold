@@ -45,6 +45,7 @@ public class DriveTrainAssist implements IDriveTrainAssist
 	 */
 	public void turnNumberOfDegrees(double desiredDegrees, double speed)
 	{
+
 		if ((-180 <= desiredDegrees) && (desiredDegrees <= 180))
 		{
 			gyro.softResetCount();
@@ -55,12 +56,16 @@ public class DriveTrainAssist implements IDriveTrainAssist
 			{
 				driveTrain.turnLeft(speed);
 				while ((gyro.getHardCount() > desiredDegrees) && RobotStatus.isRunning() && !driveBreaker)
-					;
+				{
+					SensorConfig.getInstance().getTimer().waitTimeInMillis(50);
+				}
 			} else if (gyro.getHardCount() < desiredDegrees) // If smaller (farther left) than we're supposed to be
 			{
 				driveTrain.turnRight(speed);
 				while ((gyro.getHardCount() < desiredDegrees) && RobotStatus.isRunning() && !driveBreaker)
-					;
+				{
+					SensorConfig.getInstance().getTimer().waitTimeInMillis(50);
+				}
 			}
 			setDriveForwardBreak(false);
 			driveTrain.stopDrive();
@@ -74,12 +79,12 @@ public class DriveTrainAssist implements IDriveTrainAssist
 
 	@Override
 	/**
-	 * Warning: If at -170 and want to go to 170, it will turn RIGHT the long way around
-	 * WARNING: Overshoots by +/- 5 degrees (with coast on)
+	 * Warning: If at -170 and want to go to 170, it will turn RIGHT the long way around WARNING: Overshoots by +/- 5
+	 * degrees (with coast on)
 	 */
 	public void turnToAngle(double desiredDegrees, double speed)
 	{
-		
+
 		SmartDashboard.putNumber("Desired Position", desiredDegrees);
 
 		if ((-180 <= desiredDegrees) && (desiredDegrees <= 180))
@@ -90,33 +95,22 @@ public class DriveTrainAssist implements IDriveTrainAssist
 			{
 				System.out.println("Turn to Angle - Left - Values going down");
 				driveTrain.turnLeft(speed);
-				if (RobotStatus.isAuto())
+				while ((gyro.getSoftCount() > desiredDegrees) && RobotStatus.isRunning() && !driveBreaker)
 				{
-					while ((gyro.getSoftCount() > desiredDegrees) && RobotStatus.isRunning() && RobotStatus.isAuto()
-							&& !driveBreaker)
-						;
-				} else
-				{
-					while ((gyro.getSoftCount() > desiredDegrees) && RobotStatus.isRunning() && !driveBreaker)
-						;
+					SensorConfig.getInstance().getTimer().waitTimeInMillis(50);
 				}
+
 			} else if (gyro.getSoftCount() < desiredDegrees) // If smaller (farther left) than we're supposed to be
 			{
 				System.out.println("Turn to Angle - Right - Values going up");
 				driveTrain.turnRight(speed);
-				if (RobotStatus.isAuto())
-				{
-					while ((gyro.getSoftCount() < desiredDegrees) && RobotStatus.isRunning() && RobotStatus.isAuto()
-							&& !driveBreaker)
-						;
 
-				} else
+				while ((gyro.getSoftCount() < desiredDegrees) && RobotStatus.isRunning() && !driveBreaker)
 				{
-					while ((gyro.getSoftCount() < desiredDegrees) && RobotStatus.isRunning() && !driveBreaker)
-						;
+					SensorConfig.getInstance().getTimer().waitTimeInMillis(50);
 				}
-			}
 
+			}
 			driveTrain.stopDrive();
 			setDriveForwardBreak(false);
 			if (!PIDOverride.getInstance().isTeleopDisablePID())
@@ -188,14 +182,16 @@ public class DriveTrainAssist implements IDriveTrainAssist
 
 		turnToAngle(desiredDegrees, speed);
 
-		while (!isAugerAndShooterAtPreset)
-			;
+		while (!isAugerAndShooterAtPreset && RobotStatus.isRunning())
+		{
+			SensorConfig.getInstance().getTimer().waitTimeInMillis(50);
+		}
 
 	}
-	
+
 	@Override
-	public void turnToAngleAndMoveShooterAndAugerToPreset(double desiredDegrees, double speed,
-			int desiredShooter, EAugerPresets desiredAuger)
+	public void turnToAngleAndMoveShooterAndAugerToPreset(double desiredDegrees, double speed, int desiredShooter,
+			EAugerPresets desiredAuger)
 	{
 		isAugerAndShooterAtPreset = false;
 
@@ -207,11 +203,13 @@ public class DriveTrainAssist implements IDriveTrainAssist
 
 		turnToAngle(desiredDegrees, speed);
 
-		while (!isAugerAndShooterAtPreset)
-			;
+		while (!isAugerAndShooterAtPreset && RobotStatus.isRunning())
+		{
+			SensorConfig.getInstance().getTimer().waitTimeInMillis(50);
+		}
 
 	}
-	
+
 	@Override
 	public void turnToAngleAndMoveShooterAndAugerToPreset(double desiredDegrees, double speed,
 			EShooterPresets desiredShooter, int desiredAuger)
@@ -226,14 +224,16 @@ public class DriveTrainAssist implements IDriveTrainAssist
 
 		turnToAngle(desiredDegrees, speed);
 
-		while (!isAugerAndShooterAtPreset)
-			;
+		while (!isAugerAndShooterAtPreset && RobotStatus.isRunning())
+		{
+			SensorConfig.getInstance().getTimer().waitTimeInMillis(50);
+		}
 
 	}
-	
+
 	@Override
-	public void turnToAngleAndMoveShooterAndAugerToPreset(double desiredDegrees, double speed,
-			int desiredShooter, int desiredAuger)
+	public void turnToAngleAndMoveShooterAndAugerToPreset(double desiredDegrees, double speed, int desiredShooter,
+			int desiredAuger)
 	{
 		isAugerAndShooterAtPreset = false;
 
@@ -245,8 +245,10 @@ public class DriveTrainAssist implements IDriveTrainAssist
 
 		turnToAngle(desiredDegrees, speed);
 
-		while (!isAugerAndShooterAtPreset)
-			;
+		while (!isAugerAndShooterAtPreset && RobotStatus.isRunning())
+		{
+			SensorConfig.getInstance().getTimer().waitTimeInMillis(50);
+		}
 
 	}
 

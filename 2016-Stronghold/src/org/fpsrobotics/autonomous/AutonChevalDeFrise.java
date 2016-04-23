@@ -30,7 +30,7 @@ public class AutonChevalDeFrise implements IAutonomousControl
 //			ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.FOURTY_KAI_AUTO);
 			ActuatorConfig.getInstance().getLauncher().moveShooterAndAugerToPreset(EShooterPresets.LOW_BAR, EAugerPresets.FOURTY_KAI_AUTO);
 			
-			ActuatorConfig.getInstance().getDriveTrain().goForward(0.8, 60); // Used to be 60, 85 used to be 0.8 speed
+			ActuatorConfig.getInstance().getDriveTrain().goForward(0.8, 60);
 
 			ActuatorConfig.getInstance().getDriveTrain().stopDrive();
 			SensorConfig.getInstance().getTimer().waitTimeInMillis(250);
@@ -44,11 +44,7 @@ public class AutonChevalDeFrise implements IAutonomousControl
 
 			ActuatorConfig.getInstance().getDriveTrain().goForward(0.8, 90);
 
-			// For shooting
-			// if(shooting)
-			// {
 			ActuatorConfig.getInstance().getAutoShot().shoot(position);
-			// }
 
 			System.out.println("Finish it");
 

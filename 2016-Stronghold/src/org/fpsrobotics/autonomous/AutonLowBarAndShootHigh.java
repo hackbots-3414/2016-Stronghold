@@ -13,7 +13,7 @@ public class AutonLowBarAndShootHigh implements IAutonomousControl
 	private double DRIVE_SPEED = 1.00; // 0.80
 	private double DRIVE_DISTANCE;
 
-	private boolean centerDrive = false;
+	private boolean centerDrive = true;
 	// private boolean turnAndGrabBall = false;
 	
 	// Todo: Measure the field before Competition
@@ -25,7 +25,7 @@ public class AutonLowBarAndShootHigh implements IAutonomousControl
 			DRIVE_DISTANCE = 178.165; // 140_000 // 178.165
 		} else
 		{
-			DRIVE_DISTANCE = 39; // 130_000 //165.438
+			DRIVE_DISTANCE = 10; // 130_000 //165.438
 		}
 	}
 
@@ -45,7 +45,7 @@ public class AutonLowBarAndShootHigh implements IAutonomousControl
 			SensorConfig.getInstance().getTimer().waitTimeInMillis(250);
 
 			// Angle drive train toward goal
-			ActuatorConfig.getInstance().getDriveTrain().turnRight(0.3, SHOOT_ANGLE);
+//			ActuatorConfig.getInstance().getDriveTrain().turnRight(0.3, SHOOT_ANGLE);
 
 			//Move shooter
 			if (RobotStatus.isAlpha())
@@ -55,10 +55,14 @@ public class AutonLowBarAndShootHigh implements IAutonomousControl
 				ActuatorConfig.getInstance().getDriveTrainAssist().turnToAngleAndMoveShooterAndAugerToPreset(SHOOT_ANGLE, 0.3, 765, EAugerPresets.FOURTY_KAI_AUTO);
 			} else
 			{
-				ActuatorConfig.getInstance().getDriveTrainAssist().turnToAngleAndMoveShooterAndAugerToPreset(SHOOT_ANGLE, 0.3, 300, EAugerPresets.FOURTY_KAI_AUTO);
+				ActuatorConfig.getInstance().getDriveTrainAssist().turnToAngle(SHOOT_ANGLE, 0.3);
+				ActuatorConfig.getInstance().getLauncher().moveShooterAndAugerToPreset(300, EAugerPresets.FOURTY_KAI_AUTO); //TODO: Figure out "turn to angle and move shooter and auger to preset
+//				ActuatorConfig.getInstance().getDriveTrainAssist().turnToAngleAndMoveShooterAndAugerToPreset(SHOOT_ANGLE, 0.3, 300, EAugerPresets.FOURTY_KAI_AUTO);
 //				ActuatorConfig.getInstance().getLauncher().moveShooterToPosition(300);
 			}
 
+			SensorConfig.getInstance().getTimer().waitTimeInMillis(250);
+			
 			//Raise Auger and Shoot
 			ActuatorConfig.getInstance().getLauncher().shootSequenceHighAuto();
 
