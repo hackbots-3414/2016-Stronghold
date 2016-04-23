@@ -200,7 +200,7 @@ public class ActuatorConfig
 
 		
 		// Auto Shots
-		autoShot = new AutoShot(launcher, driveTrain, driveTrainAssist);
+		autoShot = new AutoShot(launcher, driveTrain, driveAssist);
 	}
 
 	public static synchronized ActuatorConfig getInstance()
