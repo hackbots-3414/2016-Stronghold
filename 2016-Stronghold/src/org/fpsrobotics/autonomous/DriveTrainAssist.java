@@ -62,7 +62,7 @@ public class DriveTrainAssist implements IDriveTrainAssist
 				while ((gyro.getHardCount() < desiredDegrees) && RobotStatus.isRunning() && !driveBreaker)
 					;
 			}
-
+			setDriveForwardBreak(false);
 			driveTrain.stopDrive();
 
 			if (!PIDOverride.getInstance().isTeleopDisablePID())
@@ -118,7 +118,7 @@ public class DriveTrainAssist implements IDriveTrainAssist
 			}
 
 			driveTrain.stopDrive();
-			driveBreaker = false;
+			setDriveForwardBreak(false);
 			if (!PIDOverride.getInstance().isTeleopDisablePID())
 			{
 				driveTrain.enablePID();

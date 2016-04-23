@@ -75,8 +75,8 @@ public class LauncherWithPistons implements ILauncher
 	private boolean isAugerAtPreset = false;
 	private int SHOOTER_POSITION_AT_POSITION_FIVE;
 	private int SHOOTER_POSITION_AT_POSITION_TWO;
-	
-	//Override
+
+	// Override
 	private boolean launcherAndShooterOverride = false;
 
 	/**
@@ -94,10 +94,9 @@ public class LauncherWithPistons implements ILauncher
 	 * @param topLimitAuger
 	 * @param augerPot
 	 */
-	public LauncherWithPistons(ICANMotor leftShooterMotor, ICANMotor rightShooterMotor, ICANMotor shooterLifterMotor,
-			ISolenoid shooterActuator, ILimitSwitch shooterBottomLimit, ILimitSwitch shooterTopLimit,
-			IPIDFeedbackDevice shooterPot, ICANMotor augerIntakeMotor, ICANMotor augerLifterMotor,
-			ILimitSwitch bottomLimitAuger, ILimitSwitch topLimitAuger, IPIDFeedbackDevice augerPot)
+	public LauncherWithPistons(ICANMotor leftShooterMotor, ICANMotor rightShooterMotor, ICANMotor shooterLifterMotor, ISolenoid shooterActuator,
+			ILimitSwitch shooterBottomLimit, ILimitSwitch shooterTopLimit, IPIDFeedbackDevice shooterPot, ICANMotor augerIntakeMotor,
+			ICANMotor augerLifterMotor, ILimitSwitch bottomLimitAuger, ILimitSwitch topLimitAuger, IPIDFeedbackDevice augerPot)
 	{
 
 		// Shooter
@@ -181,8 +180,7 @@ public class LauncherWithPistons implements ILauncher
 	{
 		if (!isShooterAtTopLimit())
 		{
-			if ((augerPot.getCount() < (LOW_BAR_AUGER_FOR_SHOOTER)) && (shooterPot.getCount() < LOW_BAR_SHOOTER)
-					&& (!manualLowerAuger))
+			if ((augerPot.getCount() < (LOW_BAR_AUGER_FOR_SHOOTER)) && (shooterPot.getCount() < LOW_BAR_SHOOTER) && (!manualLowerAuger))
 			{
 				raiseAuger(AUTO_AUGER_SPEED);
 				autoRaiseAuger = true;
@@ -305,8 +303,8 @@ public class LauncherWithPistons implements ILauncher
 			augerIntakeMotor.setSpeed(INTAKE_AUGER_SPEED);
 
 			moveShooterAndAugerToPreset(EShooterPresets.INTAKE, EAugerPresets.INTAKE);
-//			moveShooterToPreset(EShooterPresets.INTAKE);
-//			moveAugerToPreset(EAugerPresets.INTAKE);
+			// moveShooterToPreset(EShooterPresets.INTAKE);
+			// moveAugerToPreset(EAugerPresets.INTAKE);
 
 			isAugerAtIntake = true;
 		}
@@ -641,7 +639,7 @@ public class LauncherWithPistons implements ILauncher
 			}
 			augerPrevValue = augerPot.getCount();
 		}
-		launcherAndShooterOverride = false;
+		setLauncherAndShooterOverride(false);
 		stopAugerLifter(false);
 	}
 
@@ -726,7 +724,7 @@ public class LauncherWithPistons implements ILauncher
 				}
 			}
 		}
-		launcherAndShooterOverride = false;
+		setLauncherAndShooterOverride(false);
 		// Stop Auger when at desired position
 		stopAugerLifter(false);
 	}
@@ -873,7 +871,7 @@ public class LauncherWithPistons implements ILauncher
 
 		launchBoulder();
 	}
-	
+
 	@Override
 	public void setLauncherAndShooterOverride(boolean launcherAndShooterOverride)
 	{
@@ -884,68 +882,140 @@ public class LauncherWithPistons implements ILauncher
 	@Override
 	public void moveShooterAndAugerToPreset(EShooterPresets desiredShooter, EAugerPresets desiredAuger)
 	{
+		// isAugerAtPreset = false;
+		//
+		// executor.submit(() ->
+		// {
+		// moveAugerToPreset(desiredAuger);
+		// isAugerAtPreset = true;
+		// });
+		//
+		// moveShooterToPreset(desiredShooter);
+		//
+		// while (!isAugerAtPreset)
+		// ;
+
 		isAugerAtPreset = false;
 
 		executor.submit(() ->
 		{
+			SmartDashboard.putString("moveShooterAndAugerToPreset State", "Pre-Pre Moving Auger");
 			moveAugerToPreset(desiredAuger);
 			isAugerAtPreset = true;
+			SmartDashboard.putString("moveShooterAndAugerToPreset State", "Pre-Pre Waiting For Shooter");
 		});
 
+		SmartDashboard.putString("moveShooterAndAugerToPreset State", "Pre-Pre Moving Auger and Shooter");
 		moveShooterToPreset(desiredShooter);
 
+		SmartDashboard.putString("moveShooterAndAugerToPreset State", "Pre-Pre Waiting For Auger");
 		while (!isAugerAtPreset)
 			;
+		SmartDashboard.putString("moveShooterAndAugerToPreset State", "Pre-Pre Done");
 	}
 
 	@Override
 	public void moveShooterAndAugerToPreset(int desiredShooter, int desiredAuger)
 	{
+		// isAugerAtPreset = false;
+		//
+		// executor.submit(() ->
+		// {
+		// moveAugerToPosition(desiredAuger);
+		// isAugerAtPreset = true;
+		// });
+		//
+		// moveShooterToPosition(desiredShooter);
+		//
+		// while (!isAugerAtPreset)
+		// ;
 		isAugerAtPreset = false;
+		SmartDashboard.putString("moveShooterAndAugerToPreset State", "Pos-Pos Start");
 
 		executor.submit(() ->
 		{
+			SmartDashboard.putString("moveShooterAndAugerToPreset State", "Pos-Pos Moving Auger");
 			moveAugerToPosition(desiredAuger);
 			isAugerAtPreset = true;
+			SmartDashboard.putString("moveShooterAndAugerToPreset State", "Pos-Pos Waiting For Shooter");
 		});
 
+		SmartDashboard.putString("moveShooterAndAugerToPreset State", "Pos-Pos Moving Auger and Shooter");
 		moveShooterToPosition(desiredShooter);
 
+		SmartDashboard.putString("moveShooterAndAugerToPreset State", "Pos-Pos Waiting For Auger");
 		while (!isAugerAtPreset)
 			;
+		SmartDashboard.putString("moveShooterAndAugerToPreset State", "Pos-Pos Done");
 	}
 
 	@Override
 	public void moveShooterAndAugerToPreset(EShooterPresets desiredShooter, int desiredAuger)
 	{
+		// isAugerAtPreset = false;
+		//
+		// executor.submit(() ->
+		// {
+		// moveAugerToPosition(desiredAuger);
+		// isAugerAtPreset = true;
+		// });
+		//
+		// moveShooterToPreset(desiredShooter);
+		//
+		// while (!isAugerAtPreset)
+		// ;
 		isAugerAtPreset = false;
+		SmartDashboard.putString("moveShooterAndAugerToPreset State", "Pre-Pos Start");
 
 		executor.submit(() ->
 		{
+			SmartDashboard.putString("moveShooterAndAugerToPreset State", "Pre-Pos Moving Auger");
 			moveAugerToPosition(desiredAuger);
 			isAugerAtPreset = true;
+			SmartDashboard.putString("moveShooterAndAugerToPreset State", "Pre-Pos Waiting For Shooter");
 		});
 
+		SmartDashboard.putString("moveShooterAndAugerToPreset State", "Pre-Pos Moving Auger and Shooter");
 		moveShooterToPreset(desiredShooter);
 
+		SmartDashboard.putString("moveShooterAndAugerToPreset State", "Pre-Pos Waiting For Auger");
 		while (!isAugerAtPreset)
 			;
+		SmartDashboard.putString("moveShooterAndAugerToPreset State", "Pre-Pos Done");
 	}
 
 	@Override
 	public void moveShooterAndAugerToPreset(int desiredShooter, EAugerPresets desiredAuger)
 	{
+		// isAugerAtPreset = false;
+		//
+		// executor.submit(() ->
+		// {
+		// moveAugerToPreset(desiredAuger);
+		// isAugerAtPreset = true;
+		// });
+		//
+		// moveShooterToPosition(desiredShooter);
+		//
+		// while (!isAugerAtPreset)
+		// ;
 		isAugerAtPreset = false;
+		SmartDashboard.putString("moveShooterAndAugerToPreset State", "Pos-Pre Start");
 
 		executor.submit(() ->
 		{
+			SmartDashboard.putString("moveShooterAndAugerToPreset State", "Pos-Pre Moving Auger");
 			moveAugerToPreset(desiredAuger);
 			isAugerAtPreset = true;
+			SmartDashboard.putString("moveShooterAndAugerToPreset State", "Pos-Pre Waiting For Shooter");
 		});
 
+		SmartDashboard.putString("moveShooterAndAugerToPreset State", "Pos-Pre Moving Auger and Shooter");
 		moveShooterToPosition(desiredShooter);
 
+		SmartDashboard.putString("moveShooterAndAugerToPreset State", "Pos-Pre Waiting For Auger");
 		while (!isAugerAtPreset)
 			;
+		SmartDashboard.putString("moveShooterAndAugerToPreset State", "Pos-Pre Done");
 	}
 }

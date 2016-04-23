@@ -19,7 +19,6 @@ public class Robot extends SampleRobot
 	private ExecutorService executor;
 	private SendableChooser autoChooser;
 	private SendableChooser positionChooser;
-	private boolean isAutoDoing = false;
 
 	public Robot()
 	{
@@ -59,18 +58,16 @@ public class Robot extends SampleRobot
 		positionChooser = new SendableChooser();
 
 		positionChooser.addObject("Don't shoot at Raul", EAutoPositions.ZERO);
-//		positionChooser.addObject("Position One (Low Bar - NOT USED)", EAutoPositions.ONE);
-		positionChooser.addObject("Position Two (High Raul)", EAutoPositions.TWO);
-		positionChooser.addObject("Position Three (High Raul)", EAutoPositions.THREE);
-		positionChooser.addObject("Position Four (High Raul)", EAutoPositions.FOUR);
-		positionChooser.addObject("Position Five (High Raul)", EAutoPositions.FIVE);
+		positionChooser.addObject("Position Two", EAutoPositions.TWO);
+		positionChooser.addObject("Position Three", EAutoPositions.THREE);
+		positionChooser.addObject("Position Four", EAutoPositions.FOUR);
+		positionChooser.addObject("Position Five", EAutoPositions.FIVE);
 
 		SmartDashboard.putData("Autonomous Position Chooser", positionChooser);
 	}
 
 	public void autonomous()
 	{
-		isAutoDoing = true;
 		RobotStatus.setIsRunning(true);
 		RobotStatus.setIsAuto(true);
 		RobotStatus.setIsTeleop(false);
@@ -97,9 +94,6 @@ public class Robot extends SampleRobot
 			case ZERO:
 				SmartDashboard.putNumber("Desired Position", 00);
 				break;
-//			case ONE:
-//				SmartDashboard.putNumber("Desired Position", 46);
-//				break;
 			case TWO:
 				SmartDashboard.putNumber("Desired Position", 33);
 				break;
@@ -112,32 +106,20 @@ public class Robot extends SampleRobot
 			case FIVE:
 				SmartDashboard.putNumber("Desired Position", -22);
 				break;
+			default:
+				System.out.println("Didn't know how to do it! - Raul");
 			}
 			((IAutonomousControl) autoChooser.getSelected()).doAuto((EAutoPositions) positionChooser.getSelected());
-
-//			if (isOperatorControl())
-//			{
-//				System.out.println("CHECK 1");
-//				RobotStatus.setIsRunning(true);
-//				RobotStatus.setIsAuto(false);
-//				RobotStatus.setIsTeleop(true);
-//			} else
-//			{
-//				System.out.println("CHECK 2");
-//				isAutoDoing = false;
-//			}
 		});
 	}
 
 	public void operatorControl()
 	{
-//		if (!isAutoDoing)
-//		{
-			System.out.println("CHECK 3");
-			RobotStatus.setIsRunning(true);
-			RobotStatus.setIsAuto(false);
-			RobotStatus.setIsTeleop(true);
-//		}
+		System.out.println("Teleop Running");
+
+		RobotStatus.setIsRunning(true);
+		RobotStatus.setIsAuto(false);
+		RobotStatus.setIsTeleop(true);
 
 		ActuatorConfig.getInstance().getDriveTrainAssist().driveTrainCoast(true);
 		ActuatorConfig.getInstance().getDriveTrain().setDriveForwardBreak(false);
@@ -147,9 +129,13 @@ public class Robot extends SampleRobot
 
 	public void disabled()
 	{
+		System.out.println("Robot Disabled");
+
 		RobotStatus.setIsRunning(false);
 		RobotStatus.setIsAuto(false);
 		RobotStatus.setIsTeleop(false);
+
+		ActuatorConfig.getInstance().getLauncher().setLauncherAndShooterOverride(false);
 		ActuatorConfig.getInstance().getDriveTrain().setDriveForwardBreak(false);
 		ActuatorConfig.getInstance().getDriveTrainAssist().setDriveForwardBreak(false);
 		ActuatorConfig.getInstance().getLauncher().stopAugerWheels();

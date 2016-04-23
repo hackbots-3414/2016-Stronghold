@@ -21,11 +21,23 @@ public class TankDrive implements IDriveTrain
 	private IGyroscope gyro;
 
 	private boolean driveBreaker = false;
+	private double KpAuton;
+	private double KpTeleop;
 
 	public TankDrive(DoubleMotor motorLeft, DoubleMotor motorRight)
 	{
 		this.motorLeft = motorLeft;
 		this.motorRight = motorRight;
+		if (RobotStatus.isAlpha())
+		{
+			KpAuton = 0.005; // used to be .01
+			KpTeleop = 0.003; // 0.00425, 0.0040
+		} else
+		{
+			KpAuton = 0.005; // used to be .01
+			KpTeleop = 0.003; // 0.00425, 0.0040
+		}
+
 	}
 
 	public TankDrive(DoubleMotor motorLeft, DoubleMotor motorRight, IGyroscope gyro)
@@ -277,8 +289,6 @@ public class TankDrive implements IDriveTrain
 		}
 	}
 
-	private final double KpAuton = 0.005; // used to be .01
-
 	@Override
 	/**
 	 * Use in Autonomous Mode (Uses while loop)
@@ -303,31 +313,9 @@ public class TankDrive implements IDriveTrain
 
 			SensorConfig.getInstance().getTimer().waitTimeInMillis(300);
 
-			// if (RobotStatus.isAuto())
-			// {
-			// while (RobotStatus.isRunning() && RobotStatus.isAuto() && !driveBreaker
-			// && ((motorLeft.getCANMotorOne().getPIDFeedbackDevice().getDistance()
-			// - initialCountLeft) >= -distance)
-			// && ((motorRight.getCANMotorOne().getPIDFeedbackDevice().getDistance()
-			// - initialCountRight) >= -distance))
-			// {
-			// if (speed > 0)
-			// {
-			// drive(-speed, -gyro.getHardCount() * KpAuton);
-			// } else
-			// {
-			// drive(-speed, gyro.getHardCount() * KpAuton);
-			// }
-			//
-			// // drive(-speed, -gyro.getHardCount() * KpAuton);
-			// }
-			// } else
-			// {
 			while (RobotStatus.isRunning() && !driveBreaker
-					&& ((motorLeft.getCANMotorOne().getPIDFeedbackDevice().getDistance()
-							- initialCountLeft) >= -distance)
-					&& ((motorRight.getCANMotorOne().getPIDFeedbackDevice().getDistance()
-							- initialCountRight) >= -distance))
+					&& ((motorLeft.getCANMotorOne().getPIDFeedbackDevice().getDistance() - initialCountLeft) >= -distance)
+					&& ((motorRight.getCANMotorOne().getPIDFeedbackDevice().getDistance() - initialCountRight) >= -distance))
 			{
 				if (speed > 0)
 				{
@@ -336,11 +324,8 @@ public class TankDrive implements IDriveTrain
 				{
 					drive(-speed, gyro.getHardCount() * KpAuton);
 				}
-
-				// drive(-speed, -gyro.getHardCount() * KpAuton);
-				// }
 			}
-			driveBreaker = false;
+			setDriveForwardBreak(false);
 
 			stopDrive();
 
@@ -392,8 +377,6 @@ public class TankDrive implements IDriveTrain
 		goBackward(speed, distance, true);
 	}
 
-	private final double kpTeleop = 0.003; // 0.00425, 0.0040
-
 	/**
 	 * Soft Resets the gyro Used for teleop
 	 */
@@ -404,10 +387,10 @@ public class TankDrive implements IDriveTrain
 		{
 			if (speed > 0)
 			{
-				drive(speed, gyro.getHardCount() * kpTeleop);
+				drive(speed, gyro.getHardCount() * KpTeleop);
 			} else
 			{
-				drive(speed, -gyro.getHardCount() * kpTeleop);
+				drive(speed, -gyro.getHardCount() * KpTeleop);
 			}
 		} else
 		{
