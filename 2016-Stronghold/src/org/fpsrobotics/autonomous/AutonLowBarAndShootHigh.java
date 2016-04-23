@@ -25,7 +25,7 @@ public class AutonLowBarAndShootHigh implements IAutonomousControl
 			DRIVE_DISTANCE = 178.165; // 140_000 // 178.165
 		} else
 		{
-			DRIVE_DISTANCE = 10; // 130_000 //165.438
+			DRIVE_DISTANCE = 180; // 130_000 //165.438
 		}
 	}
 
