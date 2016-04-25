@@ -9,7 +9,7 @@ import org.usfirst.frc.team3414.robot.RobotStatus;
 public class AutonReachDefenses implements IAutonomousControl
 {
 
-	private boolean timeBased = false;
+//	private boolean timeBased = false;
 
 	public AutonReachDefenses()
 	{
@@ -26,21 +26,23 @@ public class AutonReachDefenses implements IAutonomousControl
 //			ActuatorConfig.getInstance().getLauncher().moveShooterToPreset(EShooterPresets.STANDARD_DEFENSE_SHOOTER);
 //			ActuatorConfig.getInstance().getLauncher().moveAugerToPreset(EAugerPresets.STANDARD_DEFENSE_AUGER);
 
-			// Go to defenses
-			if (timeBased)
-			{
-				// TIME BASED
-				ActuatorConfig.getInstance().getDriveTrain().disablePID();
-
-				ActuatorConfig.getInstance().getDriveTrain().setSpeed(0.5);
-
-				SensorConfig.getInstance().getTimer().waitTimeInMillis(2700);
-
-				ActuatorConfig.getInstance().getDriveTrain().stopDrive();
-			} else
-			{
-				ActuatorConfig.getInstance().getDriveTrain().goForward(0.5, 80); //was 75
-			}
+			ActuatorConfig.getInstance().getDriveTrain().goForward(0.5, 80); //was 75
+			
+//			// Go to defenses
+//			if (timeBased)
+//			{
+//				// TIME BASED
+//				ActuatorConfig.getInstance().getDriveTrain().disablePID();
+//
+//				ActuatorConfig.getInstance().getDriveTrain().setSpeed(0.5);
+//
+//				SensorConfig.getInstance().getTimer().waitTimeInMillis(2700);
+//
+//				ActuatorConfig.getInstance().getDriveTrain().stopDrive();
+//			} else
+//			{
+//				ActuatorConfig.getInstance().getDriveTrain().goForward(0.5, 80); //was 75
+//			}
 
 			break;
 		}

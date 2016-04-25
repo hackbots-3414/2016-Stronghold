@@ -36,6 +36,8 @@ public class Robot extends SampleRobot
 
 		makeAutoChooser();
 		makePositionChooser();
+		
+		SmartDashboard.putNumber("Desired Position", 0); //Used in DriveTrainAssist
 	}
 
 	private void makeAutoChooser()

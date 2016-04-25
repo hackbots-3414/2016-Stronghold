@@ -7,8 +7,17 @@
 - Overload the names of the four methods describing moveShooterAndAugerToPreset
 - Make centerDriveTrain() work with rightJoystick Button 5
 
-4_23_15 5_00pm
+4_23_16 5_00pm
 
 - Fix all of the above
 - For INTAKE: in moveAugerToPosition and moveShooterToPosition:
 	if (gamepad button 3) { while (gamepad button 3){}}
+	
+3_24_15 7_20pm
+
+- There was no "break" in switch statement for moveShooterToPreset
+- Changed EShooter Enum to include all four defenses for autoShot
+- Cleaned up AutoShot and AutonLowBarShootHigh, old is commented out, new uses turn right/left -> THEN moveShooterAndAugerToPreset;
+this should be tested before use, just in case
+- Created doubles in LauncherWithPistons, so MullenatorTeleop now uses enums
+- DriveTrainAssist: Added printlns to make sure what we want is actually happening 

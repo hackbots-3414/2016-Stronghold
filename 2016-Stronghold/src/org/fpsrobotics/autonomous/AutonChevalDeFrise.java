@@ -1,17 +1,11 @@
 package org.fpsrobotics.autonomous;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import org.fpsrobotics.actuators.ActuatorConfig;
 import org.fpsrobotics.actuators.EAugerPresets;
 import org.fpsrobotics.actuators.EShooterPresets;
 import org.fpsrobotics.sensors.SensorConfig;
 import org.usfirst.frc.team3414.robot.RobotStatus;
 
-/**
- * UNTESTED
- */
 public class AutonChevalDeFrise implements IAutonomousControl
 {
 	// private boolean shooting = true;

@@ -6,9 +6,6 @@ import org.fpsrobotics.actuators.EShooterPresets;
 import org.fpsrobotics.sensors.SensorConfig;
 import org.usfirst.frc.team3414.robot.RobotStatus;
 
-/**
- * UNTESTED
- */
 public class AutonBreachDefensesAndShoot implements IAutonomousControl
 {
 	// private boolean timeBased = false;

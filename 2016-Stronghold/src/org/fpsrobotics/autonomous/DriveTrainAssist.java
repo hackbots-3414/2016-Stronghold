@@ -97,6 +97,7 @@ public class DriveTrainAssist implements IDriveTrainAssist
 				driveTrain.turnLeft(speed);
 				while ((gyro.getSoftCount() > desiredDegrees) && RobotStatus.isRunning() && !driveBreaker)
 				{
+					System.out.println("Turning Left"); // TODO: Delete this after testing
 					SensorConfig.getInstance().getTimer().waitTimeInMillis(50);
 				}
 
@@ -107,6 +108,7 @@ public class DriveTrainAssist implements IDriveTrainAssist
 
 				while ((gyro.getSoftCount() < desiredDegrees) && RobotStatus.isRunning() && !driveBreaker)
 				{
+					System.out.println("Turning Right"); // TODO: Delete this after testing
 					SensorConfig.getInstance().getTimer().waitTimeInMillis(50);
 				}
 
@@ -169,10 +171,13 @@ public class DriveTrainAssist implements IDriveTrainAssist
 	}
 
 	@Override
-	public void turnToAngleAndMoveShooterAndAugerToPreset(double desiredDegrees, double speed,
-			EShooterPresets desiredShooter, EAugerPresets desiredAuger)
+	public void turnToAngleAndMoveShooterAndAugerToPreset(double desiredDegrees, double speed, EShooterPresets desiredShooter, EAugerPresets desiredAuger)
 	{
+		System.out.println("Check 1");
+
 		isAugerAndShooterAtPreset = false;
+
+		System.out.println("Don't use this method without testing - Raul");
 
 		executor.submit(() ->
 		{
@@ -180,20 +185,48 @@ public class DriveTrainAssist implements IDriveTrainAssist
 			isAugerAndShooterAtPreset = true;
 		});
 
+		System.out.println("Check 2");
+
 		turnToAngle(desiredDegrees, speed);
+		driveTrain.stopDrive(); // TODO: Added this without testing
+
+		System.out.println("Check 3");
 
 		while (!isAugerAndShooterAtPreset && RobotStatus.isRunning())
 		{
+			System.out.println("Waiting on Shooter and Auger");
 			SensorConfig.getInstance().getTimer().waitTimeInMillis(50);
 		}
+		System.out.println("Done");
+
+		// isAugerAndShooterAtPreset = false;
+		//
+		// System.out.println("Don't use this method without testing - Raul");
+		//
+		// executor.submit(() ->
+		// {
+		// ActuatorConfig.getInstance().getLauncher().moveShooterAndAugerToPreset(desiredShooter, desiredAuger);
+		// isAugerAndShooterAtPreset = true;
+		// });
+		//
+		// turnToAngle(desiredDegrees, speed);
+		// driveTrain.stopDrive();
+		//
+		// while (!isAugerAndShooterAtPreset && RobotStatus.isRunning())
+		// {
+		// SensorConfig.getInstance().getTimer().waitTimeInMillis(50);
+		// }
 
 	}
 
 	@Override
-	public void turnToAngleAndMoveShooterAndAugerToPreset(double desiredDegrees, double speed, int desiredShooter,
-			EAugerPresets desiredAuger)
+	public void turnToAngleAndMoveShooterAndAugerToPreset(double desiredDegrees, double speed, int desiredShooter, EAugerPresets desiredAuger)
 	{
+		System.out.println("Check 1");
+
 		isAugerAndShooterAtPreset = false;
+
+		System.out.println("Don't use this method without testing - Raul");
 
 		executor.submit(() ->
 		{
@@ -201,20 +234,48 @@ public class DriveTrainAssist implements IDriveTrainAssist
 			isAugerAndShooterAtPreset = true;
 		});
 
+		System.out.println("Check 2");
+
 		turnToAngle(desiredDegrees, speed);
+		driveTrain.stopDrive();
+
+		System.out.println("Check 3");
 
 		while (!isAugerAndShooterAtPreset && RobotStatus.isRunning())
 		{
+			System.out.println("Waiting on Shooter and Auger");
 			SensorConfig.getInstance().getTimer().waitTimeInMillis(50);
 		}
+		System.out.println("Done");
+
+		// isAugerAndShooterAtPreset = false;
+		//
+		// System.out.println("Don't use this method without testing - Raul");
+		//
+		// executor.submit(() ->
+		// {
+		// ActuatorConfig.getInstance().getLauncher().moveShooterAndAugerToPreset(desiredShooter, desiredAuger);
+		// isAugerAndShooterAtPreset = true;
+		// });
+		//
+		// turnToAngle(desiredDegrees, speed);
+		// driveTrain.stopDrive();
+		//
+		// while (!isAugerAndShooterAtPreset && RobotStatus.isRunning())
+		// {
+		// SensorConfig.getInstance().getTimer().waitTimeInMillis(50);
+		// }
 
 	}
 
 	@Override
-	public void turnToAngleAndMoveShooterAndAugerToPreset(double desiredDegrees, double speed,
-			EShooterPresets desiredShooter, int desiredAuger)
+	public void turnToAngleAndMoveShooterAndAugerToPreset(double desiredDegrees, double speed, EShooterPresets desiredShooter, int desiredAuger)
 	{
+		System.out.println("Check 1");
+
 		isAugerAndShooterAtPreset = false;
+
+		System.out.println("Don't use this method without testing - Raul");
 
 		executor.submit(() ->
 		{
@@ -222,20 +283,48 @@ public class DriveTrainAssist implements IDriveTrainAssist
 			isAugerAndShooterAtPreset = true;
 		});
 
+		System.out.println("Check 2");
+
 		turnToAngle(desiredDegrees, speed);
+		driveTrain.stopDrive();
+
+		System.out.println("Check 3");
 
 		while (!isAugerAndShooterAtPreset && RobotStatus.isRunning())
 		{
+			System.out.println("Waiting on Shooter and Auger");
 			SensorConfig.getInstance().getTimer().waitTimeInMillis(50);
 		}
+		System.out.println("Done");
+
+		// isAugerAndShooterAtPreset = false;
+		//
+		// System.out.println("Don't use this method without testing - Raul");
+		//
+		// executor.submit(() ->
+		// {
+		// ActuatorConfig.getInstance().getLauncher().moveShooterAndAugerToPreset(desiredShooter, desiredAuger);
+		// isAugerAndShooterAtPreset = true;
+		// });
+		//
+		// turnToAngle(desiredDegrees, speed);
+		// driveTrain.stopDrive();
+		//
+		// while (!isAugerAndShooterAtPreset && RobotStatus.isRunning())
+		// {
+		// SensorConfig.getInstance().getTimer().waitTimeInMillis(50);
+		// }
 
 	}
 
 	@Override
-	public void turnToAngleAndMoveShooterAndAugerToPreset(double desiredDegrees, double speed, int desiredShooter,
-			int desiredAuger)
+	public void turnToAngleAndMoveShooterAndAugerToPreset(double desiredDegrees, double speed, int desiredShooter, int desiredAuger)
 	{
+		System.out.println("Check 1");
+
 		isAugerAndShooterAtPreset = false;
+
+		System.out.println("Don't use this method without testing - Raul");
 
 		executor.submit(() ->
 		{
@@ -243,12 +332,37 @@ public class DriveTrainAssist implements IDriveTrainAssist
 			isAugerAndShooterAtPreset = true;
 		});
 
+		System.out.println("Check 2");
+
 		turnToAngle(desiredDegrees, speed);
+		driveTrain.stopDrive();
+
+		System.out.println("Check 3");
 
 		while (!isAugerAndShooterAtPreset && RobotStatus.isRunning())
 		{
+			System.out.println("Waiting on Shooter and Auger");
 			SensorConfig.getInstance().getTimer().waitTimeInMillis(50);
 		}
+		System.out.println("Done");
+
+		// isAugerAndShooterAtPreset = false;
+		//
+		// System.out.println("Don't use this method without testing - Raul");
+		//
+		// executor.submit(() ->
+		// {
+		// ActuatorConfig.getInstance().getLauncher().moveShooterAndAugerToPreset(desiredShooter, desiredAuger);
+		// isAugerAndShooterAtPreset = true;
+		// });
+		//
+		// turnToAngle(desiredDegrees, speed);
+		// driveTrain.stopDrive();
+		//
+		// while (!isAugerAndShooterAtPreset && RobotStatus.isRunning())
+		// {
+		// SensorConfig.getInstance().getTimer().waitTimeInMillis(50);
+		// }
 
 	}
 
