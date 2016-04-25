@@ -174,11 +174,11 @@ public class MullenatorTeleop implements ITeleopControl
 						shootingLockOut = true;
 						driverLockOut = true;
 
-						System.out.println("Cheval De Fris Action Start");
+						System.out.println("Cheval De Frise Action Start");
 
 						if (rightJoystick.getButtonValue(EJoystickButtons.SEVEN) && rightJoystick.getButtonValue(EJoystickButtons.EIGHT))
 						{
-							System.out.println("Cheval De Fris Action Stop");
+							System.out.println("Cheval De Frise Action Stop");
 							break;
 						}
 
@@ -186,7 +186,7 @@ public class MullenatorTeleop implements ITeleopControl
 
 						if (rightJoystick.getButtonValue(EJoystickButtons.SEVEN) && rightJoystick.getButtonValue(EJoystickButtons.EIGHT))
 						{
-							System.out.println("Cheval De Fris Action Stop");
+							System.out.println("Cheval De Frise Action Stop");
 							break;
 						}
 
@@ -195,7 +195,7 @@ public class MullenatorTeleop implements ITeleopControl
 
 						if (rightJoystick.getButtonValue(EJoystickButtons.SEVEN) && rightJoystick.getButtonValue(EJoystickButtons.EIGHT))
 						{
-							System.out.println("Cheval De Fris Action Stop");
+							System.out.println("Cheval De Frise Action Stop");
 							break;
 						}
 
@@ -205,12 +205,12 @@ public class MullenatorTeleop implements ITeleopControl
 
 						if (rightJoystick.getButtonValue(EJoystickButtons.SEVEN) && rightJoystick.getButtonValue(EJoystickButtons.EIGHT))
 						{
-							System.out.println("Cheval De Fris Action Stop");
+							System.out.println("Cheval De Frise Action Stop");
 							break;
 						}
 
 						driveTrain.goForward(1.0, 80);
-						System.out.println("Cheval De Fris Action Stop");
+						System.out.println("Cheval De Frise Action Done");
 						break; // DO NOT DELETE
 					}
 
@@ -222,6 +222,7 @@ public class MullenatorTeleop implements ITeleopControl
 						launcher.shootSequenceHigh();
 					}
 
+					//Manual Shoot (High Speed)
 					if (gamepad.getPOV() == 90 && gamepad.getButtonValue(EJoystickButtons.ONE) && !shootingLockOut)
 					{
 						shootingLockOut = true;
@@ -240,7 +241,7 @@ public class MullenatorTeleop implements ITeleopControl
 					if (leftJoystick.getButtonValue(EJoystickButtons.ELEVEN) || rightJoystick.getButtonValue(EJoystickButtons.FIVE))
 					{
 						driverLockOut = true;
-						driveTrainAssist.centerDriveTrain(0.4);
+						driveTrainAssist.centerDriveTrain(0.3); //0.4
 					}
 
 					if (RobotStatus.isAlpha())

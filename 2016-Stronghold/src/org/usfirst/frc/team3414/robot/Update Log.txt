@@ -13,11 +13,54 @@
 - For INTAKE: in moveAugerToPosition and moveShooterToPosition:
 	if (gamepad button 3) { while (gamepad button 3){}}
 	
-3_24_15 7_20pm
+4_24_16 7_20pm
 
 - There was no "break" in switch statement for moveShooterToPreset
 - Changed EShooter Enum to include all four defenses for autoShot
-- Cleaned up AutoShot and AutonLowBarShootHigh, old is commented out, new uses turn right/left -> THEN moveShooterAndAugerToPreset;
-this should be tested before use, just in case
+- Cleaned up AutoShot and AutonLowBarShootHigh, old is commented out, new uses turn right/left
+ -> THEN moveShooterAndAugerToPreset; this should be tested before use, just in case
 - Created doubles in LauncherWithPistons, so MullenatorTeleop now uses enums
-- DriveTrainAssist: Added printlns to make sure what we want is actually happening 
+- DriveTrainAssist: Added printlns to make sure what we want is actually happening
+
+
+
+Everything Noticeably Updated Since States (4_24_16 9_30pm):
+
+* OVERRIDE STOPS movement of launcher and shooter (presets only)
+	* Launcher Override: see new method and moveAugerToPosition
+	* Shooter Override: see new method and moveShooterToPosition
+* moveShooterAndAugerToPreset (when available): Intake, AutonBreachDefenses, AutonCheval, AutonLowBarShootHigh&low,
+	AutonPortcullis, AutonReachDefenses, Fourty Kai, LowBarPreset(Teleop), NormalDefensePreset(Teleop), AutoShot
+	* moveShooterAndAugerToPreset FIXED: Uses while{waitmillis(50)}
+	* AutoShot and AutonLowBarShootHigh: now is implemented as (turnLeft -> moveShooterAndAugerToPreset);
+		old is commented out (SHOULD work as before, almost)
+	* Organize Enums for shooter and auger: Got rid of unnecessary ones, added break's, and now have positions in launcher
+		for all four autoShots
+* Fix D-Right & Button1 so it only fires once
+* CenterDriveTrainAction now uses Right5 or Left11
+* INTAKE will only occur if PRESSING Game3
+
+ALSO, (IN CODING LANGUAGE):
+*** moveAugerToPosition: if statements surrounding while loops were added then commented, also, void range from 10 -> 50
+*** MullenatorTeleop:
+	*fixThreadpool 7 -> 3
+	*Delete Portcullis-Action
+	*Comment out Button11
+	*Shooting values are now Enums; values are in Launcher
+*** Launcher:
+	*Made LauncherWithoutPistons (though it is out of date)
+	*LaunchBoulder 150ms -> 1000ms
+	*Changed beta values -> 250
+	*lowerAugerToBottomLimit now uses moveAugerToPosition
+	*Organize values in Launcher and added comments
+* Add "didAuto" in Robot.java -> will reset robot if not doing auto = starting in teleop
+** DriveTrainAssist -> Added comments to prepare for testing
+* AutoShot: got rid of position "ONE"
+* Make update log
+* Overload moveShooterAndAugerToPreset and turnToAngleAndmoveShooterAndAugerToPreset
+* Greater use of FOURTY_KAI_AUTO
+* TankDrive: KpAuton and KpTeleop now in constructor
+* Naming Conventions in Teleop, Launcher, and DriveAssist
+* Delete AutonBreachDefenses, AutonLowBar
+* Simplify AutonReachDefenses
+

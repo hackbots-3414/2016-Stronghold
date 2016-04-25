@@ -2,27 +2,34 @@ Left Joystick
 
 1 - Half Speed
 5 - Toggle PID
-7 - Low Bar
-8 - Normal Defenses (Rough Terrain, Moat, Sally Port)
-9 - Rock Wall
-10 - Cheval (maybe...)
+7 - Low Bar Preset
+8 - Normal Defenses Preset (Rough Terrain, Rock Wall, Moat, Sally Port)
+9 - Cheval Action
+11 - Straighten Drive
 
 Right Joystick
 
 1 - Drive Together
-7 & 8 - Override Shoot Piston
+1 & 2 - Drive Together Full Speed (+/-)
+3 - Low Bar Preset
+4 - Normal Defenses Preset
+5 - Straighten Drive
+7 & 8 - Override All
 11 & 12 - Reset Gyro
 
 Gamepad
+1 & D-Right - Manual Shoot (High Speed)
 1 & 2 - Shooter Down Slow
 2 - Shooter Down
-3 - Suck Ball In
+3 - Intake Ball
 1 & 4 - Shooter Up Slow
 4 - Shooter Up
+1 & 5 || 11 & 5 - Auger Down Fast
 5 - Auger Down
+1 & 6 || 11 & 6 - Auger Up Fast
 6 - Auger Up
-7 - Shoot High
-8 - Shoot Low
-Easy Button - Lifter Retract
-(DISABLED) 9 - Lifter
-(DISABLED) 10 - Lifter Retract
+1 & 7 || 1 & 8 - Shoot Low
+7 - Shoot High Corner
+8 - Shoot High Center
+(ON ALPHA) 9 - Lifter Engage
+(ON ALPHA) Easy Button || 10 - Lifter Retract
